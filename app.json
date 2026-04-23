@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "expense-tracker-native",
-    "slug": "expense-tracker-native",
+    "name": "baraservices",
+    "slug": "baraservices",
+    "scheme": "baraservices",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,10 +21,18 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "package": "com.cmbs.baraservices"
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f0c99166-d1f5-4163-959b-0c90ef5a9fc0"
+      }
     }
   }
 }
