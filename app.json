@@ -28,11 +28,13 @@
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "f0c99166-d1f5-4163-959b-0c90ef5a9fc0"
-      }
-    }
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
+        }
+      ]
+    ]
   }
 }

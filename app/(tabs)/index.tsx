@@ -1,448 +1,110 @@
 import { useCallback, useRef } from "react";
-import {
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { ScrollView, Text, View, TextInput, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import { useAuth } from "../../providers/AuthProvider";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Home() {
   const scrollProps = useGlobalTabBarScroll();
+  const { user } = useAuth();
+
+  const categories = [
+    { name: "Plomería", icon: "water" },
+    { name: "Electricidad", icon: "flash" },
+    { name: "Albañilería", icon: "hammer" },
+    { name: "Pintura", icon: "color-palette" },
+    { name: "Clima", icon: "snow" },
+    { name: "Jardinería", icon: "leaf" },
+  ];
 
   return (
-    <SafeAreaView className="bg-blue-300">
-      <ScrollView {...scrollProps}>
-        <View>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt!
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt!
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt!
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt!
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt!
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt!
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt!
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
-          <Text className="text-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            laudantium alias, atque accusamus excepturi similique esse deserunt
-            ipsa aspernatur corrupti nisi exercitationem veritatis temporibus
-            eligendi ut possimus, corporis adipisci nesciunt! Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Voluptatum nulla perferendis
-            quidem ipsum enim soluta fugiat sed ut et odio rerum officiis quo
-            rem, adipisci mollitia earum, eum, facere incidunt. Architecto nihil
-            iusto magni possimus. Blanditiis, facilis quia nulla ex inventore
-            laboriosam atque adipisci, corrupti molestias autem eveniet enim
-            quasi tenetur, quis voluptates. Dolores provident illum odit quasi
-            nihil. Deleniti! Architecto reiciendis aliquid illo veritatis ipsum,
-            aspernatur nostrum doloribus, culpa magnam, et quidem obcaecati id
-            blanditiis! Dolorum velit accusamus repellat perspiciatis quasi
-            vero, earum vel facilis. Obcaecati consequuntur odit nobis?
-            Accusamus adipisci perspiciatis optio ut illo velit molestiae qui,
-            rerum nostrum cum non doloremque nulla beatae esse perferendis
-            officia! Veritatis consequatur tempore exercitationem incidunt,
-            asperiores dolore blanditiis alias error et? Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Consequuntur, quo accusamus.
-            Ullam asperiores dolorum ratione distinctio voluptate quasi
-            officiis, nihil assumenda illo quae quisquam non, debitis, sequi
-            sapiente officia. Modi? Officia dolore distinctio vitae odit, esse
-            nemo qui mollitia a dolorem nam excepturi adipisci fuga ex possimus,
-            totam temporibus asperiores commodi. Odit aliquid omnis molestias
-            commodi id, dolores quia sit. Perspiciatis sint a saepe labore
-            adipisci at quasi vel ex quo eum? Iste quis quae sed nostrum
-            necessitatibus deserunt iure voluptatum ex? Autem repellat unde
-            expedita ad dolores quis sapiente! Doloremque mollitia consectetur
-            perspiciatis ipsam adipisci praesentium iure quas ullam iusto
-            officia inventore, voluptates ipsa omnis voluptatem tempora,
-            deleniti rem. Ex, minima consequuntur! Illo excepturi cum error
-            veniam illum quo? Dolorem sit, illum, placeat voluptates recusandae
-            numquam consequatur id deleniti aut excepturi pariatur. Praesentium
-            placeat necessitatibus ipsam, excepturi cumque harum, nostrum qui
-            facilis saepe at quam similique quae vero eos! Temporibus doloribus
-            dolorem non a esse aspernatur possimus explicabo fugit magni, nisi
-            aliquid inventore atque, vel debitis, dolores earum rerum
-            repudiandae. Vel consequatur deleniti non ipsa odio sapiente
-            repudiandae perferendis? Quas minus tenetur exercitationem officiis
-            vero tempora quasi voluptates nulla excepturi libero, temporibus id
-            obcaecati blanditiis aliquam, velit, quidem culpa! Iste voluptatibus
-            quia quas ullam dolores minima blanditiis illo ipsa! Veritatis
-            voluptates dolores necessitatibus minus doloremque tempora iure sit
-            provident, voluptatibus distinctio modi cupiditate sapiente
-            accusantium, porro sequi, quod mollitia iste voluptate dolorum nulla
-            eaque! Harum quae odit in quo.
-          </Text>
+    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <ScrollView {...scrollProps} className="flex-1 px-5 pt-4">
+        {/* Header */}
+        <View className="mb-6 flex-row items-center justify-between">
+          <View>
+            <Text className="text-gray-400 text-sm font-medium">Bienvenido de vuelta,</Text>
+            <Text className="text-white text-2xl font-bold mt-1">
+              {user?.user_metadata?.full_name || "Cliente"} 👋
+            </Text>
+          </View>
+          <TouchableOpacity className="bg-gray-900 p-3 rounded-full border border-gray-800">
+            <Ionicons name="notifications-outline" size={20} color="#f3f4f6" />
+          </TouchableOpacity>
         </View>
+
+        {/* Search Bar */}
+        <View className="flex-row items-center bg-gray-900 rounded-2xl px-4 py-3 mb-8 border border-gray-800">
+          <Ionicons name="search" size={20} color="#9ca3af" />
+          <TextInput
+            placeholder="¿Qué servicio necesitás hoy?"
+            placeholderTextColor="#9ca3af"
+            className="flex-1 ml-3 text-white text-base font-medium"
+          />
+        </View>
+
+        {/* Categories */}
+        <View className="mb-8">
+          <View className="flex-row items-center justify-between mb-4">
+            <Text className="text-white text-lg font-bold">Categorías</Text>
+            <TouchableOpacity>
+              <Text className="text-emerald-500 font-medium">Ver todas</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <View className="flex-row flex-wrap justify-between gap-y-4">
+            {categories.map((cat, i) => (
+              <TouchableOpacity
+                key={i}
+                className="w-[31%] items-center bg-gray-900 py-4 px-2 rounded-2xl border border-gray-800 active:bg-gray-800"
+              >
+                <View className="bg-gray-800 p-3 rounded-full mb-2">
+                  <Ionicons name={cat.icon as any} size={24} color="#10b981" />
+                </View>
+                <Text className="text-gray-300 text-xs font-medium text-center">
+                  {cat.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Recent Activity / Banner */}
+        <View className="mb-8">
+          <Text className="text-white text-lg font-bold mb-4">Oferta Especial</Text>
+          <TouchableOpacity className="bg-emerald-500/10 rounded-2xl p-5 border border-emerald-500/20 flex-row items-center justify-between overflow-hidden active:bg-emerald-500/20">
+            <View className="flex-1 pr-4">
+              <Text className="text-emerald-400 font-bold text-lg mb-1">20% de Descuento</Text>
+              <Text className="text-gray-300 text-sm leading-5">En tu primer servicio de mantenimiento de aires acondicionados.</Text>
+            </View>
+            <View className="bg-emerald-500 p-3 rounded-full">
+              <Ionicons name="arrow-forward" size={20} color="#030712" />
+            </View>
+          </TouchableOpacity>
+        </View>
+        
+        {/* Recommended Professionals Mock */}
+        <View className="mb-8">
+          <View className="flex-row items-center justify-between mb-4">
+            <Text className="text-white text-lg font-bold">Profesionales Destacados</Text>
+          </View>
+          <View className="bg-gray-900 rounded-2xl p-4 border border-gray-800 flex-row items-center mb-3">
+             <View className="w-12 h-12 bg-gray-800 rounded-full items-center justify-center mr-4 border border-gray-700">
+               <Ionicons name="person" size={24} color="#9ca3af" />
+             </View>
+             <View className="flex-1">
+               <Text className="text-white font-bold text-base">Juan Pérez</Text>
+               <Text className="text-gray-400 text-sm">Electricista • ⭐ 4.9</Text>
+             </View>
+             <TouchableOpacity className="bg-emerald-500 px-4 py-2 rounded-full">
+               <Text className="text-gray-950 font-bold text-xs">Contactar</Text>
+             </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Safe padding for bottom tab bar */}
+        <View className="h-24" />
       </ScrollView>
     </SafeAreaView>
   );

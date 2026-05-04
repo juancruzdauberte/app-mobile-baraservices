@@ -1,11 +1,21 @@
 import axios from "axios";
+import { supabase } from "./supabase.config";
+import { env } from "./env";
 
-const axiosInstance = axios.create({
-  baseURL: process.env.API_URL,
+export const api = axios.create({
+  baseURL: `${env.API_URL}/v1`,
+  timeout: 15000,
 });
 
-export const setAuthToken = (token: string) => {
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-};
-
-export default axiosInstance;
+api.interceptors.request.use(async (config) => {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (session?.access_token) {
+    config.headers = {
+      ...(config.headers ?? {}),
+      Authorization: `Bearer ${session.access_token}`,
+    } as any;
+  }
+  return config;
+});
