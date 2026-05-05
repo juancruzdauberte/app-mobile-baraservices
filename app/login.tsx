@@ -60,28 +60,11 @@ export default function Login() {
         throw new Error("No se recibieron tokens válidos del servidor");
       }
     } catch (e: any) {
-      console.error("Login Error:", e.response?.data || e.message);
-
-      // Verificar si el email no está confirmado
-      const errorData = e.response?.data || {};
-      const errorMessage = errorData.message || e.message || "";
-      const statusCode = errorData.statusCode || e.response?.status;
-
-      const isEmailNotConfirmed =
-        errorMessage.toLowerCase().includes("confirm") ||
-        errorMessage.toLowerCase().includes("verif") ||
-        statusCode === 401;
-
-      if (isEmailNotConfirmed) {
-        // Redirigir directamente a pantalla de confirmación sin mostrar error
-        router.replace(`/confirm-email?email=${encodeURIComponent(email)}`);
-        return;
-      }
-
+      // Siempre mostrar mensaje genérico sin revelar si el usuario existe o no
       Toast.show({
         type: "error",
-        text1: "Error al iniciar sesión",
-        text2: errorData.message || "Credenciales inválidas",
+        text1: "Credenciales inválidas",
+        text2: "El email o la contraseña son incorrectos",
       });
     } finally {
       setLoading(false);

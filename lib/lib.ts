@@ -63,7 +63,7 @@ export async function sendDocumentation(formData: FormData) {
 }
 
 export async function forgotPassword(email: string) {
-  const { data } = await api.post("/auth/forgot-password", email);
+  const { data } = await api.post("/auth/forgot-password", { email });
   return data;
 }
 
