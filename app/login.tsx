@@ -6,6 +6,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,11 +18,16 @@ import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../config/supabase.config";
 
 export default function Login() {
-  const { session, signOut, signIn } = useAuth();
+  const { session, signOut, signIn, forgotPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Modal de recuperación de contraseña
+  const [showRecoveryModal, setShowRecoveryModal] = useState(false);
+  const [recoveryEmail, setRecoveryEmail] = useState("");
+  const [recoveryLoading, setRecoveryLoading] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -54,14 +61,14 @@ export default function Login() {
       }
     } catch (e: any) {
       console.error("Login Error:", e.response?.data || e.message);
-      
+
       // Verificar si el email no está confirmado
       const errorData = e.response?.data || {};
       const errorMessage = errorData.message || e.message || "";
       const statusCode = errorData.statusCode || e.response?.status;
-      
-      const isEmailNotConfirmed = 
-        errorMessage.toLowerCase().includes("confirm") || 
+
+      const isEmailNotConfirmed =
+        errorMessage.toLowerCase().includes("confirm") ||
         errorMessage.toLowerCase().includes("verif") ||
         statusCode === 401;
 
@@ -78,6 +85,50 @@ export default function Login() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onRecoverPassword = async () => {
+    if (!recoveryEmail) {
+      Toast.show({
+        type: "error",
+        text1: "Campo vacío",
+        text2: "Por favor ingresa tu email",
+      });
+      return;
+    }
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(recoveryEmail)) {
+      Toast.show({
+        type: "error",
+        text1: "Email inválido",
+        text2: "Por favor ingresa un formato de email válido",
+      });
+      return;
+    }
+
+    setRecoveryLoading(true);
+    try {
+      await forgotPassword(recoveryEmail);
+
+      Toast.show({
+        type: "success",
+        text1: "Email enviado",
+        text2: "Revisa tu bandeja de entrada para restablecer tu contraseña",
+      });
+      setShowRecoveryModal(false);
+      setRecoveryEmail("");
+    } catch (e: any) {
+      console.error("Recovery Error:", e.message);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message || "No se pudo enviar el email de recuperación",
+      });
+    } finally {
+      setRecoveryLoading(false);
     }
   };
 
@@ -150,6 +201,16 @@ export default function Login() {
               </Text>
             </Pressable>
 
+            {/* Olvidaste tu contraseña */}
+            <Pressable
+              onPress={() => setShowRecoveryModal(true)}
+              className="mb-4 w-full items-center py-2"
+            >
+              <Text className="text-base text-gray-400">
+                ¿Olvidaste tu contraseña?
+              </Text>
+            </Pressable>
+
             {/* Enlace para registrarse */}
             <Pressable
               onPress={() => router.push("/register")}
@@ -175,6 +236,59 @@ export default function Login() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Modal de recuperación de contraseña */}
+      <Modal
+        visible={showRecoveryModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowRecoveryModal(false)}
+      >
+        <View className="flex-1 items-center justify-center bg-black/60 px-6">
+          <View className="w-full max-w-sm rounded-3xl bg-gray-900 p-6">
+            <View className="mb-6 flex-row items-center justify-between">
+              <Text className="text-xl font-bold text-white">
+                Restablecer Contraseña
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowRecoveryModal(false);
+                  setRecoveryEmail("");
+                }}
+                className="p-2"
+              >
+                <Ionicons name="close" size={24} color="#9ca3af" />
+              </TouchableOpacity>
+            </View>
+
+            <Text className="mb-4 text-base text-gray-400">
+              Ingresa tu email y te enviaremos un enlace para restablecer tu
+              contraseña.
+            </Text>
+
+            <TextInput
+              className="mb-6 w-full rounded-2xl bg-gray-800 px-6 py-4 text-white"
+              placeholder="Tu email"
+              placeholderTextColor="#9ca3af"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={recoveryEmail}
+              onChangeText={setRecoveryEmail}
+            />
+
+            <Pressable
+              onPress={onRecoverPassword}
+              disabled={recoveryLoading}
+              className="w-full rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
+              style={{ opacity: recoveryLoading ? 0.7 : 1 }}
+            >
+              <Text className="text-center text-base font-semibold text-white">
+                {recoveryLoading ? "Enviando..." : "Enviar Enlace"}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

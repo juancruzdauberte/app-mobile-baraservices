@@ -7,13 +7,15 @@ import React, {
 } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../config/supabase.config";
-import { loginUser, registerUser } from "../lib/lib";
+import { loginUser, registerUser, forgotPassword as apiForgotPassword, updatePassword as apiUpdatePassword } from "../lib/lib";
 import { Role } from "../types/types";
 
 type AuthContextType = {
   loading: boolean;
   session: Session | null;
   userData: User | null;
+  updatePassword: (password: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
   signIn: ({
     email,
     password,
@@ -116,11 +118,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return data;
   };
 
-  const resetPassword = async (email: string) => {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "https://baraservices.app/reset-password",
-    });
-    return { data, error };
+  const forgotPassword = async (email: string) => {
+    const data = await apiForgotPassword(email);
+    return data;
+  };
+
+  const updatePassword = async (password: string) => {
+    const data = await apiUpdatePassword(password);
+    return data;
   };
 
   const value = useMemo<AuthContextType>(
@@ -131,6 +136,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut,
       signIn,
       signUp,
+      forgotPassword,
+      updatePassword,
     }),
     [loading, session, userData],
   );

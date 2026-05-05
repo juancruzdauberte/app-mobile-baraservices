@@ -49,3 +49,25 @@ export async function getProfile(token: string): Promise<User> {
   });
   return data;
 }
+
+export async function sendDocumentation(formData: FormData) {
+  const { data } = await api.post("/professionals/documents", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    transformRequest: (data, headers) => {
+      return data;
+    },
+  });
+  return data;
+}
+
+export async function forgotPassword(email: string) {
+  const { data } = await api.post("/auth/forgot-password", email);
+  return data;
+}
+
+export async function updatePassword(password: string) {
+  const { data } = await api.post("/auth/update-password", { password });
+  return data;
+}

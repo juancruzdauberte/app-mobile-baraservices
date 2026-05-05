@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import { router } from "expo-router";
 import { api } from "../config/axios.config";
+import { sendDocumentation } from "../lib/lib";
 
 export default function OnboardingProfesionalScreen() {
   const [dniFront, setDniFront] = useState<string | null>(null);
@@ -70,15 +71,7 @@ export default function OnboardingProfesionalScreen() {
         type: "image/jpeg",
       } as any);
 
-// Subir los 3 documentos
-      const response = await api.post("/professionals/documents", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        transformRequest: (data, headers) => {
-          return data;
-        },
-      });
+      await sendDocumentation(formData);
 
       // Si llega aquí, los documentos se subieron correctamente
       Toast.show({
