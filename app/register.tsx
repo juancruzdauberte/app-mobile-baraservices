@@ -13,7 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
-import { useAuthFlowStore, Role } from "../store/authFlow.store";
+import { Role } from "../types/types";
+import { useAuthFlowStore } from "../store/authFlow.store";
 import { useAuth } from "../providers/AuthProvider";
 import PhoneInput from "react-native-phone-number-input";
 import { useRef } from "react";
@@ -82,14 +83,20 @@ export default function Register() {
       Toast.show({
         type: "success",
         text1: "Registro exitoso",
-        text2: "Se ha creado la cuenta correctamente.",
+        text2: "Revisa tu email para verificar tu cuenta.",
       });
-      setTimeout(() => router.replace("/login"), 2000);
+      // Redirigir a la pantalla de confirmación de email
+      setTimeout(
+        () =>
+          router.replace(`/confirm-email?email=${encodeURIComponent(email)}`),
+        2000,
+      );
     } catch (e: any) {
+      console.error("Register Error:", e.response?.data || e.message);
       Toast.show({
         type: "error",
         text1: "Error al registrar",
-        text2: "No se pudo registrar la cuenta",
+        text2: e.response?.data?.message || "No se pudo registrar la cuenta",
       });
     } finally {
       setLoading(false);
@@ -194,7 +201,6 @@ export default function Register() {
                   defaultCode="AR"
                   layout="first"
                   placeholder="Teléfono"
-                  placeholderTextColor="#9ca3af"
                   value={telefono}
                   onChangeText={(text) => {
                     const digitsOnly = text.replace(/\D/g, "");

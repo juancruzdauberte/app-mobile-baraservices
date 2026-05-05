@@ -7,13 +7,14 @@ import { api } from "../config/axios.config";
 import { ProfesionalStateProfile } from "../types/types";
 
 export default function Index() {
-  const { session, user, loading } = useAuth();
+  const { session, userData, loading } = useAuth();
+  const { user } = useAuthFlowStore();
   const [targetRoute, setTargetRoute] = useState<string | null>(null);
 
   // user tiene: id, email, user_metadata, etc.
   // session tiene: access_token, refresh_token
   console.log("Usuario:", user);
-  console.log("Email:", user?.email);
+  console.log("Email:", userData?.email);
   console.log("Token:", session?.access_token);
   useEffect(() => {
     const resolvePostLogin = async () => {

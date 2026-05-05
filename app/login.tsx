@@ -54,11 +54,27 @@ export default function Login() {
       }
     } catch (e: any) {
       console.error("Login Error:", e.response?.data || e.message);
+      
+      // Verificar si el email no está confirmado
+      const errorData = e.response?.data || {};
+      const errorMessage = errorData.message || e.message || "";
+      const statusCode = errorData.statusCode || e.response?.status;
+      
+      const isEmailNotConfirmed = 
+        errorMessage.toLowerCase().includes("confirm") || 
+        errorMessage.toLowerCase().includes("verif") ||
+        statusCode === 401;
+
+      if (isEmailNotConfirmed) {
+        // Redirigir directamente a pantalla de confirmación sin mostrar error
+        router.replace(`/confirm-email?email=${encodeURIComponent(email)}`);
+        return;
+      }
+
       Toast.show({
         type: "error",
         text1: "Error al iniciar sesión",
-        text2:
-          e.response?.data?.message || e.message || "Credenciales inválidas",
+        text2: errorData.message || "Credenciales inválidas",
       });
     } finally {
       setLoading(false);

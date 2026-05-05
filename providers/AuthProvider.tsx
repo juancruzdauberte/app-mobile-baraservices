@@ -13,7 +13,7 @@ import { Role } from "../types/types";
 type AuthContextType = {
   loading: boolean;
   session: Session | null;
-  user: User | null;
+  userData: User | null;
   signIn: ({
     email,
     password,
@@ -45,8 +45,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-
+  const [userData, setUserData] = useState<User | null>(null);
   useEffect(() => {
     console.log("[AUTH] Initializing...");
     // sesión inicial
@@ -55,15 +54,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         hasSession: !!data.session,
         error,
       });
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
+      setUserData(data.session?.user ?? null);
       setLoading(false);
     });
     // cambios de auth
     const { data: authSub } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
         setSession(newSession);
-        setUser(newSession?.user ?? null);
+        setUserData(newSession?.user ?? null);
       },
     );
 
@@ -75,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     await supabase.auth.signOut();
     setSession(null);
-    setUser(null);
+    setUserData(null);
   };
 
   const signIn = async ({
@@ -118,16 +116,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return data;
   };
 
+  const resetPassword = async (email: string) => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://baraservices.app/reset-password",
+    });
+    return { data, error };
+  };
+
   const value = useMemo<AuthContextType>(
     () => ({
       loading,
       session,
-      user,
+      userData,
       signOut,
       signIn,
       signUp,
     }),
-    [loading, session, user],
+    [loading, session, userData],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
