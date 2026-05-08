@@ -7,13 +7,18 @@ import React, {
 } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../config/supabase.config";
-import { loginUser, registerUser, forgotPassword as apiForgotPassword, updatePassword as apiUpdatePassword } from "../lib/lib";
+import {
+  loginUser,
+  registerUser,
+  forgotPassword as apiForgotPassword,
+  updatePassword as apiUpdatePassword,
+} from "../lib/lib";
 import { Role } from "../types/types";
 
 type AuthContextType = {
   loading: boolean;
   session: Session | null;
-  userData: User | null;
+  user: User | null;
   updatePassword: (password: string) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   signIn: ({
@@ -47,23 +52,19 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
-  const [userData, setUserData] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     console.log("[AUTH] Initializing...");
     // sesión inicial
     supabase.auth.getSession().then(({ data, error }) => {
-      console.log("[AUTH] getSession result:", {
-        hasSession: !!data.session,
-        error,
-      });
-      setUserData(data.session?.user ?? null);
+      setUser(data.session?.user ?? null);
       setLoading(false);
     });
     // cambios de auth
     const { data: authSub } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
         setSession(newSession);
-        setUserData(newSession?.user ?? null);
+        setUser(newSession?.user ?? null);
       },
     );
 
@@ -75,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     await supabase.auth.signOut();
     setSession(null);
-    setUserData(null);
+    setUser(null);
   };
 
   const signIn = async ({
@@ -132,14 +133,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       loading,
       session,
-      userData,
+      user,
       signOut,
       signIn,
       signUp,
       forgotPassword,
       updatePassword,
     }),
-    [loading, session, userData],
+    [loading, session, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

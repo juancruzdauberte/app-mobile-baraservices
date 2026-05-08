@@ -1,5 +1,5 @@
 import { api } from "../config/axios.config";
-import { Role, User } from "../types/types";
+import { Professional, Role, User } from "../types/types";
 
 export async function registerUser({
   email,
@@ -69,5 +69,28 @@ export async function forgotPassword(email: string) {
 
 export async function updatePassword(password: string) {
   const { data } = await api.post("/auth/update-password", { password });
+  return data;
+}
+
+export async function createProfessionalJobs(
+  profesionalId: string,
+  jobs: { categoria_id: string; precio_base_por_hora?: number }[],
+) {
+  const body = {
+    profesional_id: profesionalId,
+    jobs,
+  };
+  console.log("Request body:", JSON.stringify(body));
+  const { data } = await api.post("/professionals/jobs", body);
+  return data;
+}
+
+export async function getCategories() {
+  const { data } = await api.get("/categorys");
+  return data;
+}
+
+export async function getProfessionalProfile(): Promise<Professional | null> {
+  const { data } = await api.get("/professionals/profile");
   return data;
 }

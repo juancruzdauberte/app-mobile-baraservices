@@ -7,14 +7,13 @@ import { api } from "../config/axios.config";
 import { ProfesionalStateProfile } from "../types/types";
 
 export default function Index() {
-  const { session, userData, loading } = useAuth();
-  const { user } = useAuthFlowStore();
+  const { session, user, loading } = useAuth();
   const [targetRoute, setTargetRoute] = useState<string | null>(null);
 
   // user tiene: id, email, user_metadata, etc.
   // session tiene: access_token, refresh_token
   console.log("Usuario:", user);
-  console.log("Email:", userData?.email);
+  console.log("Email:", user?.email);
   console.log("Token:", session?.access_token);
   useEffect(() => {
     const resolvePostLogin = async () => {
@@ -99,6 +98,7 @@ export default function Index() {
 function getRouteByProfesionalEstado(estado?: ProfesionalStateProfile): string {
   if (!estado || estado === "INCOMPLETO") return "/onboarding-profesional";
   if (estado === "PENDIENTE_APROBACION") return "/profesional-validacion";
+  if (estado === "PENDIENTE_CATEGORIAS") return "/completar-perfil-profesional";
   if (estado === "ACTIVO") return "/(tabs)";
   return "/profesional-validacion";
 }
