@@ -13,6 +13,8 @@ import {
   forgotPassword as apiForgotPassword,
   updatePassword as apiUpdatePassword,
 } from "../lib/lib";
+import { router } from "expo-router";
+
 import { Role } from "../types/types";
 
 type AuthContextType = {
@@ -56,7 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log("[AUTH] Initializing...");
     // sesión inicial
-    supabase.auth.getSession().then(({ data, error }) => {
+    supabase.auth.getSession().then(async ({ data, error }) => {
+      setSession(data.session ?? null);
       setUser(data.session?.user ?? null);
       setLoading(false);
     });
@@ -75,6 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    router.replace("/login");
     setSession(null);
     setUser(null);
   };

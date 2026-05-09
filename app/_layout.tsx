@@ -22,6 +22,7 @@ export default function RootLayout() {
           <Stack.Screen name="register" />
           <Stack.Screen name="onboarding-profesional" />
           <Stack.Screen name="profesional-validacion" />
+          <Stack.Screen name="usuario-suspendido" options={{ gestureEnabled: false }} />
           <Stack.Screen name="(tabs)" />
         </Stack>
         <Toast />

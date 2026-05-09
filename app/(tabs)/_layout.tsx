@@ -1,8 +1,25 @@
-import { Tabs } from "expo-router";
+import { useEffect } from "react";
+import { Tabs, useRouter } from "expo-router";
 import { AnimatedTabBar } from "../../components/AnimatedTabBar";
 import { TabBarVisibilityProvider } from "../../components/TabBarVisibilityContext";
+import { useAuth } from "../../providers/AuthProvider";
 
 export default function TabsLayout() {
+  const { isSuspended, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirigir a la página de suspensión si el usuario está suspendido
+    if (!loading && isSuspended) {
+      router.replace("/usuario-suspendido");
+    }
+  }, [isSuspended, loading]);
+
+  // No mostrar tabs si está suspended
+  if (isSuspended) {
+    return null;
+  }
+
   return (
     <TabBarVisibilityProvider>
       <Tabs

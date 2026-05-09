@@ -98,6 +98,7 @@ export default function Index() {
 function getRouteByProfesionalEstado(estado?: ProfesionalStateProfile): string {
   if (!estado || estado === "INCOMPLETO") return "/onboarding-profesional";
   if (estado === "PENDIENTE_APROBACION") return "/profesional-validacion";
+  if (estado === "SUSPENDIDO") return "/usuario-suspendido";
   if (estado === "PENDIENTE_CATEGORIAS") return "/completar-perfil-profesional";
   if (estado === "ACTIVO") return "/(tabs)";
   return "/profesional-validacion";
