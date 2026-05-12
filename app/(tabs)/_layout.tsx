@@ -5,11 +5,12 @@ import { TabBarVisibilityProvider } from "../../components/TabBarVisibilityConte
 import { useAuth } from "../../providers/AuthProvider";
 
 export default function TabsLayout() {
-  const { isSuspended, loading } = useAuth();
+  const { profile, loading } = useAuth();
   const router = useRouter();
 
+  const isSuspended = profile?.estado_perfil === "SUSPENDIDO";
+
   useEffect(() => {
-    // Redirigir a la página de suspensión si el usuario está suspendido
     if (!loading && isSuspended) {
       router.replace("/usuario-suspendido");
     }

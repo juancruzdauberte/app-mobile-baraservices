@@ -6,7 +6,7 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Profile() {
-  const { user, signOut } = useAuth();
+  const { signOut, profile } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -33,29 +33,23 @@ export default function Profile() {
   };
 
   // Obtener datos del usuario desde user_metadata de Supabase
-  const userMetadata = user?.user_metadata as Record<string, any> | undefined;
-  const nombre =
-    userMetadata?.nombre || userMetadata?.full_name?.split(" ")[0] || "";
-  const apellido =
-    userMetadata?.apellido ||
-    userMetadata?.full_name?.split(" ").slice(1).join(" ") ||
-    "";
-  const rol = userMetadata?.rol || "CLIENTE";
+  const nombre = profile?.nombre;
+  const apellido = profile?.apellido || "";
 
   // Obtener iniciales para el avatar
   const getInitials = () => {
     if (nombre && apellido) {
       return `${nombre[0]}${apellido[0]}`.toUpperCase();
     }
-    if (user?.email) {
-      return user.email[0].toUpperCase();
+    if (profile?.email) {
+      return profile.email[0].toUpperCase();
     }
     return "?";
   };
 
   // Nombre completo del usuario
   const fullName =
-    nombre && apellido ? `${nombre} ${apellido}` : user?.email || "Usuario";
+    nombre && apellido ? `${nombre} ${apellido}` : profile?.email || "Usuario";
 
   const menuItems = [
     {
@@ -104,7 +98,7 @@ export default function Profile() {
           <View className="flex-row items-center">
             {/* Avatar */}
             <View className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full items-center justify-center mr-4 shadow-lg">
-              {user.user_metadata?.avatar ? (
+              {profile?.avatar ? (
                 <Ionicons name="person" size={36} color="#fff" />
               ) : (
                 <Text className="text-2xl font-bold text-white">
@@ -119,50 +113,10 @@ export default function Profile() {
                 {fullName}
               </Text>
               <Text className="text-gray-400 text-sm mb-2">
-                {user?.email || "Sin email"}
-              </Text>
-
-              {/* Role Badge */}
-              <View
-                className={`inline-flex px-3 py-1 rounded-full ${rol === "PROFESIONAL" ? "bg-purple-500/20" : "bg-emerald-500/20"}`}
-              >
-                <Text
-                  className={`text-xs font-semibold ${rol === "PROFESIONAL" ? "text-purple-400" : "text-emerald-400"}`}
-                >
-                  {rol === "PROFESIONAL" ? "Profesional" : "Cliente"}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* User ID */}
-        <View className="bg-gray-900 rounded-2xl p-4 mb-6 border border-gray-800 flex-row items-center justify-between">
-          <View className="flex-row items-center">
-            <View className="bg-gray-800 p-2 rounded-lg mr-3">
-              <Ionicons name="key-outline" size={18} color="#6b7280" />
-            </View>
-            <View>
-              <Text className="text-gray-400 text-xs">ID de Usuario</Text>
-              <Text
-                className="text-white text-sm font-medium mt-0.5"
-                numberOfLines={1}
-              >
-                {user?.id || "Sin ID"}
+                {profile?.email || "Sin email"}
               </Text>
             </View>
           </View>
-          <Pressable
-            onPress={() => {
-              if (user?.id) {
-                // Copiar al portapapeles (funcionalidad futura)
-                Alert.alert("Copiado", "ID copiado al portapapeles");
-              }
-            }}
-            className="p-2"
-          >
-            <Ionicons name="copy-outline" size={20} color="#6b7280" />
-          </Pressable>
         </View>
 
         {/* Menu Items */}
@@ -243,7 +197,7 @@ export default function Profile() {
         <View className="items-center pb-8">
           <Text className="text-gray-500 text-xs">BaraServices v1.0.0</Text>
           <Text className="text-gray-600 text-xs mt-1">
-            © 2024 Todos los derechos reservados
+            © 2026 Todos los derechos reservados
           </Text>
         </View>
       </ScrollView>

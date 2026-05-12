@@ -1,12 +1,12 @@
 // src/store/authFlow.store.ts
 import { create } from "zustand";
-import { Role, User } from "../types/types";
+import { Role, UserProfile } from "../types/types";
 type AuthFlowState = {
   pendingRole: Role | null;
   setPendingRole: (role: Role | null) => void;
   clearPendingRole: () => void;
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: UserProfile | null;
+  setUser: (user: UserProfile | null) => void;
 };
 export const useAuthFlowStore = create<AuthFlowState>((set) => ({
   pendingRole: null,

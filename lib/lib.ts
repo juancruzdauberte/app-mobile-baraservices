@@ -1,5 +1,5 @@
 import { api } from "../config/axios.config";
-import { Professional, Role, User } from "../types/types";
+import { Professional, Role, UserProfile } from "../types/types";
 
 export async function registerUser({
   email,
@@ -41,12 +41,8 @@ export async function loginUser({
   return data;
 }
 
-export async function getProfile(token: string): Promise<User> {
-  const { data } = await api.get("/auth/profile", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getProfile(): Promise<UserProfile> {
+  const { data } = await api.get("/auth/profile");
   return data;
 }
 

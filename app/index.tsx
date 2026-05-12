@@ -7,14 +7,9 @@ import { api } from "../config/axios.config";
 import { ProfesionalStateProfile } from "../types/types";
 
 export default function Index() {
-  const { session, user, loading } = useAuth();
+  const { session, profile, loading, signOut } = useAuth();
   const [targetRoute, setTargetRoute] = useState<string | null>(null);
-
-  // user tiene: id, email, user_metadata, etc.
-  // session tiene: access_token, refresh_token
-  console.log("Usuario:", user);
-  console.log("Email:", user?.email);
-  console.log("Token:", session?.access_token);
+  console.log(profile);
   useEffect(() => {
     const resolvePostLogin = async () => {
       if (loading) return;
@@ -27,62 +22,76 @@ export default function Index() {
       const { pendingRole, clearPendingRole } = useAuthFlowStore.getState();
 
       try {
+        // Si recién se registró o tenemos un rol pendiente en memoria, le damos prioridad
         if (pendingRole === "CLIENTE") {
           setTargetRoute("/(tabs)");
           return;
         }
 
         if (pendingRole === "PROFESIONAL") {
-          const perfilResp = await fetchAuthed("/professionals/profile").catch(
-            () => null,
-          );
-          setTargetRoute(
-            getRouteByProfesionalEstado(perfilResp?.estado_perfil),
-          );
+          setTargetRoute(getRouteByProfesionalEstado(profile?.estado_perfil));
           return;
         }
 
-        // Sesión persistida sin pendingRole: inferimos estado desde backend
-        const [usuarioResp, profesionalResp] = await Promise.allSettled([
-          fetchAuthed("/users/profile"),
-          fetchAuthed("/professionals/profile"),
-        ]);
+        // Si NO hay pending role, dependemos de que exista el profile en la DB.
+        if (!profile) {
+          // Solución a bug de concurrencia: 
+          // Si Supabase tiró onAuthStateChange pero todavía no terminamos de fetchear el perfil global, esperamos.
+          // Solo caemos en el fallback si el endpoint REALMENTE falló o vino nulo.
+          console.warn("[Index] Sesión detectada pero sin profile ni pendingRole. Intentando obtener de fallback...");
+          const [usuarioResp, profesionalResp] = await Promise.allSettled([
+            fetchAuthed("/users/profile"),
+            fetchAuthed("/professionals/profile").catch(() => null),
+          ]);
+          
+          let fetchedRol = null;
+          let fetchedEstado = null;
 
-        if (
-          profesionalResp.status === "fulfilled" &&
-          profesionalResp.value?.estado_perfil
-        ) {
-          setTargetRoute(
-            getRouteByProfesionalEstado(profesionalResp.value.estado_perfil),
-          );
+          if (usuarioResp.status === "fulfilled" && usuarioResp.value) {
+             fetchedRol = usuarioResp.value.rol;
+          }
+          if (profesionalResp.status === "fulfilled" && profesionalResp.value) {
+             fetchedEstado = profesionalResp.value.estado_perfil;
+          }
+
+          if (fetchedRol === "CLIENTE") {
+            setTargetRoute("/(tabs)");
+            return;
+          }
+          if (fetchedRol === "PROFESIONAL") {
+            setTargetRoute(getRouteByProfesionalEstado(fetchedEstado));
+            return;
+          }
+
+          console.warn("[Index] Fallback falló. Cerrando sesión...");
+          await signOut();
+          setTargetRoute("/login");
           return;
         }
 
-        if (
-          usuarioResp.status === "fulfilled" &&
-          usuarioResp.value?.rol === "CLIENTE"
-        ) {
+        if (profile.rol === "CLIENTE") {
           setTargetRoute("/(tabs)");
           return;
         }
 
+        if (profile.rol === "PROFESIONAL") {
+          setTargetRoute(getRouteByProfesionalEstado(profile.estado_perfil));
+          return;
+        }
+
         // fallback seguro
+        console.warn("[Index] Todos los flujos fallaron. Enviando a login...");
         setTargetRoute("/login");
       } catch (error) {
         console.error("[Index] Error en post-login:", error);
-        const { supabase } = await import("../config/supabase.config");
-        await supabase.auth.signOut();
         setTargetRoute("/login");
       } finally {
         clearPendingRole();
       }
     };
 
-    if (!loading && !session) {
-      setTargetRoute("/login");
-    }
     resolvePostLogin();
-  }, [session, loading]);
+  }, [session, profile, loading]);
 
   if (targetRoute) {
     return <Redirect href={targetRoute as any} />;

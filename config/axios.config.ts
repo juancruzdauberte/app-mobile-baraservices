@@ -1,5 +1,4 @@
 import axios from "axios";
-import { supabase } from "./supabase.config";
 import { env } from "./env";
 
 export const api = axios.create({
@@ -7,14 +6,14 @@ export const api = axios.create({
   timeout: 15000,
 });
 
-api.interceptors.request.use(async (config) => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  
-  if (session?.access_token) {
-    config.headers.set("Authorization", `Bearer ${session.access_token}`);
+// Removemos el interceptor async que usa supabase.auth.getSession() 
+// porque puede causar deadlocks en React Native durante el login.
+// En su lugar, seteamos el token directamente desde el AuthProvider.
+
+export const setGlobalAuthToken = (token: string | null) => {
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common["Authorization"];
   }
-  
-  return config;
-});
+};

@@ -7,20 +7,23 @@ import React, {
 } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../config/supabase.config";
+import { setGlobalAuthToken } from "../config/axios.config";
 import {
   loginUser,
   registerUser,
   forgotPassword as apiForgotPassword,
   updatePassword as apiUpdatePassword,
+  getProfile,
 } from "../lib/lib";
 import { router } from "expo-router";
 
-import { Role } from "../types/types";
+import { Role, UserProfile } from "../types/types";
 
 type AuthContextType = {
   loading: boolean;
   session: Session | null;
   user: User | null;
+  profile: UserProfile | null;
   updatePassword: (password: string) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   signIn: ({
@@ -55,19 +58,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+
   useEffect(() => {
     console.log("[AUTH] Initializing...");
-    // sesión inicial
+
+    const fetchProfile = async (currentSession: Session | null) => {
+      if (currentSession) {
+        try {
+          const profileData = await getProfile();
+          console.log("[AUTH] profileData fetched:", profileData);
+          setProfile(profileData || null);
+        } catch (error) {
+          console.log("[AUTH] Error fetching profile:", error);
+          setProfile(null);
+        }
+      } else {
+        setProfile(null);
+      }
+    };
+
     supabase.auth.getSession().then(async ({ data, error }) => {
       setSession(data.session ?? null);
       setUser(data.session?.user ?? null);
+      setGlobalAuthToken(data.session?.access_token ?? null);
+      await fetchProfile(data.session ?? null);
       setLoading(false);
     });
     // cambios de auth
     const { data: authSub } = supabase.auth.onAuthStateChange(
-      (_event, newSession) => {
+      async (event, newSession) => {
+        console.log("[AUTH] onAuthStateChange event:", event);
+        setGlobalAuthToken(newSession?.access_token ?? null);
+        
+        if (event === "SIGNED_OUT") {
+           setSession(null);
+           setUser(null);
+           setProfile(null);
+           setLoading(false);
+           return;
+        }
+
+        setLoading(true);
         setSession(newSession);
         setUser(newSession?.user ?? null);
+        await fetchProfile(newSession);
+        setLoading(false);
       },
     );
 
@@ -81,6 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace("/login");
     setSession(null);
     setUser(null);
+    setProfile(null);
   };
 
   const signIn = async ({
@@ -138,13 +175,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       session,
       user,
+      profile,
       signOut,
       signIn,
       signUp,
       forgotPassword,
       updatePassword,
     }),
-    [loading, session, user],
+    [loading, session, user, profile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
