@@ -13,18 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
-import {
-  createProfessionalJobs,
-  getCategories,
-  getProfessionalProfile,
-} from "../lib/lib";
+import { createProfessionalJobs, getCategories, getProfile } from "../lib/lib";
 import { useAuth } from "../providers/AuthProvider";
-
-interface Category {
-  id: string;
-  nombre: string;
-  descripcion?: string;
-}
+import { useCategoriesStore } from "../store/categorys.store";
 
 interface JobItem {
   categoria_id: string;
@@ -32,12 +23,12 @@ interface JobItem {
 }
 
 export default function CompletarPerfilProfesionalScreen() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { categories, setCategories } = useCategoriesStore();
   const [selectedJobs, setSelectedJobs] = useState<JobItem[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
-  console.log(user.user_metadata);
+  console.log(user?.user_metadata);
   useEffect(() => {
     loadInitialData();
   }, []);
@@ -45,7 +36,7 @@ export default function CompletarPerfilProfesionalScreen() {
   const loadInitialData = async () => {
     try {
       // Cargar perfil del profesional
-      const profileData = await getProfessionalProfile();
+      const profileData = await getProfile();
       if (!profileData) {
         Toast.show({
           type: "error",
@@ -115,7 +106,7 @@ export default function CompletarPerfilProfesionalScreen() {
       return;
     }
 
-    if (!user.id) {
+    if (!user?.id) {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -207,7 +198,7 @@ export default function CompletarPerfilProfesionalScreen() {
 
           {/* Categories List */}
           <View className="gap-4">
-            {categories.length === 0 ? (
+            {categories?.length === 0 ? (
               <View className="items-center rounded-2xl bg-gray-900 p-8">
                 <Ionicons
                   name="folder-open-outline"
@@ -222,47 +213,45 @@ export default function CompletarPerfilProfesionalScreen() {
                 </Text>
               </View>
             ) : (
-              categories.map((category) => (
+              categories?.map((cat) => (
                 <View
-                  key={category.id}
+                  key={cat.id}
                   className={`rounded-2xl border p-4 ${
-                    isJobSelected(category.id)
+                    isJobSelected(cat.id)
                       ? "border-emerald-500/50 bg-emerald-500/10"
                       : "border-gray-800 bg-gray-900"
                   }`}
                 >
                   {/* Category Header */}
                   <Pressable
-                    onPress={() => toggleJob(category.id)}
+                    onPress={() => toggleJob(cat.id)}
                     className="flex-row items-center justify-between"
                   >
                     <View className="flex-row items-center gap-3">
                       <View
                         className={`h-10 w-10 items-center justify-center rounded-xl ${
-                          isJobSelected(category.id)
+                          isJobSelected(cat.id)
                             ? "bg-emerald-500/20"
                             : "bg-gray-800"
                         }`}
                       >
                         <Ionicons
                           name={
-                            isJobSelected(category.id)
+                            isJobSelected(cat.id)
                               ? "checkmark-circle"
                               : "ellipse-outline"
                           }
                           size={24}
-                          color={
-                            isJobSelected(category.id) ? "#10b981" : "#6b7280"
-                          }
+                          color={isJobSelected(cat.id) ? "#10b981" : "#6b7280"}
                         />
                       </View>
                       <View className="flex-1">
                         <Text className="text-base font-medium text-white">
-                          {category.nombre}
+                          {cat.nombre}
                         </Text>
-                        {category.descripcion && (
+                        {cat.descripcion && (
                           <Text className="mt-1 text-xs text-gray-400">
-                            {category.descripcion}
+                            {cat.descripcion}
                           </Text>
                         )}
                       </View>
@@ -270,7 +259,7 @@ export default function CompletarPerfilProfesionalScreen() {
                   </Pressable>
 
                   {/* Price Input (shown when selected) */}
-                  {isJobSelected(category.id) && (
+                  {isJobSelected(cat.id) && (
                     <View className="mt-4 flex-row items-center gap-3 border-t border-gray-800 pt-4">
                       <Text className="text-sm text-gray-400">
                         Precio por hora:
@@ -278,10 +267,8 @@ export default function CompletarPerfilProfesionalScreen() {
                       <View className="flex-1 flex-row items-center rounded-xl border border-gray-700 bg-gray-800 px-3">
                         <Text className="text-emerald-500">$</Text>
                         <TextInput
-                          value={getJobPrice(category.id)}
-                          onChangeText={(text) =>
-                            updatePrice(category.id, text)
-                          }
+                          value={getJobPrice(cat.id)}
+                          onChangeText={(text) => updatePrice(cat.id, text)}
                           keyboardType="numeric"
                           placeholder="0"
                           placeholderTextColor="#6b7280"

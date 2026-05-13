@@ -1,5 +1,11 @@
 export type Role = "CLIENTE" | "PROFESIONAL";
 
+export type Category = {
+  descripcion: string;
+  nombre: string;
+  id: string;
+};
+export type Categories = Category[];
 export type Professional = {
   id: string;
   nombre: string;

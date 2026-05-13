@@ -7,7 +7,7 @@ import { api } from "../config/axios.config";
 import { ProfesionalStateProfile } from "../types/types";
 
 export default function Index() {
-  const { session, profile, loading, signOut } = useAuth();
+  const { session, profile, loading } = useAuth();
   const [targetRoute, setTargetRoute] = useState<string | null>(null);
   console.log(profile);
   useEffect(() => {
@@ -34,47 +34,50 @@ export default function Index() {
         }
 
         // Si NO hay pending role, dependemos de que exista el profile en la DB.
-        if (!profile) {
-          // Solución a bug de concurrencia: 
-          // Si Supabase tiró onAuthStateChange pero todavía no terminamos de fetchear el perfil global, esperamos.
-          // Solo caemos en el fallback si el endpoint REALMENTE falló o vino nulo.
-          console.warn("[Index] Sesión detectada pero sin profile ni pendingRole. Intentando obtener de fallback...");
-          const [usuarioResp, profesionalResp] = await Promise.allSettled([
-            fetchAuthed("/users/profile"),
-            fetchAuthed("/professionals/profile").catch(() => null),
-          ]);
-          
-          let fetchedRol = null;
-          let fetchedEstado = null;
+        // if (!profile) {
+        //   // Solución a bug de concurrencia:
+        //   // Si Supabase tiró onAuthStateChange pero todavía no terminamos de fetchear el perfil global, esperamos.
+        //   // Solo caemos en el fallback si el endpoint REALMENTE falló o vino nulo.
+        //   console.warn(
+        //     "[Index] Sesión detectada pero sin profile ni pendingRole. Intentando obtener de fallback...",
+        //   );
+        //   const usuarioResp = await fetchAuthed("/auth/profile");
 
-          if (usuarioResp.status === "fulfilled" && usuarioResp.value) {
-             fetchedRol = usuarioResp.value.rol;
-          }
-          if (profesionalResp.status === "fulfilled" && profesionalResp.value) {
-             fetchedEstado = profesionalResp.value.estado_perfil;
-          }
+        //   let fetchedRol = null;
+        //   let fetchedEstado = null;
 
-          if (fetchedRol === "CLIENTE") {
-            setTargetRoute("/(tabs)");
-            return;
-          }
-          if (fetchedRol === "PROFESIONAL") {
-            setTargetRoute(getRouteByProfesionalEstado(fetchedEstado));
-            return;
-          }
+        //   if (usuarioResp.status === "fulfilled" && usuarioResp.value) {
+        //     fetchedRol = usuarioResp.value.rol;
+        //     fetchedEstado = usuarioResp.value.estado_perfil;
+        //   }
 
-          console.warn("[Index] Fallback falló. Cerrando sesión...");
-          await signOut();
-          setTargetRoute("/login");
-          return;
-        }
+        //   if (fetchedRol === "CLIENTE") {
+        //     setTargetRoute("/(tabs)");
+        //     return;
+        //   }
+        //   if (fetchedRol === "PROFESIONAL") {
+        //     setTargetRoute(getRouteByProfesionalEstado(fetchedEstado));
+        //     return;
+        //   }
 
-        if (profile.rol === "CLIENTE") {
+        //   console.warn("[Index] Fallback falló. Cerrando sesión...");
+        //   await signOut();
+        //   setTargetRoute("/login");
+        //   return;
+        // }
+
+        if (
+          profile?.rol === "CLIENTE" ||
+          (profile?.rol === undefined && !profile?.estado_perfil)
+        ) {
           setTargetRoute("/(tabs)");
           return;
         }
 
-        if (profile.rol === "PROFESIONAL") {
+        if (
+          profile?.rol === "PROFESIONAL" ||
+          profile?.estado_perfil !== undefined
+        ) {
           setTargetRoute(getRouteByProfesionalEstado(profile.estado_perfil));
           return;
         }

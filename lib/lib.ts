@@ -1,5 +1,5 @@
 import { api } from "../config/axios.config";
-import { Professional, Role, UserProfile } from "../types/types";
+import { Categories, Professional, Role, UserProfile } from "../types/types";
 
 export async function registerUser({
   email,
@@ -81,7 +81,7 @@ export async function createProfessionalJobs(
   return data;
 }
 
-export async function getCategories() {
+export async function getCategories(): Promise<Categories | null> {
   const { data } = await api.get("/categorys");
   return data;
 }

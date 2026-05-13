@@ -1,6 +1,6 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
-import { Pressable, View, type ViewStyle } from "react-native";
+import { Pressable, View, Image, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   FadeIn,
@@ -18,6 +18,7 @@ import {
   UserIcon,
 } from "../components/Icons";
 import { useTabBarVisibility } from "./TabBarVisibilityContext";
+import { useAuth } from "../providers/AuthProvider";
 
 const PRIMARY_COLOR = "#130057";
 const SECONDARY_COLOR = "#FFFFFF";
@@ -29,6 +30,7 @@ export function AnimatedTabBar({
 }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { isVisible, setVisible } = useTabBarVisibility();
+  const { profile } = useAuth();
   const visibilityProgress = useSharedValue(1);
 
   useEffect(() => {
@@ -57,15 +59,16 @@ export function AnimatedTabBar({
   const getIconByRouteName = (routeName: string, color: string) => {
     switch (routeName) {
       case "index":
-        return <HomeIcon color={color} size={18} />;
-      case "expenses":
-        return <ExpensesIcon color={color} size={18} />;
-      case "payments-history":
-        return <RecordIcon color={color} size={18} />;
+        return <HomeIcon color={color} size={22} />;
       case "profile":
-        return <UserIcon color={color} size={18} />;
-      default:
-        return <HomeIcon color={color} size={18} />;
+        return profile?.avatar ? (
+          <Image
+            source={{ uri: profile.avatar }}
+            style={{ width: 30, height: 30, borderRadius: 22 }}
+          />
+        ) : (
+          <UserIcon color={color} size={18} />
+        );
     }
   };
 
