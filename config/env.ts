@@ -2,6 +2,8 @@ const EXPO_PUBLIC_SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const EXPO_PUBLIC_SUPABASE_ANON_KEY =
   process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
+const EXPO_PUBLIC_GOOGLE_PLACES_API_KEY =
+  process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY;
 
 function requireEnv(name: string, value: string | undefined): string {
   if (!value || value.trim().length === 0) {
@@ -23,4 +25,8 @@ export const env = {
     EXPO_PUBLIC_SUPABASE_ANON_KEY,
   ),
   API_URL: requireEnv('EXPO_PUBLIC_API_URL', EXPO_PUBLIC_API_URL),
+  GOOGLE_PLACES_API_KEY: requireEnv(
+    'EXPO_PUBLIC_GOOGLE_PLACES_API_KEY',
+    EXPO_PUBLIC_GOOGLE_PLACES_API_KEY,
+  ),
 } as const;

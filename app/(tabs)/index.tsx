@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -14,10 +14,29 @@ import { useCategoriesStore } from "../../store/categorys.store";
 import { getCategories } from "../../lib/lib";
 import { Category } from "../../types/types";
 
+const CATEGORY_ICONS: Record<string, string> = {
+  albañilería: "hammer-outline",
+  cerrajería: "key-outline",
+  jardinería: "leaf-outline",
+  electricidad: "flash-outline",
+  plomería: "water-outline",
+  gasista: "flame-outline",
+  pintura: "brush-outline",
+  "fletes y mudanza": "cube-outline",
+  climatización: "snow-outline",
+};
+
+function getCategoryIcon(nombre: string): string {
+  const key = nombre.toLowerCase().trim();
+  return CATEGORY_ICONS[key] ?? "construct-outline";
+}
+import CreateJobRequestModal from "../../components/CreateJobRequestModal";
+
 export default function Home() {
   const scrollProps = useGlobalTabBarScroll();
   const { profile } = useAuth();
   const { categories, setCategories } = useCategoriesStore();
+  const [showModal, setShowModal] = useState(false);
 
   const fetchCategories = async () => {
     const categories = await getCategories();
@@ -71,7 +90,7 @@ export default function Home() {
                 className="w-[31%] items-center bg-gray-900 py-4 px-2 rounded-2xl border border-gray-800 active:bg-gray-800"
               >
                 <View className="bg-gray-800 p-3 rounded-full mb-2">
-                  {/* <Ionicons name={cat.icon as any} size={24} color="#10b981" /> */}
+                  <Ionicons name={getCategoryIcon(cat.nombre) as any} size={24} color="#10b981" />
                 </View>
                 <Text className="text-gray-300 text-xs font-medium text-center">
                   {cat.nombre}
@@ -127,6 +146,19 @@ export default function Home() {
         {/* Safe padding for bottom tab bar */}
         <View className="h-24" />
       </ScrollView>
+
+      {/* FAB — Floating Action Button */}
+      <TouchableOpacity
+        onPress={() => setShowModal(true)}
+        className="absolute bottom-28 right-5 bg-emerald-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
+      >
+        <Ionicons name="add" size={28} color="#030712" />
+      </TouchableOpacity>
+
+      <CreateJobRequestModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </SafeAreaView>
   );
 }

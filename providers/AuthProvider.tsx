@@ -80,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     supabase.auth.getSession().then(async ({ data, error }) => {
       setSession(data.session ?? null);
+      console.log(data.session?.access_token);
       setUser(data.session?.user ?? null);
       setGlobalAuthToken(data.session?.access_token ?? null);
       await fetchProfile(data.session ?? null);
@@ -90,13 +91,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async (event, newSession) => {
         console.log("[AUTH] onAuthStateChange event:", event);
         setGlobalAuthToken(newSession?.access_token ?? null);
-        
+
         if (event === "SIGNED_OUT") {
-           setSession(null);
-           setUser(null);
-           setProfile(null);
-           setLoading(false);
-           return;
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+          return;
         }
 
         setLoading(true);

@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, ScrollView } from "react-native";
+import { View, Text, Pressable, Alert, ScrollView, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../providers/AuthProvider";
 import { Ionicons } from "@expo/vector-icons";
@@ -99,7 +99,10 @@ export default function Profile() {
             {/* Avatar */}
             <View className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full items-center justify-center mr-4 shadow-lg">
               {profile?.avatar ? (
-                <Ionicons name="person" size={36} color="#fff" />
+                <Image
+                  source={{ uri: profile.avatar }}
+                  className="w-20 h-20 rounded-full"
+                />
               ) : (
                 <Text className="text-2xl font-bold text-white">
                   {getInitials()}

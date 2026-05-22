@@ -60,6 +60,8 @@ export function AnimatedTabBar({
     switch (routeName) {
       case "index":
         return <HomeIcon color={color} size={22} />;
+      case "my-jobs-requests":
+        return <RecordIcon color={color} size={22} />;
       case "profile":
         return profile?.avatar ? (
           <Image
