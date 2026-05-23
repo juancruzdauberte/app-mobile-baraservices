@@ -133,7 +133,7 @@ export default function CompletarPerfilProfesionalScreen() {
         text2: "Tus servicios han sido guardados correctamente.",
       });
 
-      router.replace("/(tabs)/profile");
+      router.replace("/(profesional)" as any);
     } catch (error: any) {
       console.error("Error al guardar trabajos:", error?.response?.data);
       Toast.show({

@@ -1,16 +1,33 @@
 import { api } from "../config/axios.config";
 import {
+  ApiPaginatedResponse,
   ApiResponse,
   Categories,
+  Complaint,
+  CreateComplaintPayload,
   CreateJobRequestPayload,
+  CreateProposalPayload,
+  CreateReviewPayload,
   JobRequest,
+  JobRequestFilters,
   LoginResponse,
   Professional,
   ProfessionalJob,
+  Proposal,
+  PublicClient,
+  PublicProfessional,
   RegisterResponse,
+  Review,
   Role,
+  UpdateProfessionalPayload,
+  UpdateWorkOrderPricePayload,
   UserProfile,
+  WorkOrder,
 } from "../types/types";
+
+// ---------------------------------------------------------------------------
+// Auth
+// ---------------------------------------------------------------------------
 
 type RegisterPayload = {
   email: string;
@@ -48,6 +65,61 @@ export async function getProfile(): Promise<UserProfile> {
   return data;
 }
 
+export async function forgotPassword(email: string): Promise<void> {
+  await api.post("/auth/forgot-password", { email });
+}
+
+export async function updatePassword(password: string): Promise<void> {
+  await api.post("/auth/update-password", { password });
+}
+
+// ---------------------------------------------------------------------------
+// Categories
+// ---------------------------------------------------------------------------
+
+export async function getCategories(): Promise<Categories> {
+  const { data } = await api.get<ApiResponse<Categories>>("/categorys");
+  return data.data;
+}
+
+// ---------------------------------------------------------------------------
+// Professionals
+// ---------------------------------------------------------------------------
+
+export async function getProfessionalProfile(): Promise<Professional> {
+  const { data } = await api.get<ApiResponse<Professional>>(
+    "/professionals/profile",
+  );
+  return data.data;
+}
+
+/** Perfil público de un profesional por su ID */
+export async function getProfessionalById(id: string): Promise<PublicProfessional> {
+  const { data } = await api.get<ApiResponse<PublicProfessional>>(
+    `/professionals/${id}`,
+  );
+  return data.data;
+}
+
+/** Perfil público de un cliente por su ID */
+export async function getClientById(id: string): Promise<PublicClient> {
+  const { data } = await api.get<ApiResponse<PublicClient>>(
+    `/clientes/${id}`,
+  );
+  return data.data;
+}
+
+export async function updateProfessional(
+  id: string,
+  payload: UpdateProfessionalPayload,
+): Promise<Professional> {
+  const { data } = await api.patch<ApiResponse<Professional>>(
+    `/professionals/${id}`,
+    payload,
+  );
+  return data.data;
+}
+
 export async function sendDocumentation(
   formData: FormData,
 ): Promise<Professional> {
@@ -56,18 +128,10 @@ export async function sendDocumentation(
     formData,
     {
       headers: { "Content-Type": "multipart/form-data" },
-      transformRequest: (data) => data,
+      transformRequest: (d) => d,
     },
   );
   return data.data;
-}
-
-export async function forgotPassword(email: string): Promise<void> {
-  await api.post("/auth/forgot-password", { email });
-}
-
-export async function updatePassword(password: string): Promise<void> {
-  await api.post("/auth/update-password", { password });
 }
 
 export async function createProfessionalJobs(
@@ -81,34 +145,187 @@ export async function createProfessionalJobs(
   return data.data;
 }
 
-export async function getCategories(): Promise<Categories> {
-  const { data } = await api.get<ApiResponse<Categories>>("/categorys");
-  return data.data;
-}
-
-export async function getProfessionalProfile(): Promise<Professional> {
-  const { data } = await api.get<ApiResponse<Professional>>(
-    "/professionals/profile",
-  );
-  return data.data;
-}
+// ---------------------------------------------------------------------------
+// Job Requests (Solicitudes)
+// ---------------------------------------------------------------------------
 
 export async function createJobRequest(
   payload: CreateJobRequestPayload,
 ): Promise<JobRequest> {
   const { data } = await api.post<ApiResponse<JobRequest>>(
-    "/job-requests",
+    "/jobs-requests",
     payload,
   );
   return data.data;
 }
 
-export async function getMyJobRequests(params?: {
+export async function getMyJobRequests(
+  filters?: JobRequestFilters,
+): Promise<{ data: JobRequest[]; meta: import("../types/types").ApiMeta }> {
+  const { data } = await api.get<ApiPaginatedResponse<JobRequest>>(
+    "/jobs-requests",
+    { params: filters },
+  );
+  return { data: data.data, meta: data.meta };
+}
+
+export async function getJobRequestById(id: string): Promise<JobRequest> {
+  const { data } = await api.get<ApiResponse<JobRequest>>(
+    `/jobs-requests/${id}`,
+  );
+  return data.data;
+}
+
+export async function cancelJobRequest(id: string): Promise<JobRequest> {
+  const { data } = await api.patch<ApiResponse<JobRequest>>(
+    `/jobs-requests/${id}/cancel`,
+  );
+  return data.data;
+}
+
+// ---------------------------------------------------------------------------
+// Proposals (Propuestas)
+// ---------------------------------------------------------------------------
+
+/** CLIENTE — propuestas recibidas para una solicitud */
+export async function getProposalsByJobRequest(
+  reqId: string,
+): Promise<Proposal[]> {
+  const { data } = await api.get<ApiResponse<Proposal[]>>(
+    `/proposals/jobs-requests/${reqId}`,
+  );
+  return data.data;
+}
+
+/** CLIENTE — aceptar propuesta (crea WorkOrder automáticamente) */
+export async function acceptProposal(id: string): Promise<WorkOrder> {
+  const { data } = await api.patch<ApiResponse<WorkOrder>>(
+    `/proposals/${id}/accept`,
+  );
+  return data.data;
+}
+
+/** CLIENTE — rechazar propuesta */
+export async function rejectProposal(id: string): Promise<Proposal> {
+  const { data } = await api.patch<ApiResponse<Proposal>>(
+    `/proposals/${id}/reject`,
+  );
+  return data.data;
+}
+
+/** PROFESIONAL — enviar propuesta para una solicitud */
+export async function createProposal(
+  reqId: string,
+  payload: CreateProposalPayload,
+): Promise<Proposal> {
+  const { data } = await api.post<ApiResponse<Proposal>>(
+    `/proposals/jobs-requests/${reqId}`,
+    payload,
+  );
+  return data.data;
+}
+
+/** PROFESIONAL — mis propuestas enviadas */
+export async function getMyProposals(): Promise<Proposal[]> {
+  const { data } = await api.get<ApiResponse<Proposal[]>>(
+    "/proposals/my-proposals",
+  );
+  return data.data;
+}
+
+/** PROFESIONAL — retirar propuesta (solo PENDIENTE) */
+export async function deleteProposal(id: string): Promise<void> {
+  await api.delete(`/proposals/${id}`);
+}
+
+// ---------------------------------------------------------------------------
+// Work Orders (Órdenes de Trabajo)
+// ---------------------------------------------------------------------------
+
+export async function getMyWorkOrders(): Promise<WorkOrder[]> {
+  const { data } = await api.get("/work-orders");
+  // Manejar respuesta simple, paginada, o doble-anidada
+  const result = data?.data;
+  if (Array.isArray(result)) return result;
+  if (Array.isArray(result?.data)) return result.data;
+  return [];
+}
+
+export async function getWorkOrderById(id: string): Promise<WorkOrder> {
+  const { data } = await api.get<ApiResponse<WorkOrder>>(`/work-orders/${id}`);
+  return data.data;
+}
+
+/** CLIENTE — disputar una orden EN_PROGRESO */
+export async function disputeWorkOrder(id: string): Promise<WorkOrder> {
+  const { data } = await api.patch<ApiResponse<WorkOrder>>(
+    `/work-orders/${id}/dispute`,
+  );
+  return data.data;
+}
+
+/** PROFESIONAL — iniciar una orden PROGRAMADA */
+export async function startWorkOrder(id: string): Promise<WorkOrder> {
+  const { data } = await api.patch<ApiResponse<WorkOrder>>(
+    `/work-orders/${id}/start`,
+  );
+  return data.data;
+}
+
+/** PROFESIONAL — completar una orden EN_PROGRESO */
+export async function completeWorkOrder(id: string): Promise<WorkOrder> {
+  const { data } = await api.patch<ApiResponse<WorkOrder>>(
+    `/work-orders/${id}/complete`,
+  );
+  return data.data;
+}
+
+/** PROFESIONAL — actualizar precio de una orden PROGRAMADA */
+export async function updateWorkOrderPrice(
+  id: string,
+  payload: UpdateWorkOrderPricePayload,
+): Promise<WorkOrder> {
+  const { data } = await api.patch<ApiResponse<WorkOrder>>(
+    `/work-orders/${id}/price`,
+    payload,
+  );
+  return data.data;
+}
+
+// ---------------------------------------------------------------------------
+// Reviews (Reseñas)
+// ---------------------------------------------------------------------------
+
+/** CLIENTE — crear reseña post-COMPLETADA */
+export async function createReview(
+  payload: CreateReviewPayload,
+): Promise<Review> {
+  const { data } = await api.post<ApiResponse<Review>>("/reviews", payload);
+  return data.data;
+}
+
+/** PROFESIONAL — mis reseñas recibidas */
+export async function getMyReviews(params?: {
   page?: number;
   limit?: number;
-}): Promise<{ data: JobRequest[]; meta: import("../types/types").ApiMeta }> {
-  const { data } = await api.get<
-    import("../types/types").ApiPaginatedResponse<JobRequest>
-  >("/job-requests", { params });
+}): Promise<{ data: Review[]; meta: import("../types/types").ApiMeta }> {
+  const { data } = await api.get<ApiPaginatedResponse<Review>>(
+    "/reviews/my-reviews",
+    { params },
+  );
   return { data: data.data, meta: data.meta };
+}
+
+// ---------------------------------------------------------------------------
+// Complaints (Denuncias)
+// ---------------------------------------------------------------------------
+
+export async function createComplaint(
+  payload: CreateComplaintPayload,
+): Promise<Complaint> {
+  const { data } = await api.post<ApiResponse<Complaint>>(
+    "/complaints",
+    payload,
+  );
+  return data.data;
 }

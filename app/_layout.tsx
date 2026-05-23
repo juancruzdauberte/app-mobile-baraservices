@@ -24,6 +24,28 @@ export default function RootLayout() {
           <Stack.Screen name="profesional-validacion" />
           <Stack.Screen name="usuario-suspendido" options={{ gestureEnabled: false }} />
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(cliente)" />
+          <Stack.Screen name="(profesional)" />
+          <Stack.Screen
+            name="solicitud/[id]"
+            options={{ animation: "slide_from_right" }}
+          />
+          <Stack.Screen
+            name="orden/[id]"
+            options={{ animation: "slide_from_right" }}
+          />
+          <Stack.Screen
+            name="enviar-propuesta/[reqId]"
+            options={{ animation: "slide_from_right" }}
+          />
+          <Stack.Screen
+            name="resena/[orderId]"
+            options={{ animation: "slide_from_right" }}
+          />
+          <Stack.Screen
+            name="profesional/[id]"
+            options={{ animation: "slide_from_right" }}
+          />
         </Stack>
         <Toast />
       </SafeAreaProvider>

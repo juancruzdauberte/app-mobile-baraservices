@@ -24,7 +24,7 @@ export default function Index() {
       try {
         // Si recién se registró o tenemos un rol pendiente en memoria, le damos prioridad
         if (pendingRole === "CLIENTE") {
-          setTargetRoute("/(tabs)");
+          setTargetRoute("/(cliente)");
           return;
         }
 
@@ -70,7 +70,7 @@ export default function Index() {
           profile?.rol === "CLIENTE" ||
           (profile?.rol === undefined && !profile?.estado_perfil)
         ) {
-          setTargetRoute("/(tabs)");
+          setTargetRoute("/(cliente)");
           return;
         }
 
@@ -112,7 +112,7 @@ function getRouteByProfesionalEstado(estado?: ProfesionalStateProfile): string {
   if (estado === "PENDIENTE_APROBACION") return "/profesional-validacion";
   if (estado === "SUSPENDIDO") return "/usuario-suspendido";
   if (estado === "PENDIENTE_CATEGORIAS") return "/completar-perfil-profesional";
-  if (estado === "ACTIVO") return "/(tabs)";
+  if (estado === "ACTIVO") return "/(profesional)";
   return "/profesional-validacion";
 }
 

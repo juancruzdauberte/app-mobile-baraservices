@@ -1,6 +1,7 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
 import { Pressable, View, Image, type ViewStyle } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   FadeIn,
@@ -58,11 +59,32 @@ export function AnimatedTabBar({
 
   const getIconByRouteName = (routeName: string, color: string) => {
     switch (routeName) {
+      // ─── Legacy (tabs) routes ─────────────────────────────────────────────
       case "index":
         return <HomeIcon color={color} size={22} />;
       case "my-jobs-requests":
         return <RecordIcon color={color} size={22} />;
       case "profile":
+        return profile?.avatar ? (
+          <Image
+            source={{ uri: profile.avatar }}
+            style={{ width: 30, height: 30, borderRadius: 22 }}
+          />
+        ) : (
+          <UserIcon color={color} size={18} />
+        );
+      // ─── Cliente routes ───────────────────────────────────────────────────
+      case "solicitudes":
+        return <Ionicons name="clipboard-outline" size={22} color={color} />;
+      case "ordenes":
+        return <Ionicons name="briefcase-outline" size={22} color={color} />;
+      // ─── Profesional routes ───────────────────────────────────────────────
+      case "mercado":
+        return <Ionicons name="search-outline" size={22} color={color} />;
+      case "propuestas":
+        return <Ionicons name="send-outline" size={22} color={color} />;
+      // ─── Shared new routes ────────────────────────────────────────────────
+      case "perfil":
         return profile?.avatar ? (
           <Image
             source={{ uri: profile.avatar }}
