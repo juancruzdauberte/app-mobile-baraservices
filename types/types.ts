@@ -185,6 +185,9 @@ export type WorkOrder = {
   estado: WorkOrderEstado;
   precio_final: number;
   fecha_creacion: string;
+  _count?: {
+    resenas: number;
+  };
   // Relaciones anidadas (presente en GET /work-orders/:id)
   solicitudes_trabajo?: {
     id: string;

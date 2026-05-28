@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -169,16 +170,32 @@ export default function ResenaScreen() {
               <ActivityIndicator size="large" color="#10b981" />
             </View>
           ) : (
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-6">
-              <Text className="text-gray-400 text-sm mb-1">Calificando a:</Text>
-              <Text className="text-white font-bold text-base">
-                {evaluatedName}
-              </Text>
-              {order?.solicitudes_trabajo?.titulo ? (
-                <Text className="text-gray-400 text-sm mt-1">
-                  {order.solicitudes_trabajo.titulo}
+            <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-6 flex-row items-center gap-3">
+              {order?.propuestas?.profesionales?.avatar ? (
+                <Image
+                  source={{ uri: order.propuestas.profesionales.avatar }}
+                  className="w-14 h-14 rounded-full"
+                />
+              ) : (
+                <Ionicons
+                  name="person-circle-outline"
+                  size={48}
+                  color="#6b7280"
+                />
+              )}
+              <View className="flex-1">
+                <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-0.5">
+                  Calificando a
                 </Text>
-              ) : null}
+                <Text className="text-white font-bold text-base">
+                  {evaluatedName}
+                </Text>
+                {order?.solicitudes_trabajo?.titulo ? (
+                  <Text className="text-gray-500 text-xs mt-0.5" numberOfLines={1}>
+                    {order.solicitudes_trabajo.titulo}
+                  </Text>
+                ) : null}
+              </View>
             </View>
           )}
 

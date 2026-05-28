@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Modal,
   ScrollView,
   Text,
@@ -281,7 +282,9 @@ export default function OrdenDetalle() {
 
           {/* Status badge — large & prominent */}
           <View className="mb-4">
-            <View className={`self-start px-3 py-1.5 rounded-full ${statusCfg.bg}`}>
+            <View
+              className={`self-start px-3 py-1.5 rounded-full ${statusCfg.bg}`}
+            >
               <Text className={`text-sm font-semibold ${statusCfg.text}`}>
                 {statusCfg.label}
               </Text>
@@ -328,31 +331,51 @@ export default function OrdenDetalle() {
                 Profesional asignado
               </Text>
               <View className="flex-row items-center gap-3">
-                <Ionicons
-                  name="person-circle-outline"
-                  size={40}
-                  color="#6b7280"
-                />
+                {order.propuestas?.profesionales?.avatar ? (
+                  <Image
+                    source={{ uri: order.propuestas.profesionales.avatar }}
+                    className="w-12 h-12 rounded-full"
+                  />
+                ) : (
+                  <Ionicons
+                    name="person-circle-outline"
+                    size={40}
+                    color="#6b7280"
+                  />
+                )}
+
+                {/* Name + message — left */}
                 <View className="flex-1">
                   <Text className="text-white font-semibold">
                     {order.propuestas?.profesionales?.nombre
                       ? `${order.propuestas.profesionales.nombre} ${order.propuestas.profesionales.apellido ?? ""}`.trim()
                       : "Profesional asignado"}
                   </Text>
-                  {order.propuestas?.profesionales?.calificacion_promedio ? (
-                    <Text className="text-gray-400 text-xs mt-0.5">
-                      ⭐{" "}
-                      {order.propuestas.profesionales.calificacion_promedio.toFixed(
-                        1,
-                      )}
-                    </Text>
-                  ) : null}
                   {order.propuestas?.mensaje ? (
                     <Text
                       className="text-gray-500 text-xs italic mt-1 leading-4"
                       numberOfLines={2}
                     >
                       "{order.propuestas.mensaje}"
+                    </Text>
+                  ) : null}
+                </View>
+
+                {/* Rating + jobs — right */}
+                <View className="items-end gap-1">
+                  {order.propuestas?.profesionales?.calificacion_promedio ? (
+                    <View className="flex-row items-center gap-1">
+                      <Text className="text-yellow-400 text-xs">⭐</Text>
+                      <Text className="text-gray-300 text-xs font-semibold">
+                        {order.propuestas.profesionales.calificacion_promedio.toFixed(1)}
+                      </Text>
+                    </View>
+                  ) : null}
+                  {order.propuestas?.profesionales?.total_trabajos_realizados ? (
+                    <Text className="text-gray-500 text-xs text-right">
+                      {order.propuestas.profesionales.total_trabajos_realizados === 1
+                        ? "1 trabajo"
+                        : `${order.propuestas.profesionales.total_trabajos_realizados} trabajos`}
                     </Text>
                   ) : null}
                 </View>
@@ -411,28 +434,30 @@ export default function OrdenDetalle() {
         ) : null}
 
         {isCliente && order.estado === "COMPLETADA" ? (
-          <TouchableOpacity
-            onPress={handleLeaveReview}
-            className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 mb-4"
-          >
-            <Ionicons name="star-outline" size={18} color="#030712" />
-            <Text className="text-gray-950 font-bold">Calificar profesional</Text>
-          </TouchableOpacity>
+          (order._count?.resenas ?? 0) === 0 ? (
+            <TouchableOpacity
+              onPress={handleLeaveReview}
+              className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 mb-4"
+            >
+              <Ionicons name="star-outline" size={18} color="#030712" />
+              <Text className="text-gray-950 font-bold">
+                Calificar profesional
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View className="flex-row items-center justify-center gap-2 py-3.5 mb-4 bg-gray-800 rounded-2xl">
+              <Ionicons name="checkmark-circle" size={18} color="#10b981" />
+              <Text className="text-emerald-400 font-semibold">Ya calificaste esta orden</Text>
+            </View>
+          )
         ) : null}
 
-        {isProfesional && order.estado === "COMPLETADA" ? (
-          <TouchableOpacity
-            onPress={handleLeaveReview}
-            className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 mb-4"
-          >
-            <Ionicons name="star-outline" size={18} color="#030712" />
-            <Text className="text-gray-950 font-bold">Calificar cliente</Text>
-          </TouchableOpacity>
-        ) : null}
 
         {isCliente && order.estado === "EN_DISPUTA" ? (
           <View className="bg-orange-500/10 border border-orange-500/30 rounded-2xl p-4 mb-4">
-            <Text className="text-orange-400 font-bold mb-1.5">En revisión</Text>
+            <Text className="text-orange-400 font-bold mb-1.5">
+              En revisión
+            </Text>
             <Text className="text-gray-400 text-sm leading-5">
               Nuestro equipo está analizando la situación. Te notificaremos
               cuando haya una resolución.
@@ -454,7 +479,9 @@ export default function OrdenDetalle() {
               ) : (
                 <>
                   <Ionicons name="play-outline" size={18} color="#030712" />
-                  <Text className="text-gray-950 font-bold">Iniciar trabajo</Text>
+                  <Text className="text-gray-950 font-bold">
+                    Iniciar trabajo
+                  </Text>
                 </>
               )}
             </TouchableOpacity>
@@ -494,7 +521,9 @@ export default function OrdenDetalle() {
 
         {isProfesional && order.estado === "EN_DISPUTA" ? (
           <View className="bg-orange-500/10 border border-orange-500/30 rounded-2xl p-4 mb-4">
-            <Text className="text-orange-400 font-bold mb-1.5">En revisión</Text>
+            <Text className="text-orange-400 font-bold mb-1.5">
+              En revisión
+            </Text>
             <Text className="text-gray-400 text-sm leading-5">
               Nuestro equipo está analizando la situación. Te notificaremos
               cuando haya una resolución.
