@@ -52,5 +52,8 @@
   "devDependencies": {
     "@types/react": "~19.1.10",
     "typescript": "~5.9.2"
+  },
+  "optionalDependencies": {
+    "lightningcss-linux-x64-gnu": "^1.32.0"
   }
 }
