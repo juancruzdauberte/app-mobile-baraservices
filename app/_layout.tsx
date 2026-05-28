@@ -46,6 +46,18 @@ export default function RootLayout() {
             name="profesional/[id]"
             options={{ animation: "slide_from_right" }}
           />
+          <Stack.Screen
+            name="cliente/[id]"
+            options={{ animation: "slide_from_right" }}
+          />
+          <Stack.Screen
+            name="editar-perfil"
+            options={{ animation: "slide_from_right" }}
+          />
+          <Stack.Screen
+            name="editar-perfil-profesional"
+            options={{ animation: "slide_from_right" }}
+          />
         </Stack>
         <Toast />
       </SafeAreaProvider>

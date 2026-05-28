@@ -27,6 +27,16 @@ type Prediction = {
   };
 };
 
+// New Places API response shape
+type NewPlacePrediction = {
+  placeId: string;
+  text: { text: string };
+  structuredFormat?: {
+    mainText: { text: string };
+    secondaryText?: { text: string };
+  };
+};
+
 type Props = {
   onSelect: (result: PlaceResult) => void;
   error?: string;
@@ -34,16 +44,17 @@ type Props = {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
+// Places API (New) — v1 endpoints
 const AUTOCOMPLETE_URL =
-  "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-const DETAILS_URL =
-  "https://maps.googleapis.com/maps/api/place/details/json";
+  "https://places.googleapis.com/v1/places:autocomplete";
+const DETAILS_BASE_URL = "https://places.googleapis.com/v1/places";
 const DEBOUNCE_MS = 400;
 const MIN_CHARS = 3;
 
 // Search area — Baradero, Buenos Aires, Argentina
-const SEARCH_LOCATION = "-33.8067,-59.5073";
-const SEARCH_RADIUS_METERS = 15000; // 15 km
+const SEARCH_LAT = -33.8067;
+const SEARCH_LNG = -59.5073;
+const SEARCH_RADIUS_METERS = 20000; // 20 km
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -60,11 +71,41 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
   async function fetchPredictions(input: string) {
     setLoading(true);
     try {
-      const url = `${AUTOCOMPLETE_URL}?input=${encodeURIComponent(input)}&key=${env.GOOGLE_PLACES_API_KEY}&language=es&types=address&components=country:ar&location=${SEARCH_LOCATION}&radius=${SEARCH_RADIUS_METERS}&strictbounds=true`;
-      const response = await fetch(url);
+      const response = await fetch(AUTOCOMPLETE_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": env.GOOGLE_PLACES_API_KEY,
+        },
+        body: JSON.stringify({
+          input,
+          languageCode: "es",
+          // Only street addresses — filters out cities, businesses, POIs
+          includedPrimaryTypes: ["street_address", "route"],
+          // Strict boundary: rejects suggestions outside the 20km circle
+          locationRestriction: {
+            circle: {
+              center: { latitude: SEARCH_LAT, longitude: SEARCH_LNG },
+              radius: SEARCH_RADIUS_METERS,
+            },
+          },
+        }),
+      });
       const json = await response.json();
-      if (json.status === "OK") {
-        setPredictions(json.predictions ?? []);
+      const suggestions: NewPlacePrediction[] = (json.suggestions ?? []).map(
+        (s: { placePrediction: NewPlacePrediction }) => s.placePrediction
+      );
+      if (suggestions.length > 0) {
+        // Normalise to the internal Prediction shape the rest of the component uses
+        const normalised: Prediction[] = suggestions.map((s) => ({
+          place_id: s.placeId,
+          description: s.text.text,
+          structured_formatting: {
+            main_text: s.structuredFormat?.mainText?.text ?? s.text.text,
+            secondary_text: s.structuredFormat?.secondaryText?.text ?? "",
+          },
+        }));
+        setPredictions(normalised);
         setShowDropdown(true);
       } else {
         setPredictions([]);
@@ -84,16 +125,20 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
   async function fetchPlaceDetails(placeId: string, description: string) {
     setLoading(true);
     try {
-      const url = `${DETAILS_URL}?place_id=${placeId}&fields=geometry/location,formatted_address&key=${env.GOOGLE_PLACES_API_KEY}`;
-      const response = await fetch(url);
+      const url = `${DETAILS_BASE_URL}/${placeId}`;
+      const response = await fetch(url, {
+        headers: {
+          "X-Goog-Api-Key": env.GOOGLE_PLACES_API_KEY,
+          "X-Goog-FieldMask": "location,formattedAddress",
+        },
+      });
       const json = await response.json();
-      if (json.status === "OK") {
-        const location = json.result?.geometry?.location;
-        const formattedAddress =
-          json.result?.formatted_address ?? description;
+      const location = json.location;
+      const formattedAddress = json.formattedAddress ?? description;
+      if (location) {
         onSelect({
-          latitud: location.lat,
-          longitud: location.lng,
+          latitud: location.latitude,
+          longitud: location.longitude,
           direccion_formateada: formattedAddress,
           google_place_id: placeId,
         });

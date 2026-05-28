@@ -4,7 +4,7 @@
 
 export type Role = "CLIENTE" | "PROFESIONAL" | "ADMIN";
 
-export type Urgencia = "BAJA" | "MEDIA" | "ALTA";
+export type Urgencia = "BAJA" | "MEDIA" | "EMERGENCIA";
 
 export type JobRequestEstado = "ABIERTA" | "ASIGNADA" | "CANCELADA" | "EXPIRADA";
 
@@ -193,13 +193,13 @@ export type WorkOrder = {
     id: string;
     titulo: string;
     descripcion: string;
-    clientes?: Partial<UserProfile>;
+    clientes?: Partial<UserProfile> & { id?: string };
   };
   propuestas?: {
     id: string;
     precio_estimado: number;
     mensaje: string | null;
-    profesionales?: Partial<UserProfile>;
+    profesionales?: Partial<UserProfile> & { id?: string };
   };
 };
 
@@ -261,7 +261,9 @@ export type PublicClient = {
   nombre: string;
   apellido: string;
   usuario_id: string;
+  telefono: string | null;
   avatar: string | null;
+  email: string | null;
 };
 
 // Perfil público del profesional (para vistas de cliente)
@@ -273,7 +275,9 @@ export type PublicProfessional = {
   biografia: string | null;
   calificacion_promedio: number | null;
   total_trabajos_realizados: number | null;
+  telefono: string | null;
   avatar: string | null;
+  email: string | null;
   estado_perfil: ProfesionalStateProfile;
 };
 
@@ -305,9 +309,16 @@ export type UpdateProfessionalPayload = {
   apellido?: string;
   telefono?: string;
   dni?: string;
-  latitud?: number;
-  longitud?: number;
   biografia?: string;
+  avatar?: string;
+  categorias?: { categoria_id: string; precio_base_por_hora?: number }[];
+};
+
+export type MyProfessionalJob = {
+  categoria_id: string;
+  nombre: string;
+  descripcion: string;
+  precio_base_por_hora: number | null;
 };
 
 export type CreateProfessionalJobsPayload = {

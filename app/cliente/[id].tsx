@@ -12,28 +12,27 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { getProfessionalById } from "../../lib/lib";
-import { PublicProfessional } from "../../types/types";
+import { getClientById } from "../../lib/lib";
+import { PublicClient } from "../../types/types";
 
-export default function ProfessionalProfile() {
+export default function ClientProfile() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
-  const [professional, setProfessional] = useState<PublicProfessional | null>(null);
+  const [client, setClient] = useState<PublicClient | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
 
+  function load() {
+    setLoading(true);
+    setLoadError(false);
+    getClientById(id)
+      .then(setClient)
+      .catch(() => setLoadError(true))
+      .finally(() => setLoading(false));
+  }
+
   useEffect(() => {
-    async function load() {
-      try {
-        const data = await getProfessionalById(id);
-        setProfessional(data);
-      } catch {
-        setLoadError(true);
-      } finally {
-        setLoading(false);
-      }
-    }
     load();
   }, [id]);
 
@@ -51,7 +50,7 @@ export default function ProfessionalProfile() {
 
   // ─── Error ─────────────────────────────────────────────────────────────────
 
-  if (loadError || professional == null) {
+  if (loadError || client == null) {
     return (
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
         <TouchableOpacity
@@ -70,14 +69,7 @@ export default function ProfessionalProfile() {
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <TouchableOpacity
-            onPress={() => {
-              setLoadError(false);
-              setLoading(true);
-              getProfessionalById(id)
-                .then(setProfessional)
-                .catch(() => setLoadError(true))
-                .finally(() => setLoading(false));
-            }}
+            onPress={load}
             className="bg-emerald-500 px-6 py-3 rounded-full"
           >
             <Text className="text-gray-950 font-bold">Reintentar</Text>
@@ -86,11 +78,6 @@ export default function ProfessionalProfile() {
       </SafeAreaView>
     );
   }
-
-  // ─── Derived ───────────────────────────────────────────────────────────────
-
-  const rating = professional.calificacion_promedio ?? 0;
-  const hasRating = rating > 0;
 
   // ─── Main render ───────────────────────────────────────────────────────────
 
@@ -109,15 +96,14 @@ export default function ProfessionalProfile() {
           >
             <Ionicons name="arrow-back" size={24} color="#ffffff" />
           </TouchableOpacity>
-          <Text className="text-white text-lg font-bold">Perfil del profesional</Text>
+          <Text className="text-white text-lg font-bold">Perfil del cliente</Text>
         </View>
 
         {/* ── Hero card ─────────────────────────────────────────────────── */}
-        <View className="bg-gray-900 border border-gray-800 rounded-2xl p-5 mb-4 items-center">
-          {/* Avatar */}
-          {professional.avatar ? (
+        <View className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-4 items-center">
+          {client.avatar ? (
             <Image
-              source={{ uri: professional.avatar }}
+              source={{ uri: client.avatar }}
               style={{ width: 80, height: 80, borderRadius: 40 }}
             />
           ) : (
@@ -129,84 +115,26 @@ export default function ProfessionalProfile() {
             </View>
           )}
 
-          {/* Nombre */}
           <Text className="text-white text-xl font-bold mt-3 text-center">
-            {professional.nombre} {professional.apellido}
+            {client.nombre} {client.apellido}
           </Text>
 
-          {/* Rating estrellas */}
-          {hasRating ? (
-            <View className="flex-row items-center mt-2" style={{ gap: 2 }}>
-              {[1, 2, 3, 4, 5].map((n) => {
-                const isFull = rating >= n;
-                const isHalf = !isFull && rating >= n - 0.5;
-                return (
-                  <Ionicons
-                    key={n}
-                    name={isFull ? "star" : isHalf ? "star-half" : "star-outline"}
-                    size={16}
-                    color={isFull || isHalf ? "#f59e0b" : "#4b5563"}
-                  />
-                );
-              })}
-              <Text className="text-amber-400 font-semibold ml-1">
-                {rating.toFixed(1)}
-              </Text>
-              {professional.total_trabajos_realizados != null && (
-                <Text className="text-gray-400 text-sm ml-1">
-                  ({professional.total_trabajos_realizados}{" "}
-                  {professional.total_trabajos_realizados === 1 ? "trabajo" : "trabajos"})
-                </Text>
-              )}
-            </View>
-          ) : (
-            <Text className="text-gray-500 text-sm mt-2">Sin calificaciones aún</Text>
-          )}
-        </View>
-
-        {/* ── Stats row ─────────────────────────────────────────────────── */}
-        <View className="flex-row mb-4" style={{ gap: 12 }}>
-          {/* Trabajos */}
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4 items-center">
-            <Ionicons name="briefcase-outline" size={22} color="#10b981" style={{ marginBottom: 4 }} />
-            <Text className="text-white text-xl font-bold">
-              {professional.total_trabajos_realizados ?? 0}
-            </Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Trabajos</Text>
-          </View>
-
-          {/* Calificación */}
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4 items-center">
-            <Ionicons name="star-outline" size={22} color="#f59e0b" style={{ marginBottom: 4 }} />
-            <Text className="text-white text-xl font-bold">
-              {professional.calificacion_promedio != null
-                ? professional.calificacion_promedio.toFixed(1)
-                : "—"}
-            </Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Calificación</Text>
+          <View className="flex-row items-center mt-2" style={{ gap: 6 }}>
+            <Ionicons name="person-circle-outline" size={14} color="#6b7280" />
+            <Text className="text-gray-500 text-sm">Cliente</Text>
           </View>
         </View>
-
-        {/* ── Biografía ─────────────────────────────────────────────────── */}
-        {professional.biografia ? (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-            <Text className="text-white font-bold mb-2">Sobre mí</Text>
-            <Text className="text-gray-400 text-sm leading-5">
-              {professional.biografia}
-            </Text>
-          </View>
-        ) : null}
 
         {/* ── Contacto ──────────────────────────────────────────────────── */}
-        {(professional.telefono || professional.email) ? (
+        {(client.telefono || client.email) ? (
           <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
             <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
               Contacto
             </Text>
 
-            {professional.telefono ? (
+            {client.telefono ? (
               <TouchableOpacity
-                onPress={() => Linking.openURL(`tel:${professional.telefono}`)}
+                onPress={() => Linking.openURL(`tel:${client.telefono}`)}
                 className="flex-row items-center py-3 border-b border-gray-800"
                 style={{ gap: 12 }}
               >
@@ -216,16 +144,16 @@ export default function ProfessionalProfile() {
                 <View className="flex-1">
                   <Text className="text-gray-500 text-xs mb-0.5">Teléfono</Text>
                   <Text className="text-white text-sm font-medium">
-                    {professional.telefono}
+                    {client.telefono}
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={16} color="#4b5563" />
               </TouchableOpacity>
             ) : null}
 
-            {professional.email ? (
+            {client.email ? (
               <TouchableOpacity
-                onPress={() => Linking.openURL(`mailto:${professional.email}`)}
+                onPress={() => Linking.openURL(`mailto:${client.email}`)}
                 className="flex-row items-center pt-3"
                 style={{ gap: 12 }}
               >
@@ -235,7 +163,7 @@ export default function ProfessionalProfile() {
                 <View className="flex-1">
                   <Text className="text-gray-500 text-xs mb-0.5">Email</Text>
                   <Text className="text-white text-sm font-medium">
-                    {professional.email}
+                    {client.email}
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={16} color="#4b5563" />
@@ -243,19 +171,6 @@ export default function ProfessionalProfile() {
             ) : null}
           </View>
         ) : null}
-
-        {/* ── Badge verificado ──────────────────────────────────────────── */}
-        {professional.estado_perfil === "ACTIVO" ? (
-          <View className="flex-row items-center mb-4" style={{ gap: 6 }}>
-            <Ionicons name="checkmark-circle" size={16} color="#10b981" />
-            <Text className="text-emerald-400 text-sm font-medium">
-              Profesional verificado
-            </Text>
-          </View>
-        ) : null}
-
-        {/* Spacer */}
-        <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -359,6 +359,20 @@ export default function OrdenDetalle() {
                       "{order.propuestas.mensaje}"
                     </Text>
                   ) : null}
+                  {order.propuestas?.profesionales?.id ? (
+                    <TouchableOpacity
+                      onPress={() =>
+                        router.push(
+                          `/profesional/${order.propuestas!.profesionales!.id}` as any,
+                        )
+                      }
+                      hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
+                    >
+                      <Text className="text-emerald-500 text-xs mt-1">
+                        Ver perfil →
+                      </Text>
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
 
                 {/* Rating + jobs — right */}
@@ -367,13 +381,17 @@ export default function OrdenDetalle() {
                     <View className="flex-row items-center gap-1">
                       <Text className="text-yellow-400 text-xs">⭐</Text>
                       <Text className="text-gray-300 text-xs font-semibold">
-                        {order.propuestas.profesionales.calificacion_promedio.toFixed(1)}
+                        {order.propuestas.profesionales.calificacion_promedio.toFixed(
+                          1,
+                        )}
                       </Text>
                     </View>
                   ) : null}
-                  {order.propuestas?.profesionales?.total_trabajos_realizados ? (
+                  {order.propuestas?.profesionales
+                    ?.total_trabajos_realizados ? (
                     <Text className="text-gray-500 text-xs text-right">
-                      {order.propuestas.profesionales.total_trabajos_realizados === 1
+                      {order.propuestas.profesionales
+                        .total_trabajos_realizados === 1
                         ? "1 trabajo"
                         : `${order.propuestas.profesionales.total_trabajos_realizados} trabajos`}
                     </Text>
@@ -387,17 +405,40 @@ export default function OrdenDetalle() {
                 Cliente
               </Text>
               <View className="flex-row items-center gap-3">
-                <Ionicons
-                  name="person-circle-outline"
-                  size={40}
-                  color="#6b7280"
-                />
+                {order.solicitudes_trabajo?.clientes?.avatar ? (
+                  <Image
+                    source={{
+                      uri: order.solicitudes_trabajo?.clientes?.avatar,
+                    }}
+                    className="w-12 h-12 rounded-full"
+                  />
+                ) : (
+                  <Ionicons
+                    name="person-circle-outline"
+                    size={40}
+                    color="#6b7280"
+                  />
+                )}
                 <View className="flex-1">
                   <Text className="text-white font-semibold">
                     {order.solicitudes_trabajo?.clientes?.nombre
                       ? `${order.solicitudes_trabajo.clientes.nombre} ${order.solicitudes_trabajo.clientes.apellido ?? ""}`.trim()
                       : "Cliente"}
                   </Text>
+                  {order.solicitudes_trabajo?.clientes?.id ? (
+                    <TouchableOpacity
+                      onPress={() =>
+                        router.push(
+                          `/cliente/${order.solicitudes_trabajo!.clientes!.id}` as any,
+                        )
+                      }
+                      hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
+                    >
+                      <Text className="text-emerald-500 text-xs mt-1">
+                        Ver perfil →
+                      </Text>
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
               </View>
             </>
@@ -447,11 +488,12 @@ export default function OrdenDetalle() {
           ) : (
             <View className="flex-row items-center justify-center gap-2 py-3.5 mb-4 bg-gray-800 rounded-2xl">
               <Ionicons name="checkmark-circle" size={18} color="#10b981" />
-              <Text className="text-emerald-400 font-semibold">Ya calificaste esta orden</Text>
+              <Text className="text-emerald-400 font-semibold">
+                Ya calificaste esta orden
+              </Text>
             </View>
           )
         ) : null}
-
 
         {isCliente && order.estado === "EN_DISPUTA" ? (
           <View className="bg-orange-500/10 border border-orange-500/30 rounded-2xl p-4 mb-4">

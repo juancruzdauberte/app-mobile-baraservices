@@ -195,6 +195,22 @@ export default function ResenaScreen() {
                     {order.solicitudes_trabajo.titulo}
                   </Text>
                 ) : null}
+                <TouchableOpacity
+                  onPress={() => {
+                    if (isPro) {
+                      const clienteId = order?.solicitudes_trabajo?.clientes?.id;
+                      if (clienteId) router.push(`/cliente/${clienteId}` as any);
+                    } else {
+                      const profesionalId = order?.propuestas?.profesionales?.id;
+                      if (profesionalId) router.push(`/profesional/${profesionalId}` as any);
+                    }
+                  }}
+                  hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
+                >
+                  <Text className="text-emerald-500 text-xs mt-1">
+                    Ver perfil →
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           )}

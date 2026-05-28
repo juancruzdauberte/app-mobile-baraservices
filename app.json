@@ -34,7 +34,10 @@
               "pathPrefix": "/auth/confirm"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -49,6 +52,11 @@
           "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a0e98a83-68ac-44b1-9564-5d65af66e04d"
+      }
+    }
   }
 }

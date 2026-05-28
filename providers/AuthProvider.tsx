@@ -24,6 +24,7 @@ type AuthContextType = {
   session: Session | null;
   user: User | null;
   profile: UserProfile | null;
+  refreshProfile: () => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   signIn: ({
@@ -59,6 +60,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+
+  const refreshProfile = async () => {
+    try {
+      const profileData = await getProfile();
+      setProfile(profileData || null);
+    } catch {
+      // silently ignore
+    }
+  };
 
   useEffect(() => {
     console.log("[AUTH] Initializing...");
@@ -177,6 +187,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       user,
       profile,
+      refreshProfile,
       signOut,
       signIn,
       signUp,

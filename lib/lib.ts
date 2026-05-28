@@ -11,6 +11,7 @@ import {
   JobRequest,
   JobRequestFilters,
   LoginResponse,
+  MyProfessionalJob,
   Professional,
   ProfessionalJob,
   Proposal,
@@ -93,18 +94,35 @@ export async function getProfessionalProfile(): Promise<Professional> {
   return data.data;
 }
 
-/** Perfil público de un profesional por su ID */
-export async function getProfessionalById(id: string): Promise<PublicProfessional> {
+/** Perfil público de un profesional por su ID (profesionales.id) */
+export async function getProfessionalById(
+  id: string,
+): Promise<PublicProfessional> {
   const { data } = await api.get<ApiResponse<PublicProfessional>>(
-    `/professionals/${id}`,
+    `/professionals/public/${id}`,
   );
   return data.data;
 }
 
 /** Perfil público de un cliente por su ID */
 export async function getClientById(id: string): Promise<PublicClient> {
-  const { data } = await api.get<ApiResponse<PublicClient>>(
-    `/clientes/${id}`,
+  const { data } = await api.get<ApiResponse<PublicClient>>(`/customers/${id}`);
+  return data.data;
+}
+
+export async function getMyProfessionalJobs(): Promise<MyProfessionalJob[]> {
+  const { data } = await api.get<ApiResponse<MyProfessionalJob[]>>(
+    "/professionals/me/jobs",
+  );
+  return data.data;
+}
+
+export async function updateMyProfessionalProfile(
+  payload: UpdateProfessionalPayload,
+): Promise<Professional> {
+  const { data } = await api.patch<ApiResponse<Professional>>(
+    "/professionals/me",
+    payload,
   );
   return data.data;
 }
@@ -145,6 +163,35 @@ export async function createProfessionalJobs(
   return data.data;
 }
 
+export async function updateUserProfile(payload: {
+  nombre?: string;
+  apellido?: string;
+  telefono?: string;
+  avatar?: string;
+  email?: string;
+}): Promise<UserProfile> {
+  const { data } = await api.patch<ApiResponse<UserProfile>>(
+    "/users/profile",
+    payload,
+  );
+  return data.data;
+}
+
+export async function uploadUserAvatar(
+  uri: string,
+  mimeType: string,
+): Promise<string> {
+  const formData = new FormData();
+  const filename = uri.split("/").pop() ?? "avatar.jpg";
+  formData.append("avatar", { uri, name: filename, type: mimeType } as any);
+  const { data } = await api.post<ApiResponse<{ url: string }>>(
+    "/users/avatar",
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" }, transformRequest: (d) => d },
+  );
+  return data.data.url;
+}
+
 // ---------------------------------------------------------------------------
 // Job Requests (Solicitudes)
 // ---------------------------------------------------------------------------
@@ -179,6 +226,13 @@ export async function getJobRequestById(id: string): Promise<JobRequest> {
 export async function cancelJobRequest(id: string): Promise<JobRequest> {
   const { data } = await api.patch<ApiResponse<JobRequest>>(
     `/jobs-requests/${id}/cancel`,
+  );
+  return data.data;
+}
+
+export async function deleteJobRequest(id: string): Promise<JobRequest> {
+  const { data } = await api.delete<ApiResponse<JobRequest>>(
+    `/jobs-requests/${id}`,
   );
   return data.data;
 }

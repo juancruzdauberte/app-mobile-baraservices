@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
+  Linking,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -15,11 +17,11 @@ import Toast from "react-native-toast-message";
 import {
   acceptProposal,
   cancelJobRequest,
+  deleteJobRequest,
   deleteProposal,
   getClientById,
   getJobRequestById,
   getMyProposals,
-  getProfessionalById,
   getProposalsByJobRequest,
   rejectProposal,
 } from "../../lib/lib";
@@ -29,7 +31,6 @@ import {
   Proposal,
   ProposalEstado,
   PublicClient,
-  PublicProfessional,
   Urgencia,
   WorkOrder,
 } from "../../types/types";
@@ -53,7 +54,7 @@ const URGENCY_CONFIG: Record<
     text: "text-amber-400",
     color: "#f59e0b",
   },
-  ALTA: {
+  EMERGENCIA: {
     label: "Alta",
     bg: "bg-red-500/20",
     text: "text-red-400",
@@ -214,7 +215,6 @@ interface ProposalCardProps {
   onAccept: (id: string) => void;
   onReject: (id: string) => void;
   actionLoading: string | null;
-  professional: PublicProfessional | null;
 }
 
 function ProposalCard({
@@ -223,12 +223,12 @@ function ProposalCard({
   onAccept,
   onReject,
   actionLoading,
-  professional,
 }: ProposalCardProps) {
   const statusCfg =
     PROPOSAL_STATUS_CONFIG[proposal.estado] ?? PROPOSAL_STATUS_CONFIG.PENDIENTE;
   const isProcessing = actionLoading === proposal.id;
   const router = useRouter();
+  const pro = proposal.profesionales ?? null;
 
   const date = new Date(proposal.fecha_creacion).toLocaleDateString("es-AR", {
     day: "2-digit",
@@ -236,8 +236,8 @@ function ProposalCard({
     year: "numeric",
   });
 
-  const fullName = professional
-    ? `${professional.nombre} ${professional.apellido}`.trim()
+  const fullName = pro
+    ? `${pro.nombre} ${pro.apellido}`.trim()
     : `Profesional #${index + 1}`;
 
   return (
@@ -246,9 +246,9 @@ function ProposalCard({
       <View className="flex-row items-center justify-between mb-3">
         <View className="flex-row items-center" style={{ gap: 10 }}>
           {/* Avatar */}
-          {professional?.avatar ? (
+          {pro?.avatar ? (
             <Image
-              source={{ uri: professional.avatar }}
+              source={{ uri: pro.avatar }}
               className="w-10 h-10 rounded-full bg-gray-800"
               style={{ width: 40, height: 40, borderRadius: 20 }}
             />
@@ -261,7 +261,7 @@ function ProposalCard({
           {/* Nombre + "ver perfil" */}
           <View>
             <Text className="text-white font-semibold text-sm">{fullName}</Text>
-            {professional && (
+            {pro && (
               <TouchableOpacity
                 onPress={() =>
                   router.push(`/profesional/${proposal.profesional_id}` as any)
@@ -284,19 +284,16 @@ function ProposalCard({
       </View>
 
       {/* Rating si existe */}
-      {professional?.calificacion_promedio != null &&
-      professional.calificacion_promedio > 0 ? (
+      {pro?.calificacion_promedio != null && pro.calificacion_promedio > 0 ? (
         <View className="flex-row items-center mb-2" style={{ gap: 4 }}>
           <Ionicons name="star" size={12} color="#f59e0b" />
           <Text className="text-amber-400 text-xs font-semibold">
-            {professional.calificacion_promedio.toFixed(1)}
+            {pro.calificacion_promedio.toFixed(1)}
           </Text>
-          {professional.total_trabajos_realizados != null && (
+          {pro.total_trabajos_realizados != null && (
             <Text className="text-gray-500 text-xs">
-              · {professional.total_trabajos_realizados}{" "}
-              {professional.total_trabajos_realizados === 1
-                ? "trabajo"
-                : "trabajos"}
+              · {pro.total_trabajos_realizados}{" "}
+              {pro.total_trabajos_realizados === 1 ? "trabajo" : "trabajos"}
             </Text>
           )}
         </View>
@@ -378,9 +375,6 @@ export default function SolicitudDetalle() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [myProposal, setMyProposal] = useState<Proposal | null>(null);
   const [clientProfile, setClientProfile] = useState<PublicClient | null>(null);
-  const [proProfiles, setProProfiles] = useState<
-    Map<string, PublicProfessional>
-  >(new Map());
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -412,23 +406,6 @@ export default function SolicitudDetalle() {
           ]);
           setJobRequest(jobReq);
           setProposals(fetchedProposals);
-
-          // Enriquecer con perfiles de profesionales (solo si hay propuestas)
-          if (fetchedProposals.length > 0) {
-            const uniqueIds = [
-              ...new Set(fetchedProposals.map((p) => p.profesional_id)),
-            ];
-            const profiles = await Promise.allSettled(
-              uniqueIds.map((id) => getProfessionalById(id)),
-            );
-            const proMap = new Map<string, PublicProfessional>();
-            profiles.forEach((result, index) => {
-              if (result.status === "fulfilled") {
-                proMap.set(uniqueIds[index], result.value);
-              }
-            });
-            setProProfiles(proMap);
-          }
         }
       } catch {
         setLoadError(true);
@@ -525,6 +502,22 @@ export default function SolicitudDetalle() {
     }
   }
 
+  async function handleDeleteJobRequest() {
+    setActionLoading("delete");
+    try {
+      await deleteJobRequest(jobRequest?.id!);
+      Toast.show({ type: "success", text1: "Solicitud eliminada" });
+      router.back();
+    } catch {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "No se pudo eliminar la solicitud.",
+      });
+    } finally {
+      setActionLoading(null);
+    }
+  }
   // ─── Render states ──────────────────────────────────────────────────────────
 
   if (loading) {
@@ -588,6 +581,7 @@ export default function SolicitudDetalle() {
     jobRequest.estado === "ABIERTA" || jobRequest.estado === "ASIGNADA";
 
   const isCancelProcessing = actionLoading === "cancel";
+  const isDeletingProcessing = actionLoading === "delete";
 
   // ─── Main render ─────────────────────────────────────────────────────────────
 
@@ -609,6 +603,33 @@ export default function SolicitudDetalle() {
           <Text className="text-white text-lg font-bold flex-1">
             Detalle de Solicitud
           </Text>
+          {!isPro && jobRequest.estado === "ABIERTA" ? (
+            <TouchableOpacity
+              onPress={() =>
+                Alert.alert(
+                  "Eliminar solicitud",
+                  "¿Estás seguro que querés eliminar esta solicitud? Esta acción no se puede deshacer.",
+                  [
+                    { text: "No, volver", style: "cancel" },
+                    {
+                      text: "Sí, eliminar",
+                      style: "destructive",
+                      onPress: handleDeleteJobRequest,
+                    },
+                  ],
+                )
+              }
+              disabled={isDeletingProcessing}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              className="p-1 "
+            >
+              {isDeletingProcessing ? (
+                <ActivityIndicator size="small" color="#f87171" />
+              ) : (
+                <Ionicons name="trash-outline" size={22} color="#f87171" />
+              )}
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         {/* ── Info card ──────────────────────────────────────────────────── */}
@@ -637,17 +658,25 @@ export default function SolicitudDetalle() {
 
           {/* Address */}
           {jobRequest.direccion_formateada ? (
-            <View className="flex-row items-start mb-3">
+            <TouchableOpacity
+              onPress={() => {
+                const url = jobRequest.google_place_id
+                  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(jobRequest.direccion_formateada!)}&query_place_id=${jobRequest.google_place_id}`
+                  : `https://maps.google.com/maps?q=${jobRequest.latitud},${jobRequest.longitud}`;
+                Linking.openURL(url);
+              }}
+              className="flex-row items-start mb-3"
+            >
               <Ionicons
                 name="location-outline"
                 size={15}
-                color="#6b7280"
+                color="#10b981"
                 style={{ marginTop: 1 }}
               />
-              <Text className="text-gray-400 text-sm ml-1.5 flex-1">
+              <Text className="text-emerald-400 text-sm ml-1.5 flex-1 underline">
                 {jobRequest.direccion_formateada}
               </Text>
-            </View>
+            </TouchableOpacity>
           ) : null}
 
           {/* Date */}
@@ -815,9 +844,6 @@ export default function SolicitudDetalle() {
                       onAccept={handleAccept}
                       onReject={handleReject}
                       actionLoading={actionLoading}
-                      professional={
-                        proProfiles.get(proposal.profesional_id) ?? null
-                      }
                     />
                   ))
                 )}

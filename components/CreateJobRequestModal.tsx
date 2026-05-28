@@ -71,8 +71,8 @@ const URGENCY_CONFIG: {
     activeTextClasses: "text-amber-400",
   },
   {
-    value: "ALTA",
-    label: "Alta",
+    value: "EMERGENCIA",
+    label: "Emergencia",
     activeClasses: "bg-red-500/20 border-red-500",
     activeTextClasses: "text-red-400",
   },
@@ -160,10 +160,16 @@ export default function CreateJobRequestModal({
       onSuccess?.();
       handleClose();
     } catch (e: any) {
+      const backendMessage =
+        e?.response?.data?.message ?? e?.response?.data?.error;
+      const detail = Array.isArray(backendMessage)
+        ? backendMessage[0]
+        : backendMessage;
+      console.error("[CreateJobRequest] error:", e?.response?.status, e?.response?.data);
       Toast.show({
         type: "error",
         text1: "Error al crear la solicitud",
-        text2: e?.message ?? "Intentá de nuevo.",
+        text2: detail ?? "Intentá de nuevo.",
       });
     } finally {
       setSubmitting(false);

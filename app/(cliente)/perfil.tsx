@@ -56,8 +56,7 @@ export default function Perfil() {
       icon: "person-outline",
       label: "Editar Perfil",
       color: "#3b82f6",
-      onPress: () =>
-        Alert.alert("Próximamente", "Esta función estará disponible pronto."),
+      onPress: () => router.push("/editar-perfil" as any),
     },
     {
       icon: "settings-outline",
