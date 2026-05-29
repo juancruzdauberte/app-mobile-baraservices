@@ -45,8 +45,7 @@ type Props = {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 // Places API (New) — v1 endpoints
-const AUTOCOMPLETE_URL =
-  "https://places.googleapis.com/v1/places:autocomplete";
+const AUTOCOMPLETE_URL = "https://places.googleapis.com/v1/places:autocomplete";
 const DETAILS_BASE_URL = "https://places.googleapis.com/v1/places";
 const DEBOUNCE_MS = 400;
 const MIN_CHARS = 3;
@@ -93,7 +92,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
       });
       const json = await response.json();
       const suggestions: NewPlacePrediction[] = (json.suggestions ?? []).map(
-        (s: { placePrediction: NewPlacePrediction }) => s.placePrediction
+        (s: { placePrediction: NewPlacePrediction }) => s.placePrediction,
       );
       if (suggestions.length > 0) {
         // Normalise to the internal Prediction shape the rest of the component uses
@@ -189,9 +188,9 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
     <View>
       {/* Input row */}
       <View
-        className={`flex-row items-center bg-gray-900 border rounded-2xl px-4 py-4 ${
+        className={`flex-row items-center bg-gray-900 border rounded-2xl px-4 py-2 ${
           error ? "border-red-500" : "border-gray-800"
-        }`}
+        } ${predictions.length > 0 && "rounded-b-none"}`}
       >
         <Ionicons name="location-outline" size={18} color="#9ca3af" />
         <TextInput
@@ -217,7 +216,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
 
       {/* Dropdown */}
       {showDropdown && predictions.length > 0 && (
-        <View className="bg-gray-900 border border-gray-800 rounded-2xl mt-1 overflow-hidden">
+        <View className="bg-gray-900 border border-gray-800 rounded-b-2xl mt-14 overflow-hidden absolute z-10 w-full">
           {predictions.map((prediction, index) => (
             <TouchableOpacity
               key={prediction.place_id}
@@ -233,12 +232,18 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
                 style={{ marginTop: 2, marginRight: 8 }}
               />
               <View className="flex-1">
-                <Text className="text-white text-sm font-medium" numberOfLines={1}>
+                <Text
+                  className="text-white text-sm font-medium"
+                  numberOfLines={1}
+                >
                   {prediction.structured_formatting?.main_text ??
                     prediction.description}
                 </Text>
                 {prediction.structured_formatting?.secondary_text ? (
-                  <Text className="text-gray-400 text-xs mt-0.5" numberOfLines={1}>
+                  <Text
+                    className="text-gray-400 text-xs mt-0.5"
+                    numberOfLines={1}
+                  >
                     {prediction.structured_formatting.secondary_text}
                   </Text>
                 ) : null}

@@ -15,13 +15,34 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import PhoneInput from "react-native-phone-number-input";
+import PhoneInput, { CountryCode } from "react-native-phone-number-input";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { uploadUserAvatar, updateUserProfile } from "../lib/lib";
 import { useAuth } from "../providers/AuthProvider";
+
+// ─── Phone parsing ────────────────────────────────────────────────────────────
+
+const PHONE_PREFIXES: [string, CountryCode][] = [
+  ["598", "UY"], ["595", "PY"], ["593", "EC"], ["592", "GY"],
+  ["591", "BO"], ["506", "CR"], ["505", "NI"], ["503", "SV"],
+  ["502", "GT"], ["501", "BZ"],
+  ["56", "CL"], ["57", "CO"], ["58", "VE"], ["55", "BR"],
+  ["54", "AR"], ["53", "CU"], ["52", "MX"], ["51", "PE"],
+];
+
+function parseStoredPhone(stored: string): { country: CountryCode; local: string } {
+  const digits = (stored ?? "").replace(/\D/g, "");
+  if (!digits) return { country: "AR", local: "" };
+  for (const [prefix, country] of PHONE_PREFIXES) {
+    if (digits.startsWith(prefix)) {
+      return { country, local: digits.substring(prefix.length) };
+    }
+  }
+  return { country: "AR", local: digits };
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -38,11 +59,14 @@ export default function EditarPerfil() {
   const { profile, refreshProfile } = useAuth();
   const phoneInput = useRef<PhoneInput>(null);
 
-  const [form, setForm] = useState<FormState>({
+  const [phoneCountry] = useState<CountryCode>(() =>
+    parseStoredPhone(profile?.telefono ?? "").country
+  );
+  const [form, setForm] = useState<FormState>(() => ({
     nombre: profile?.nombre ?? "",
     apellido: profile?.apellido ?? "",
-    telefono: profile?.telefono ?? "",
-  });
+    telefono: parseStoredPhone(profile?.telefono ?? "").local,
+  }));
 
   // Local URI while the user hasn't saved yet; null = no change
   const [localAvatarUri, setLocalAvatarUri] = useState<string | null>(null);
@@ -252,7 +276,7 @@ export default function EditarPerfil() {
               <View className="w-full rounded-2xl bg-gray-900 border border-gray-800 px-2 py-2">
                 <PhoneInput
                   ref={phoneInput}
-                  defaultCode="AR"
+                  defaultCode={phoneCountry}
                   layout="first"
                   placeholder="Teléfono"
                   value={form.telefono}

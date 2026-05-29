@@ -8,6 +8,7 @@ import {
   Platform,
   Modal,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -128,8 +129,11 @@ export default function Login() {
           <View className="flex-1 justify-center px-8 py-12">
             {/* Logo / App Name */}
             <View className="mb-12 items-center">
-              <View className="mb-6 h-24 w-24 items-center justify-center rounded-3xl bg-emerald-500/20">
-                <Ionicons name="wallet-outline" size={48} color="#10b981" />
+              <View className="mb-6 h-24 w-24 items-center justify-center rounded-3xl ">
+                <Image
+                  source={require("../assets/icon-foreground.png")}
+                  className="h-full w-full"
+                />
               </View>
               <Text className="mb-2 text-4xl font-bold text-white">
                 Baraservices

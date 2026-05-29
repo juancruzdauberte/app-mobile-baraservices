@@ -165,7 +165,11 @@ export default function CreateJobRequestModal({
       const detail = Array.isArray(backendMessage)
         ? backendMessage[0]
         : backendMessage;
-      console.error("[CreateJobRequest] error:", e?.response?.status, e?.response?.data);
+      console.error(
+        "[CreateJobRequest] error:",
+        e?.response?.status,
+        e?.response?.data,
+      );
       Toast.show({
         type: "error",
         text1: "Error al crear la solicitud",
@@ -205,6 +209,27 @@ export default function CreateJobRequestModal({
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
+            {/* ── Address ──────────────────────────────────────────────── */}
+            <View className="mt-5">
+              <Text className="text-gray-400 text-sm font-medium mb-3">
+                Dirección
+              </Text>
+              <GooglePlacesInput
+                onSelect={(result) => {
+                  setForm((prev) => ({
+                    ...prev,
+                    latitud: result.latitud,
+                    longitud: result.longitud,
+                    direccion_formateada: result.direccion_formateada,
+                    google_place_id: result.google_place_id,
+                  }));
+                  if (errors.address) {
+                    setErrors((prev) => ({ ...prev, address: undefined }));
+                  }
+                }}
+                error={errors.address}
+              />
+            </View>
             {/* ── Urgency ─────────────────────────────────────────────── */}
             <View className="mt-6 mb-5">
               <Text className="text-gray-400 text-sm font-medium mb-3">
@@ -253,7 +278,7 @@ export default function CreateJobRequestModal({
                       <TouchableOpacity
                         key={cat.id}
                         onPress={() => updateField("categoria_id", cat.id)}
-                        className={`px-4 py-2.5 rounded-2xl border ${
+                        className={`px-4 py-2 rounded-2xl border ${
                           isActive
                             ? "bg-emerald-500/20 border-emerald-500"
                             : "bg-gray-900 border-gray-800"
@@ -264,7 +289,8 @@ export default function CreateJobRequestModal({
                             isActive ? "text-emerald-400" : "text-gray-400"
                           }`}
                         >
-                          {cat.nombre}
+                          {cat.nombre.charAt(0).toUpperCase() +
+                            cat.nombre.slice(1).toLowerCase()}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -321,28 +347,6 @@ export default function CreateJobRequestModal({
                   {errors.descripcion}
                 </Text>
               ) : null}
-            </View>
-
-            {/* ── Address ──────────────────────────────────────────────── */}
-            <View className="mb-6">
-              <Text className="text-gray-400 text-sm font-medium mb-3">
-                Dirección
-              </Text>
-              <GooglePlacesInput
-                onSelect={(result) => {
-                  setForm((prev) => ({
-                    ...prev,
-                    latitud: result.latitud,
-                    longitud: result.longitud,
-                    direccion_formateada: result.direccion_formateada,
-                    google_place_id: result.google_place_id,
-                  }));
-                  if (errors.address) {
-                    setErrors((prev) => ({ ...prev, address: undefined }));
-                  }
-                }}
-                error={errors.address}
-              />
             </View>
 
             {/* ── Submit ───────────────────────────────────────────────── */}
