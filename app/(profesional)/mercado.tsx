@@ -24,7 +24,7 @@ const URGENCY_CONFIG: Record<
 > = {
   BAJA: { label: "Baja", bg: "bg-emerald-500/20", text: "text-emerald-400" },
   MEDIA: { label: "Media", bg: "bg-amber-500/20", text: "text-amber-400" },
-  ALTA: { label: "Alta", bg: "bg-red-500/20", text: "text-red-400" },
+  EMERGENCIA: { label: "Alta", bg: "bg-red-500/20", text: "text-red-400" },
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -42,10 +42,11 @@ function getTimeAgo(fechaCreacion: string): string {
 
 interface MarketJobCardProps {
   item: JobRequest;
+  categoryName?: string;
   onPress: () => void;
 }
 
-function MarketJobCard({ item, onPress }: MarketJobCardProps) {
+function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
   const urgencyCfg = item.urgencia
     ? (URGENCY_CONFIG[item.urgencia] ?? URGENCY_CONFIG.BAJA)
     : null;
@@ -72,6 +73,16 @@ function MarketJobCard({ item, onPress }: MarketJobCardProps) {
           </View>
         ) : null}
       </View>
+
+      {/* Category badge */}
+      {categoryName ? (
+        <View className="flex-row items-center mb-2" style={{ gap: 4 }}>
+          <Ionicons name="tag-outline" size={11} color="#6b7280" />
+          <View className="bg-gray-800 px-2 py-0.5 rounded-full">
+            <Text className="text-gray-400 text-xs">{categoryName}</Text>
+          </View>
+        </View>
+      ) : null}
 
       {/* Description */}
       {item.descripcion ? (
@@ -114,6 +125,7 @@ export default function MercadoScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedUrgency, setSelectedUrgency] = useState<Urgencia | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const fetchRequests = useCallback(
     async (silent = false) => {
@@ -155,20 +167,24 @@ export default function MercadoScreen() {
 
   const urgencyFilters: Array<{ key: Urgencia | null; label: string }> = [
     { key: null, label: "Todos" },
-    { key: "ALTA", label: "Alta" },
+    { key: "EMERGENCIA", label: "Alta" },
     { key: "MEDIA", label: "Media" },
     { key: "BAJA", label: "Baja" },
   ];
+
+  const filteredRequests = selectedCategory
+    ? requests.filter((r) => r.categoria_id === selectedCategory)
+    : requests;
 
   return (
     <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <View className="px-5 pt-4 pb-3 flex-row items-center justify-between">
         <Text className="text-white text-3xl font-bold">Mercado</Text>
-        {requests.length > 0 ? (
+        {filteredRequests.length > 0 ? (
           <View className="bg-emerald-500/20 px-2.5 py-1 rounded-full">
             <Text className="text-emerald-400 text-xs font-semibold">
-              {requests.length}
+              {filteredRequests.length}
             </Text>
           </View>
         ) : null}
@@ -178,7 +194,7 @@ export default function MercadoScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 12 }}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 8 }}
       >
         {urgencyFilters.map((f) => {
           const isActive = selectedUrgency === f.key;
@@ -204,6 +220,54 @@ export default function MercadoScreen() {
         })}
       </ScrollView>
 
+      {/* ── Category filter chips ────────────────────────────────────────── */}
+      {categories.length > 0 ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 12 }}
+        >
+          <TouchableOpacity
+            onPress={() => setSelectedCategory(null)}
+            className={`mr-2 px-3 py-1.5 rounded-full ${
+              selectedCategory === null
+                ? "bg-gray-700"
+                : "bg-gray-900 border border-gray-800"
+            }`}
+          >
+            <Text
+              className={`text-xs font-medium ${
+                selectedCategory === null ? "text-white" : "text-gray-500"
+              }`}
+            >
+              Todas
+            </Text>
+          </TouchableOpacity>
+          {categories.map((cat) => {
+            const isActive = selectedCategory === cat.id;
+            return (
+              <TouchableOpacity
+                key={cat.id}
+                onPress={() => setSelectedCategory(cat.id)}
+                className={`mr-2 px-3 py-1.5 rounded-full ${
+                  isActive
+                    ? "bg-gray-700"
+                    : "bg-gray-900 border border-gray-800"
+                }`}
+              >
+                <Text
+                  className={`text-xs font-medium ${
+                    isActive ? "text-white" : "text-gray-500"
+                  }`}
+                >
+                  {cat.nombre}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      ) : null}
+
       {/* ── List ────────────────────────────────────────────────────────── */}
       {loading ? (
         <View className="flex-1 items-center justify-center">
@@ -211,7 +275,7 @@ export default function MercadoScreen() {
         </View>
       ) : (
         <FlatList
-          data={requests}
+          data={filteredRequests}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{
             paddingHorizontal: 20,
@@ -229,6 +293,7 @@ export default function MercadoScreen() {
           renderItem={({ item }) => (
             <MarketJobCard
               item={item}
+              categoryName={categories.find((c) => c.id === item.categoria_id)?.nombre}
               onPress={() => router.push(`/solicitud/${item.id}` as any)}
             />
           )}

@@ -12,8 +12,70 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { getProfessionalById } from "../../lib/lib";
-import { PublicProfessional } from "../../types/types";
+import {
+  getProfessionalById,
+  getReviewsForProfessional,
+  getServicesForProfessional,
+} from "../../lib/lib";
+import { PublicProfessional, PublicReview, ProfessionalService } from "../../types/types";
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function renderStars(puntaje: number): string {
+  const full = Math.min(5, Math.max(0, Math.round(puntaje)));
+  return "★".repeat(full) + "☆".repeat(5 - full);
+}
+
+function formatReviewDate(fechaCreacion: string): string {
+  return new Date(fechaCreacion).toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+// ─── ReviewCard ───────────────────────────────────────────────────────────────
+
+function ReviewCard({ review }: { review: PublicReview }) {
+  const authorName = review.evaluador
+    ? `${review.evaluador.nombre} ${review.evaluador.apellido}`
+    : "Cliente";
+
+  return (
+    <View className="bg-gray-800/60 rounded-xl p-3 mb-2">
+      {/* Author row */}
+      <View className="flex-row items-center mb-1.5" style={{ gap: 8 }}>
+        {review.evaluador?.avatar ? (
+          <Image
+            source={{ uri: review.evaluador.avatar }}
+            style={{ width: 28, height: 28, borderRadius: 14 }}
+          />
+        ) : (
+          <View
+            className="bg-gray-700 items-center justify-center"
+            style={{ width: 28, height: 28, borderRadius: 14 }}
+          >
+            <Ionicons name="person" size={14} color="#6b7280" />
+          </View>
+        )}
+        <View className="flex-1">
+          <Text className="text-white text-xs font-semibold">{authorName}</Text>
+          <Text className="text-gray-500 text-xs">{formatReviewDate(review.fecha_creacion)}</Text>
+        </View>
+        <Text className="text-amber-400 text-sm tracking-wide">
+          {renderStars(review.puntaje)}
+        </Text>
+      </View>
+
+      {/* Comment */}
+      {review.comentario ? (
+        <Text className="text-gray-400 text-sm leading-5 italic">
+          "{review.comentario}"
+        </Text>
+      ) : null}
+    </View>
+  );
+}
 
 export default function ProfessionalProfile() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,12 +84,29 @@ export default function ProfessionalProfile() {
   const [professional, setProfessional] = useState<PublicProfessional | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [reviews, setReviews] = useState<PublicReview[]>([]);
+  const [services, setServices] = useState<ProfessionalService[]>([]);
+  const [enrichLoading, setEnrichLoading] = useState(false);
 
   useEffect(() => {
     async function load() {
       try {
         const data = await getProfessionalById(id);
         setProfessional(data);
+        // Fetch reviews + services in parallel after profile loads — fail silently
+        setEnrichLoading(true);
+        Promise.all([
+          getReviewsForProfessional(id, 5),
+          getServicesForProfessional(id),
+        ])
+          .then(([fetchedReviews, fetchedServices]) => {
+            setReviews(fetchedReviews);
+            setServices(fetchedServices);
+          })
+          .catch(() => {
+            // Silently degrade — profile is still usable
+          })
+          .finally(() => setEnrichLoading(false));
       } catch {
         setLoadError(true);
       } finally {
@@ -129,10 +208,15 @@ export default function ProfessionalProfile() {
             </View>
           )}
 
-          {/* Nombre */}
-          <Text className="text-white text-xl font-bold mt-3 text-center">
-            {professional.nombre} {professional.apellido}
-          </Text>
+          {/* Nombre + badge verificado inline */}
+          <View className="flex-row items-center justify-center mt-3" style={{ gap: 6 }}>
+            <Text className="text-white text-xl font-bold text-center">
+              {professional.nombre} {professional.apellido}
+            </Text>
+            {professional.estado_perfil === "ACTIVO" ? (
+              <Ionicons name="checkmark-circle" size={20} color="#10b981" />
+            ) : null}
+          </View>
 
           {/* Rating estrellas */}
           {hasRating ? (
@@ -197,6 +281,63 @@ export default function ProfessionalProfile() {
           </View>
         ) : null}
 
+        {/* ── Servicios ─────────────────────────────────────────────────── */}
+        {enrichLoading ? (
+          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4 items-center">
+            <ActivityIndicator size="small" color="#10b981" />
+          </View>
+        ) : services.length > 0 ? (
+          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
+            <Text className="text-white font-bold mb-3">Servicios</Text>
+            {services.map((service, idx) => (
+              <View
+                key={service.categoria_id}
+                className={idx < services.length - 1 ? "mb-3 pb-3 border-b border-gray-800" : ""}
+              >
+                <View className="flex-row items-center justify-between mb-0.5">
+                  <Text className="text-white text-sm font-semibold flex-1 mr-2">
+                    {service.nombre}
+                  </Text>
+                  {service.precio_base_por_hora != null ? (
+                    <Text className="text-emerald-400 text-sm font-bold">
+                      ${service.precio_base_por_hora.toLocaleString("es-AR")}/h
+                    </Text>
+                  ) : null}
+                </View>
+                {service.descripcion ? (
+                  <Text className="text-gray-400 text-xs leading-4">
+                    {service.descripcion}
+                  </Text>
+                ) : null}
+              </View>
+            ))}
+          </View>
+        ) : null}
+
+        {/* ── Reseñas ───────────────────────────────────────────────────── */}
+        {!enrichLoading && reviews.length > 0 ? (
+          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
+            {/* Header */}
+            <View className="flex-row items-center justify-between mb-3">
+              <Text className="text-white font-bold">Reseñas</Text>
+              <View className="flex-row items-center" style={{ gap: 4 }}>
+                <Ionicons name="star" size={13} color="#f59e0b" />
+                <Text className="text-amber-400 text-xs font-semibold">
+                  {(reviews.reduce((sum, r) => sum + r.puntaje, 0) / reviews.length).toFixed(1)}
+                </Text>
+                <Text className="text-gray-500 text-xs">
+                  ({reviews.length} {reviews.length === 1 ? "reseña" : "reseñas"})
+                </Text>
+              </View>
+            </View>
+
+            {/* Review cards */}
+            {reviews.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+          </View>
+        ) : null}
+
         {/* ── Contacto ──────────────────────────────────────────────────── */}
         {(professional.telefono || professional.email) ? (
           <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
@@ -241,16 +382,6 @@ export default function ProfessionalProfile() {
                 <Ionicons name="chevron-forward" size={16} color="#4b5563" />
               </TouchableOpacity>
             ) : null}
-          </View>
-        ) : null}
-
-        {/* ── Badge verificado ──────────────────────────────────────────── */}
-        {professional.estado_perfil === "ACTIVO" ? (
-          <View className="flex-row items-center mb-4" style={{ gap: 6 }}>
-            <Ionicons name="checkmark-circle" size={16} color="#10b981" />
-            <Text className="text-emerald-400 text-sm font-medium">
-              Profesional verificado
-            </Text>
           </View>
         ) : null}
 

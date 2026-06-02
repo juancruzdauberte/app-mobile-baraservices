@@ -1,4 +1,5 @@
 import { api } from "../config/axios.config";
+import { supabase } from "../config/supabase.config";
 import {
   ApiPaginatedResponse,
   ApiResponse,
@@ -14,9 +15,11 @@ import {
   MyProfessionalJob,
   Professional,
   ProfessionalJob,
+  ProfessionalService,
   Proposal,
   PublicClient,
   PublicProfessional,
+  PublicReview,
   RegisterResponse,
   Review,
   Role,
@@ -368,6 +371,72 @@ export async function getMyReviews(params?: {
     { params },
   );
   return { data: data.data, meta: data.meta };
+}
+
+/** PÚBLICO — reseñas recibidas por un profesional (query directa a Supabase) */
+export async function getReviewsForProfessional(
+  profesionalId: string,
+  limit = 5,
+): Promise<PublicReview[]> {
+  try {
+    type RawReviewRow = {
+      id: string;
+      puntaje: number;
+      comentario: string | null;
+      fecha_creacion: string;
+      evaluador: { nombre: string; apellido: string; avatar: string | null } | null;
+    };
+
+    const { data, error } = await supabase
+      .from("resenas")
+      .select(
+        "id, puntaje, comentario, fecha_creacion, evaluador:usuarios!evaluador_id(nombre, apellido, avatar)",
+      )
+      .eq("evaluado_id", profesionalId)
+      .order("fecha_creacion", { ascending: false })
+      .limit(limit);
+
+    if (error || !data) return [];
+    return (data as unknown as RawReviewRow[]).map((row) => ({
+      id: row.id,
+      puntaje: row.puntaje,
+      comentario: row.comentario,
+      fecha_creacion: row.fecha_creacion,
+      evaluador: row.evaluador,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/** PÚBLICO — servicios ofrecidos por un profesional (query directa a Supabase) */
+export async function getServicesForProfessional(
+  profesionalId: string,
+): Promise<ProfessionalService[]> {
+  try {
+    type RawJobRow = {
+      categoria_id: string;
+      precio_base_por_hora: number | null;
+      categorias: { nombre: string; descripcion: string } | null;
+    };
+
+    const { data, error } = await supabase
+      .from("trabajos_profesionales")
+      .select("categoria_id, precio_base_por_hora, categorias(nombre, descripcion)")
+      .eq("profesional_id", profesionalId);
+
+    if (error || !data) return [];
+    return (data as unknown as RawJobRow[])
+      .filter((row) => row.categorias != null)
+      .map((row) => ({
+        categoria_id: row.categoria_id,
+        nombre: row.categorias!.nombre,
+        descripcion: row.categorias!.descripcion,
+        precio_base_por_hora: row.precio_base_por_hora,
+      }));
+  } catch {
+    return [];
+  }
 }
 
 // ---------------------------------------------------------------------------
