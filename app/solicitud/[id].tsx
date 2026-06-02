@@ -82,6 +82,7 @@ const STATUS_CONFIG: Record<
     bg: "bg-gray-700/40",
     text: "text-gray-400",
   },
+  COMPLETA: { label: "Completada", bg: "bg-emerald-500/20", text: "text-emerald-400" },
 };
 
 const PROPOSAL_STATUS_CONFIG: Record<
@@ -267,10 +268,13 @@ function ProposalCard({
                   router.push(`/profesional/${proposal.profesional_id}` as any)
                 }
                 hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
+                className="flex-row items-center mt-0.5"
+                style={{ gap: 3 }}
               >
-                <Text className="text-emerald-500 text-xs mt-0.5">
-                  Ver perfil →
+                <Text className="text-emerald-500 text-sm font-medium">
+                  Ver perfil
                 </Text>
+                <Ionicons name="open-outline" size={13} color="#10b981" />
               </TouchableOpacity>
             )}
           </View>
@@ -565,7 +569,7 @@ export default function SolicitudDetalle() {
   const urgency = jobRequest.urgencia
     ? (URGENCY_CONFIG[jobRequest.urgencia] ?? URGENCY_CONFIG.BAJA)
     : URGENCY_CONFIG.BAJA;
-  const status = STATUS_CONFIG[jobRequest.estado] ?? STATUS_CONFIG.ABIERTA;
+  const status = STATUS_CONFIG[jobRequest.estado] ?? { label: "Desconocido", bg: "bg-gray-500/20", text: "text-gray-400" };
 
   const createdDate = new Date(jobRequest.fecha_creacion).toLocaleDateString(
     "es-AR",
@@ -786,6 +790,31 @@ export default function SolicitudDetalle() {
                 </Text>
               </TouchableOpacity>
             ) : null}
+
+            {jobRequest.estado === "COMPLETA" ? (
+              <View className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 mb-4">
+                <Text className="text-emerald-400 font-semibold text-sm mb-1">
+                  Trabajo completado
+                </Text>
+                <Text className="text-gray-400 text-xs mb-3">
+                  El cliente finalizó la orden exitosamente.
+                </Text>
+                {jobRequest.ordenes_trabajo?.[0]?.id ? (
+                  <TouchableOpacity
+                    onPress={() =>
+                      router.push(
+                        `/orden/${jobRequest.ordenes_trabajo![0].id}` as any,
+                      )
+                    }
+                    className="border border-emerald-500/30 bg-emerald-500/10 py-2.5 rounded-xl items-center"
+                  >
+                    <Text className="text-emerald-400 font-semibold text-sm">
+                      Ver orden →
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            ) : null}
           </>
         ) : (
           /* ── Sección CLIENTE ─────────────────────────────────────────────── */
@@ -875,6 +904,46 @@ export default function SolicitudDetalle() {
                 </Text>
               </TouchableOpacity>
             ) : null}
+
+            {jobRequest.estado === "COMPLETA" ? (
+              <View className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 mt-4">
+                <Text className="text-emerald-400 font-semibold text-sm mb-1">
+                  Trabajo completado
+                </Text>
+                <Text className="text-gray-400 text-xs mb-3">
+                  El trabajo fue finalizado exitosamente.
+                </Text>
+                {jobRequest.ordenes_trabajo?.[0]?.id ? (
+                  <TouchableOpacity
+                    onPress={() =>
+                      router.push(
+                        `/orden/${jobRequest.ordenes_trabajo![0].id}` as any,
+                      )
+                    }
+                    className="border border-emerald-500/30 py-2.5 rounded-xl items-center mb-2"
+                  >
+                    <Text className="text-emerald-400 font-semibold text-sm">
+                      Ver orden →
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
+                {jobRequest.ordenes_trabajo?.[0]?.id &&
+                (jobRequest.ordenes_trabajo?.[0]?._count?.resenas ?? 0) === 0 ? (
+                  <TouchableOpacity
+                    onPress={() =>
+                      router.push(
+                        `/resena/${jobRequest.ordenes_trabajo![0].id}` as any,
+                      )
+                    }
+                    className="bg-emerald-500 py-2.5 rounded-xl items-center"
+                  >
+                    <Text className="text-gray-950 font-bold text-sm">
+                      Calificar profesional
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            ) : null}
           </>
         )}
 
@@ -910,6 +979,25 @@ export default function SolicitudDetalle() {
               {jobRequest.estado === "CANCELADA"
                 ? "Esta solicitud fue cancelada. Podés crear una nueva solicitud cuando quieras."
                 : "Esta solicitud expiró después de 7 días sin recibir una propuesta aceptada."}
+            </Text>
+          </View>
+        ) : null}
+
+        {/* ── Read-only banner for COMPLETA ─────────────────────────────── */}
+        {jobRequest.estado === "COMPLETA" ? (
+          <View className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 mt-2">
+            <View className="flex-row items-center gap-2 mb-2">
+              <Ionicons
+                name="checkmark-circle-outline"
+                size={18}
+                color="#10b981"
+              />
+              <Text className="text-emerald-400 font-semibold text-sm">
+                Trabajo completado
+              </Text>
+            </View>
+            <Text className="text-gray-500 text-sm leading-5">
+              El trabajo fue completado exitosamente.
             </Text>
           </View>
         ) : null}

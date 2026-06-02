@@ -6,7 +6,7 @@ export type Role = "CLIENTE" | "PROFESIONAL" | "ADMIN";
 
 export type Urgencia = "BAJA" | "MEDIA" | "EMERGENCIA";
 
-export type JobRequestEstado = "ABIERTA" | "ASIGNADA" | "CANCELADA" | "EXPIRADA";
+export type JobRequestEstado = "ABIERTA" | "ASIGNADA" | "CANCELADA" | "EXPIRADA" | "COMPLETA";
 
 export type ProposalEstado = "PENDIENTE" | "ACEPTADA" | "RECHAZADA";
 
@@ -127,6 +127,7 @@ export type JobRequest = {
   longitud: number;
   estado: JobRequestEstado;
   fecha_creacion: string;
+  ordenes_trabajo?: { id: string; _count?: { resenas: number } }[];
 };
 
 export type CreateJobRequestPayload = {
@@ -165,6 +166,8 @@ export type Proposal = {
     JobRequest,
     "id" | "titulo" | "descripcion" | "estado" | "urgencia" | "categoria_id" | "fecha_creacion"
   >;
+  // Orden generada al aceptar la propuesta (array por esquema, en práctica máx. 1)
+  ordenes_trabajo?: { id: string }[];
   // Datos del profesional (enriquecidos en frontend o anidados por el backend)
   profesionales?: PublicProfessional | null;
 };
@@ -219,6 +222,23 @@ export type Review = {
   puntaje: number;
   comentario: string | null;
   fecha_creacion: string;
+};
+
+/** Reseña pública — usada en el perfil del profesional (query directa a Supabase) */
+export type PublicReview = {
+  id: string;
+  puntaje: number;
+  comentario: string | null;
+  fecha_creacion: string;
+  evaluador: { nombre: string; apellido: string; avatar: string | null } | null;
+};
+
+/** Servicio ofrecido por un profesional — mapeado desde trabajos_profesionales + categorias */
+export type ProfessionalService = {
+  categoria_id: string;
+  nombre: string;
+  descripcion: string;
+  precio_base_por_hora: number | null;
 };
 
 export type CreateReviewPayload = {
@@ -279,6 +299,9 @@ export type PublicProfessional = {
   avatar: string | null;
   email: string | null;
   estado_perfil: ProfesionalStateProfile;
+  // Enriquecidos via Supabase directo en el perfil público
+  reviews?: PublicReview[];
+  services?: ProfessionalService[];
 };
 
 export type Professional = {
