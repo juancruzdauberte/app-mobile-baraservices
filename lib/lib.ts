@@ -321,10 +321,18 @@ export async function disputeWorkOrder(id: string): Promise<WorkOrder> {
   return data.data;
 }
 
-/** PROFESIONAL — iniciar una orden PROGRAMADA */
-export async function startWorkOrder(id: string): Promise<WorkOrder> {
+/** CLIENTE — confirmar inicio de una orden PROGRAMADA */
+export async function confirmStartWorkOrder(id: string): Promise<WorkOrder> {
   const { data } = await api.patch<ApiResponse<WorkOrder>>(
-    `/work-orders/${id}/start`,
+    `/work-orders/${id}/confirm-start`,
+  );
+  return data.data;
+}
+
+/** CLIENTE — cancelar una orden PROGRAMADA */
+export async function cancelWorkOrder(id: string): Promise<WorkOrder> {
+  const { data } = await api.patch<ApiResponse<WorkOrder>>(
+    `/work-orders/${id}/cancel`,
   );
   return data.data;
 }

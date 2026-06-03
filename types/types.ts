@@ -10,7 +10,7 @@ export type JobRequestEstado = "ABIERTA" | "ASIGNADA" | "CANCELADA" | "EXPIRADA"
 
 export type ProposalEstado = "PENDIENTE" | "ACEPTADA" | "RECHAZADA" | "CANCELADA";
 
-export type WorkOrderEstado = "PROGRAMADA" | "EN_PROGRESO" | "EN_DISPUTA" | "COMPLETADA";
+export type WorkOrderEstado = "PROGRAMADA" | "EN_PROGRESO" | "EN_DISPUTA" | "COMPLETADA" | "CANCELADA";
 
 export type ProfileEstado = "ACTIVO" | "INACTIVO" | "PENDIENTE_APROBACION" | "RECHAZADO";
 
