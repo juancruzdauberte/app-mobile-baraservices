@@ -93,14 +93,17 @@ export default function Perfil() {
         <Text className="mb-6 text-3xl font-bold text-white">Mi Perfil</Text>
 
         {/* Profile Card */}
-        <View className="bg-gray-900 rounded-3xl p-6 mb-6 border border-gray-800">
-          <View className="flex-row items-center">
-            {/* Avatar */}
-            <View className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full items-center justify-center mr-4 shadow-lg">
+        <View className="bg-gray-900 rounded-3xl p-5 mb-6 border border-gray-800">
+          {/* Avatar + info */}
+          <View className="flex-row items-center mb-5">
+            <View
+              className="bg-emerald-500 rounded-full items-center justify-center mr-4"
+              style={{ width: 72, height: 72, borderRadius: 36 }}
+            >
               {profile?.avatar ? (
                 <Image
                   source={{ uri: profile.avatar }}
-                  className="w-20 h-20 rounded-full"
+                  style={{ width: 72, height: 72, borderRadius: 36 }}
                 />
               ) : (
                 <Text className="text-2xl font-bold text-white">
@@ -109,14 +112,39 @@ export default function Perfil() {
               )}
             </View>
 
-            {/* Info */}
             <View className="flex-1">
-              <Text className="text-2xl font-bold text-white mb-1">
+              <Text
+                className="text-xl font-bold text-white mb-0.5"
+                numberOfLines={1}
+              >
                 {fullName}
               </Text>
-              <Text className="text-gray-400 text-sm mb-2">
+              <Text className="text-gray-400 text-sm" numberOfLines={1}>
                 {profile?.email || "Sin email"}
               </Text>
+            </View>
+          </View>
+
+          {/* Divider */}
+          <View className="border-t border-gray-800 mb-4" />
+
+          {/* Stats */}
+          <View className="flex-row" style={{ gap: 12 }}>
+            <View className="flex-1 bg-gray-800/60 rounded-2xl p-3 items-center">
+              <Ionicons name="star" size={18} color="#f59e0b" />
+              <Text className="text-white text-lg font-bold mt-1">
+                {profile?.calificacion_promedio
+                  ? profile.calificacion_promedio.toFixed(1)
+                  : "—"}
+              </Text>
+              <Text className="text-gray-400 text-xs mt-0.5">Calificación</Text>
+            </View>
+            <View className="flex-1 bg-gray-800/60 rounded-2xl p-3 items-center">
+              <Ionicons name="briefcase-outline" size={18} color="#10b981" />
+              <Text className="text-white text-lg font-bold mt-1">
+                {profile?.total_trabajos_realizados ?? 0}
+              </Text>
+              <Text className="text-gray-400 text-xs mt-0.5">Trabajos</Text>
             </View>
           </View>
         </View>
@@ -152,29 +180,7 @@ export default function Perfil() {
 
         {/* Danger Zone */}
         <View className="mb-8">
-          <Text className="text-white text-lg font-bold mb-4">
-            Zona de Peligro
-          </Text>
-
           <View className="gap-3">
-            <Pressable
-              onPress={handleClearCache}
-              className="bg-amber-500/10 rounded-2xl p-4 flex-row items-center border border-amber-500/20 active:bg-amber-500/20"
-            >
-              <View className="bg-amber-500/20 p-2 rounded-lg mr-4">
-                <Ionicons name="trash-outline" size={20} color="#f59e0b" />
-              </View>
-              <View className="flex-1">
-                <Text className="text-amber-500 font-semibold">
-                  Limpiar Cache
-                </Text>
-                <Text className="text-amber-500/60 text-xs mt-0.5">
-                  Borra datos locales y cierra sesión
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color="#f59e0b" />
-            </Pressable>
-
             <Pressable
               onPress={handleSignOut}
               className="bg-red-500/10 rounded-2xl p-4 flex-row items-center border border-red-500/20 active:bg-red-500/20"
@@ -197,7 +203,7 @@ export default function Perfil() {
 
         {/* App Version */}
         <View className="items-center pb-8">
-          <Text className="text-gray-500 text-xs">BaraServices v1.0.0</Text>
+          <Text className="text-gray-500 text-xs">Baraservices v1.0.0</Text>
           <Text className="text-gray-600 text-xs mt-1">
             © 2026 Todos los derechos reservados
           </Text>

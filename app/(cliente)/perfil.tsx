@@ -152,29 +152,7 @@ export default function Perfil() {
 
         {/* Danger Zone */}
         <View className="mb-8">
-          <Text className="text-white text-lg font-bold mb-4">
-            Zona de Peligro
-          </Text>
-
           <View className="gap-3">
-            <Pressable
-              onPress={handleClearCache}
-              className="bg-amber-500/10 rounded-2xl p-4 flex-row items-center border border-amber-500/20 active:bg-amber-500/20"
-            >
-              <View className="bg-amber-500/20 p-2 rounded-lg mr-4">
-                <Ionicons name="trash-outline" size={20} color="#f59e0b" />
-              </View>
-              <View className="flex-1">
-                <Text className="text-amber-500 font-semibold">
-                  Limpiar Cache
-                </Text>
-                <Text className="text-amber-500/60 text-xs mt-0.5">
-                  Borra datos locales y cierra sesión
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color="#f59e0b" />
-            </Pressable>
-
             <Pressable
               onPress={handleSignOut}
               className="bg-red-500/10 rounded-2xl p-4 flex-row items-center border border-red-500/20 active:bg-red-500/20"
@@ -197,7 +175,7 @@ export default function Perfil() {
 
         {/* App Version */}
         <View className="items-center pb-8">
-          <Text className="text-gray-500 text-xs">BaraServices v1.0.0</Text>
+          <Text className="text-gray-500 text-xs">Baraservices v1.0.0</Text>
           <Text className="text-gray-600 text-xs mt-1">
             © 2026 Todos los derechos reservados
           </Text>
