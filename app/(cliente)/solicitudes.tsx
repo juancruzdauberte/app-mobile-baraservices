@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { getMyJobRequests } from "../../lib/lib";
 import { JobRequest, JobRequestEstado, Urgencia } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
@@ -49,6 +50,7 @@ const STATUS_CONFIG: Record<
     bg: "bg-gray-700/40",
     text: "text-gray-400",
   },
+  COMPLETA: { label: "Completada", bg: "bg-emerald-500/20", text: "text-emerald-400" },
 };
 
 function getStatusConfig(estado: string) {
@@ -186,6 +188,12 @@ export default function Solicitudes() {
   useEffect(() => {
     fetchRequests();
   }, [fetchRequests]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRequests();
+    }, [fetchRequests]),
+  );
 
   const handleRefresh = () => {
     setRefreshing(true);

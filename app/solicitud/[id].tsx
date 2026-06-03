@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
 import {
@@ -103,6 +104,11 @@ const PROPOSAL_STATUS_CONFIG: Record<
     label: "Rechazada",
     bg: "bg-red-500/20",
     text: "text-red-400",
+  },
+  CANCELADA: {
+    label: "Cancelada",
+    bg: "bg-gray-800",
+    text: "text-gray-500",
   },
 };
 
@@ -425,6 +431,12 @@ export default function SolicitudDetalle() {
     loadData();
   }, [loadData]);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData]),
+  );
+
   // ─── Handlers ───────────────────────────────────────────────────────────────
 
   async function handleAccept(proposalId: string) {
@@ -471,7 +483,8 @@ export default function SolicitudDetalle() {
   async function handleCancel() {
     setActionLoading("cancel");
     try {
-      await cancelJobRequest(id);
+      const updated = await cancelJobRequest(id);
+      setJobRequest(updated);
       Toast.show({
         type: "success",
         text1: "Solicitud cancelada",
