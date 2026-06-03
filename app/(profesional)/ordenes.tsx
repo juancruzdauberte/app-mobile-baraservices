@@ -40,6 +40,11 @@ const STATUS_CONFIG: Record<
     bg: "bg-emerald-500/20",
     text: "text-emerald-400",
   },
+  CANCELADA: {
+    label: "Cancelada",
+    bg: "bg-red-500/20",
+    text: "text-red-400",
+  },
 };
 
 const STATUS_HINT: Record<WorkOrderEstado, string> = {
@@ -47,6 +52,7 @@ const STATUS_HINT: Record<WorkOrderEstado, string> = {
   EN_PROGRESO: "Trabajo en curso",
   EN_DISPUTA: "En revisión por el equipo",
   COMPLETADA: "Completado ✓",
+  CANCELADA: "Esta orden fue cancelada.",
 };
 
 // ─── WorkOrderCard ────────────────────────────────────────────────────────────

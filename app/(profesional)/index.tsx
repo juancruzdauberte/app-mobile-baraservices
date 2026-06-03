@@ -13,6 +13,7 @@ const ORDER_STATUS_COLORS: Record<WorkOrderEstado, { dot: string; text: string; 
   EN_PROGRESO: { dot: "bg-amber-400",   text: "text-amber-400",   label: "En progreso" },
   EN_DISPUTA:  { dot: "bg-orange-400",  text: "text-orange-400",  label: "En disputa" },
   COMPLETADA:  { dot: "bg-emerald-400", text: "text-emerald-400", label: "Completada" },
+  CANCELADA:   { dot: "bg-red-400",     text: "text-red-400",     label: "Cancelada" },
 };
 
 const PROPOSAL_STATUS_COLORS: Record<ProposalEstado, { dot: string; text: string; label: string }> = {

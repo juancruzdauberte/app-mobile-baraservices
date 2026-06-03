@@ -16,10 +16,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import {
+  cancelWorkOrder,
   completeWorkOrder,
+  confirmStartWorkOrder,
   disputeWorkOrder,
   getWorkOrderById,
-  startWorkOrder,
   updateWorkOrderPrice,
 } from "../../lib/lib";
 import { WorkOrder, WorkOrderEstado } from "../../types/types";
@@ -50,6 +51,11 @@ const STATUS_CONFIG: Record<
     label: "Completada",
     bg: "bg-emerald-500/20",
     text: "text-emerald-400",
+  },
+  CANCELADA: {
+    label: "Cancelada",
+    bg: "bg-red-500/20",
+    text: "text-red-400",
   },
 };
 
@@ -89,26 +95,54 @@ export default function OrdenDetalle() {
 
   // ─── Handlers ─────────────────────────────────────────────────────────────
 
-  async function handleStart() {
-    setActionLoading("start");
-    try {
-      await startWorkOrder(id);
-      Toast.show({
-        type: "success",
-        text1: "¡Trabajo iniciado!",
-        text2: "El estado se actualizó a En progreso.",
-      });
-      await loadOrder(true);
-    } catch {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "No se pudo iniciar el trabajo.",
-      });
-    } finally {
-      setActionLoading(null);
-    }
-  }
+  const handleConfirmStart = async () => {
+    Alert.alert(
+      "Confirmar inicio",
+      "¿Confirmás que el profesional puede comenzar el trabajo?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Confirmar",
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await confirmStartWorkOrder(id);
+              await loadOrder(true);
+            } catch (error) {
+              Alert.alert("Error", "No se pudo confirmar el inicio");
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleCancel = async () => {
+    Alert.alert(
+      "Cancelar orden",
+      "¿Cancelás esta orden? Esta acción no se puede deshacer.",
+      [
+        { text: "Volver", style: "cancel" },
+        {
+          text: "Cancelar orden",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await cancelWorkOrder(id);
+              router.replace("/(cliente)/ordenes");
+            } catch (error) {
+              Alert.alert("Error", "No se pudo cancelar la orden");
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  };
 
   function handleComplete() {
     Alert.alert("¿Confirmás?", "Esta acción no se puede deshacer.", [
@@ -507,36 +541,36 @@ export default function OrdenDetalle() {
           </View>
         ) : null}
 
-        {/* === PROFESIONAL === */}
-
-        {isProfesional && order.estado === "PROGRAMADA" ? (
-          <View className="mb-4">
+        {order.estado === "PROGRAMADA" && isCliente && (
+          <View className="gap-3">
+            <View className="bg-gray-800 rounded-2xl p-4 border border-gray-700 mb-1">
+              <Text className="text-gray-400 text-sm mb-1">Precio confirmado por el profesional</Text>
+              <Text className="text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
+              <Text className="text-gray-500 text-xs mt-1">Revisá el precio antes de confirmar el inicio</Text>
+            </View>
             <TouchableOpacity
-              onPress={handleStart}
-              disabled={actionLoading === "start"}
-              className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 w-full"
+              onPress={handleConfirmStart}
+              className="bg-green-600 rounded-2xl py-4 items-center"
             >
-              {actionLoading === "start" ? (
-                <ActivityIndicator size="small" color="#030712" />
-              ) : (
-                <>
-                  <Ionicons name="play-outline" size={18} color="#030712" />
-                  <Text className="text-gray-950 font-bold">
-                    Iniciar trabajo
-                  </Text>
-                </>
-              )}
+              <Text className="text-white font-semibold text-base">Confirmar inicio</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
-              onPress={() => setShowPriceModal(true)}
-              className="bg-gray-800 border border-gray-700 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 w-full mt-3"
+              onPress={handleCancel}
+              className="bg-red-500/10 border border-red-500/40 rounded-2xl py-4 items-center"
             >
-              <Ionicons name="pencil-outline" size={16} color="#d1d5db" />
-              <Text className="text-gray-300">Actualizar precio</Text>
+              <Text className="text-red-400 font-semibold text-base">Cancelar orden</Text>
             </TouchableOpacity>
           </View>
-        ) : null}
+        )}
+
+        {order.estado === "CANCELADA" && (
+          <View className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 mb-4">
+            <Text className="text-red-400 font-semibold text-base mb-1">Orden cancelada</Text>
+            <Text className="text-red-300/70 text-sm">Esta orden fue cancelada y no puede ser reactivada.</Text>
+          </View>
+        )}
+
+        {/* === PROFESIONAL === */}
 
         {isProfesional && order.estado === "EN_PROGRESO" ? (
           <TouchableOpacity
