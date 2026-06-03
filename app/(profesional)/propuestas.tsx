@@ -32,6 +32,7 @@ const STATUS_CONFIG: Record<
     text: "text-emerald-400",
   },
   RECHAZADA: { label: "Rechazada", bg: "bg-red-500/20", text: "text-red-400" },
+  CANCELADA: { label: "Cancelada", bg: "bg-gray-800", text: "text-gray-500" },
 };
 
 // ─── ProposalListCard ─────────────────────────────────────────────────────────
@@ -115,9 +116,11 @@ function ProposalListCard({
         </TouchableOpacity>
       ) : null}
 
-      {proposal.estado === "ACEPTADA" ? (
+      {proposal.estado === "ACEPTADA" && proposal.ordenes_trabajo?.[0]?.id ? (
         <TouchableOpacity
-          onPress={() => router.push("/(profesional)/ordenes" as any)}
+          onPress={() =>
+            router.push(`/orden/${proposal.ordenes_trabajo![0].id}` as any)
+          }
           className="border border-emerald-500/30 bg-emerald-500/10 py-2.5 rounded-xl items-center flex-row justify-center gap-1"
         >
           <Text className="text-emerald-400 font-semibold text-sm">
@@ -136,6 +139,7 @@ export default function PropuestasScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [withdrawingId, setWithdrawingId] = useState<string | null>(null);
+  const [isCancelledExpanded, setIsCancelledExpanded] = useState(false);
 
   const fetchProposals = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -176,6 +180,9 @@ export default function PropuestasScreen() {
     }
   }
 
+  const activeProposals = proposals.filter((p) => p.estado !== "CANCELADA");
+  const cancelledProposals = proposals.filter((p) => p.estado === "CANCELADA");
+
   return (
     <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
@@ -196,7 +203,7 @@ export default function PropuestasScreen() {
         </View>
       ) : (
         <FlatList
-          data={proposals}
+          data={activeProposals}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{
             paddingHorizontal: 20,
@@ -218,16 +225,50 @@ export default function PropuestasScreen() {
               withdrawingId={withdrawingId}
             />
           )}
+          ListFooterComponent={
+            cancelledProposals.length > 0 ? (
+              <View className="mb-3">
+                <TouchableOpacity
+                  onPress={() => setIsCancelledExpanded(!isCancelledExpanded)}
+                  className="flex-row items-center justify-between py-3 px-1 mb-1"
+                  activeOpacity={0.7}
+                >
+                  <Text className="text-gray-400 font-semibold text-sm">
+                    Canceladas ({cancelledProposals.length})
+                  </Text>
+                  <Ionicons
+                    name={isCancelledExpanded ? "chevron-up" : "chevron-down"}
+                    size={16}
+                    color="#9ca3af"
+                  />
+                </TouchableOpacity>
+                {isCancelledExpanded ? (
+                  <View style={{ opacity: 0.6 }}>
+                    {cancelledProposals.map((proposal) => (
+                      <ProposalListCard
+                        key={proposal.id}
+                        proposal={proposal}
+                        onWithdraw={handleWithdraw}
+                        withdrawingId={withdrawingId}
+                      />
+                    ))}
+                  </View>
+                ) : null}
+              </View>
+            ) : null
+          }
           ListEmptyComponent={
-            <View className="flex-1 items-center justify-center py-20">
-              <Ionicons name="send-outline" size={56} color="#374151" />
-              <Text className="text-white text-lg font-bold mt-5 mb-2">
-                Sin propuestas enviadas
-              </Text>
-              <Text className="text-gray-400 text-sm text-center leading-5 px-6">
-                Explorá el mercado y enviá tu primera propuesta.
-              </Text>
-            </View>
+            cancelledProposals.length === 0 ? (
+              <View className="flex-1 items-center justify-center py-20">
+                <Ionicons name="send-outline" size={56} color="#374151" />
+                <Text className="text-white text-lg font-bold mt-5 mb-2">
+                  Sin propuestas enviadas
+                </Text>
+                <Text className="text-gray-400 text-sm text-center leading-5 px-6">
+                  Explorá el mercado y enviá tu primera propuesta.
+                </Text>
+              </View>
+            ) : null
           }
         />
       )}
