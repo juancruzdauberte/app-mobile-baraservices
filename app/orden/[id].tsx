@@ -572,6 +572,21 @@ export default function OrdenDetalle() {
 
         {/* === PROFESIONAL === */}
 
+        {isProfesional && order.estado === "PROGRAMADA" && (
+          <View className="gap-3 mb-4">
+            <View className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+              <Text className="text-gray-400 text-sm mb-1">Precio actual</Text>
+              <Text className="text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => setShowPriceModal(true)}
+              className="bg-amber-500 rounded-2xl py-4 items-center"
+            >
+              <Text className="text-gray-950 font-bold text-base">Editar precio</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {isProfesional && order.estado === "EN_PROGRESO" ? (
           <TouchableOpacity
             onPress={handleComplete}
