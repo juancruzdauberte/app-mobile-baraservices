@@ -7,8 +7,9 @@ import {
   ScrollView,
   Platform,
   Modal,
-  Image,
 } from "react-native";
+import { Image } from "expo-image";
+import { IMAGE_TRANSITION } from "../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -131,7 +132,9 @@ export default function Login() {
               <View className="mb-6 h-24 w-24 items-center justify-center rounded-3xl ">
                 <Image
                   source={require("../assets/icon-foreground.png")}
-                  className="h-full w-full"
+                  transition={IMAGE_TRANSITION}
+                  contentFit="contain"
+                  style={{ width: "100%", height: "100%" }}
                 />
               </View>
               <Text className="mb-2 text-4xl font-bold text-white">

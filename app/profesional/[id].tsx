@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   Linking,
   Pressable,
   ScrollView,
   Text,
   View,
 } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -48,6 +49,10 @@ function ReviewCard({ review }: { review: PublicReview }) {
         {review.evaluador?.avatar ? (
           <Image
             source={{ uri: review.evaluador.avatar }}
+            placeholder={AVATAR_PLACEHOLDER}
+            transition={IMAGE_TRANSITION}
+            cachePolicy={IMAGE_CACHE_POLICY}
+            contentFit="cover"
             style={{ width: 28, height: 28, borderRadius: 14 }}
           />
         ) : (
@@ -197,6 +202,10 @@ export default function ProfessionalProfile() {
           {professional.avatar ? (
             <Image
               source={{ uri: professional.avatar }}
+              placeholder={AVATAR_PLACEHOLDER}
+              transition={IMAGE_TRANSITION}
+              cachePolicy={IMAGE_CACHE_POLICY}
+              contentFit="cover"
               style={{ width: 80, height: 80, borderRadius: 40 }}
             />
           ) : (

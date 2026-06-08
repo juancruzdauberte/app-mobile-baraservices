@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Text, View, Pressable, Image, ActivityIndicator } from "react-native";
+import { Text, View, Pressable, ActivityIndicator } from "react-native";
+import { Image } from "expo-image";
+import { IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -192,8 +194,10 @@ function PhotoCaptureButton({
       {uri && (
         <Image
           source={{ uri }}
-          className="h-12 w-16 rounded-lg bg-gray-800"
-          resizeMode="cover"
+          cachePolicy={IMAGE_CACHE_POLICY}
+          transition={IMAGE_TRANSITION}
+          contentFit="cover"
+          style={{ height: 48, width: 64, borderRadius: 8, backgroundColor: "#1f2937" }}
         />
       )}
     </Pressable>

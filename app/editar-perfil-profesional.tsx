@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -12,6 +11,8 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import PhoneInput, { CountryCode } from "react-native-phone-number-input";
@@ -310,6 +311,10 @@ export default function EditarPerfilProfesional() {
                 {displayAvatar ? (
                   <Image
                     source={{ uri: displayAvatar }}
+                    placeholder={AVATAR_PLACEHOLDER}
+                    transition={IMAGE_TRANSITION}
+                    cachePolicy={IMAGE_CACHE_POLICY}
+                    contentFit="cover"
                     style={{ width: 96, height: 96, borderRadius: 48 }}
                   />
                 ) : (

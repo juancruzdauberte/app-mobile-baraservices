@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   Linking,
   Pressable,
   ScrollView,
   Text,
   View,
 } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -256,7 +257,10 @@ function ProposalCard({
           {pro?.avatar ? (
             <Image
               source={{ uri: pro.avatar }}
-              className="w-10 h-10 rounded-full bg-gray-800"
+              placeholder={AVATAR_PLACEHOLDER}
+              transition={IMAGE_TRANSITION}
+              cachePolicy={IMAGE_CACHE_POLICY}
+              contentFit="cover"
               style={{ width: 40, height: 40, borderRadius: 20 }}
             />
           ) : (
@@ -731,6 +735,10 @@ export default function SolicitudDetalle() {
                 {clientProfile?.avatar ? (
                   <Image
                     source={{ uri: clientProfile.avatar }}
+                    placeholder={AVATAR_PLACEHOLDER}
+                    transition={IMAGE_TRANSITION}
+                    cachePolicy={IMAGE_CACHE_POLICY}
+                    contentFit="cover"
                     style={{ width: 44, height: 44, borderRadius: 22 }}
                   />
                 ) : (

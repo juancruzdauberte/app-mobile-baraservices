@@ -1,4 +1,6 @@
-import { View, Text, Pressable, Alert, ScrollView, Image } from "react-native";
+import { View, Text, Pressable, Alert, ScrollView } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../providers/AuthProvider";
 import { Ionicons } from "@expo/vector-icons";
@@ -103,6 +105,10 @@ export default function Perfil() {
               {profile?.avatar ? (
                 <Image
                   source={{ uri: profile.avatar }}
+                  placeholder={AVATAR_PLACEHOLDER}
+                  transition={IMAGE_TRANSITION}
+                  cachePolicy={IMAGE_CACHE_POLICY}
+                  contentFit="cover"
                   style={{ width: 72, height: 72, borderRadius: 36 }}
                 />
               ) : (

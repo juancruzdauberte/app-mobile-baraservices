@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -10,6 +9,8 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -368,7 +369,11 @@ export default function OrdenDetalle() {
                 {order.propuestas?.profesionales?.avatar ? (
                   <Image
                     source={{ uri: order.propuestas.profesionales.avatar }}
-                    className="w-12 h-12 rounded-full"
+                    placeholder={AVATAR_PLACEHOLDER}
+                    transition={IMAGE_TRANSITION}
+                    cachePolicy={IMAGE_CACHE_POLICY}
+                    contentFit="cover"
+                    style={{ width: 48, height: 48, borderRadius: 24 }}
                   />
                 ) : (
                   <Ionicons
@@ -444,7 +449,11 @@ export default function OrdenDetalle() {
                     source={{
                       uri: order.solicitudes_trabajo?.clientes?.avatar,
                     }}
-                    className="w-12 h-12 rounded-full"
+                    placeholder={AVATAR_PLACEHOLDER}
+                    transition={IMAGE_TRANSITION}
+                    cachePolicy={IMAGE_CACHE_POLICY}
+                    contentFit="cover"
+                    style={{ width: 48, height: 48, borderRadius: 24 }}
                   />
                 ) : (
                   <Ionicons
