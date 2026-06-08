@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   RefreshControl,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -243,7 +244,7 @@ export default function PropuestasScreen() {
                   />
                 </TouchableOpacity>
                 {isCancelledExpanded ? (
-                  <View style={{ opacity: 0.6 }}>
+                  <View style={styles.cancelledSection}>
                     {cancelledProposals.map((proposal) => (
                       <ProposalListCard
                         key={proposal.id}
@@ -275,3 +276,11 @@ export default function PropuestasScreen() {
     </SafeAreaView>
   );
 }
+
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
+const styles = StyleSheet.create({
+  cancelledSection: {
+    opacity: 0.6,
+  },
+});

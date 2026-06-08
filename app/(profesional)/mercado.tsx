@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -15,6 +16,7 @@ import Toast from "react-native-toast-message";
 
 import { getCategories, getMyJobRequests } from "../../lib/lib";
 import { Category, JobRequest, Urgencia } from "../../types/types";
+import { theme } from "@/constants/theme";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -76,7 +78,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
 
       {/* Category badge */}
       {categoryName ? (
-        <View className="flex-row items-center mb-2" style={{ gap: 4 }}>
+        <View className="flex-row items-center mb-2" style={styles.categoryBadgeRow}>
           <Ionicons name="pricetag-outline" size={13} color="#6b7280" />
           <View className="bg-gray-800 px-2 py-0.5 rounded-full">
             <Text className="text-gray-400 text-xs font-semibold">
@@ -201,7 +203,7 @@ export default function MercadoScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ flexGrow: 0 }}
+        style={styles.horizontalScroll}
         contentContainerStyle={{
           paddingHorizontal: 20,
           paddingVertical: 8,
@@ -237,7 +239,7 @@ export default function MercadoScreen() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={{ flexGrow: 0 }}
+          style={styles.horizontalScroll}
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingVertical: 8,
@@ -333,3 +335,14 @@ export default function MercadoScreen() {
     </SafeAreaView>
   );
 }
+
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
+const styles = StyleSheet.create({
+  categoryBadgeRow: {
+    gap: theme.spacing.xs, // 4px
+  },
+  horizontalScroll: {
+    flexGrow: 0,
+  },
+});
