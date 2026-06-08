@@ -1,0 +1,27 @@
+# OpenSpec Configuration for app-mobile-baraservices
+# Generated: 2026-06-08
+
+project:
+  name: app-mobile-baraservices
+  type: react-native-expo
+  description: Mobile app for Baraservices
+
+sdd:
+  execution_mode: interactive
+  artifact_store: engram
+  chained_pr_strategy: auto-forecast
+  review_budget_lines: 400
+
+testing:
+  # Test commands to be configured
+  unit_test_command: ""
+  integration_test_command: ""
+  strict_tdd: false
+
+# React Native / Expo specific
+framework:
+  type: expo
+  language: typescript
+  
+skills:
+  - .agents/skills/vercel-react-native-skills/SKILL.md
