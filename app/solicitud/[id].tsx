@@ -562,6 +562,7 @@ export default function SolicitudDetalle() {
         <Pressable
           accessibilityRole="button"
           onPress={() => router.back()}
+          accessibilityLabel="Volver"
           className="flex-row items-center px-5 pt-4 pb-2"
         >
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
@@ -623,6 +624,7 @@ export default function SolicitudDetalle() {
           <Pressable
             accessibilityRole="button"
             onPress={() => router.back()}
+          accessibilityLabel="Volver"
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
