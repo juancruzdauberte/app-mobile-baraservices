@@ -3,7 +3,7 @@ import {
   ActivityIndicator,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -203,9 +203,9 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
         {loading ? (
           <ActivityIndicator size="small" color="#10b981" />
         ) : query.length > 0 ? (
-          <TouchableOpacity onPress={handleClear} hitSlop={8}>
+          <Pressable onPress={handleClear} hitSlop={8}>
             <Ionicons name="close-circle" size={18} color="#9ca3af" />
-          </TouchableOpacity>
+          </Pressable>
         ) : null}
       </View>
 
@@ -218,7 +218,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
       {showDropdown && predictions.length > 0 && (
         <View className="bg-gray-900 border border-gray-800 rounded-b-2xl mt-14 overflow-hidden absolute z-10 w-full">
           {predictions.map((prediction, index) => (
-            <TouchableOpacity
+            <Pressable
               key={prediction.place_id}
               onPress={() => handleSelectPrediction(prediction)}
               className={`px-4 py-3 flex-row items-start ${
@@ -248,7 +248,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
                   </Text>
                 ) : null}
               </View>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
       )}

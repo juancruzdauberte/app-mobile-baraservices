@@ -1,22 +1,30 @@
-import { useCallback, useEffect, useState } from "react";
 import {
+  Pressable, useCallback, useEffect, useState } from "react";
+import {
+  Pressable,
   ActivityIndicator,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Pressable, FlashList } from "@shopify/flash-list";
+import {
+  Pressable, SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
+import {
+  Pressable, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import { getCategories, getMyJobRequests } from "../../lib/lib";
-import { Category, JobRequest, Urgencia } from "../../types/types";
-import { theme } from "@/constants/theme";
+import {
+  Pressable, getCategories, getMyJobRequests } from "../../lib/lib";
+import {
+  Pressable, Category, JobRequest, Urgencia } from "../../types/types";
+import {
+  Pressable, theme } from "@/constants/theme";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -54,7 +62,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
     : null;
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       activeOpacity={0.7}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"
@@ -118,7 +126,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
         </Text>
         <Ionicons name="chevron-forward" size={14} color="#6b7280" />
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -213,7 +221,7 @@ export default function MercadoScreen() {
         {urgencyFilters.map((f) => {
           const isActive = selectedUrgency === f.key;
           return (
-            <TouchableOpacity
+            <Pressable
               key={f.key ?? "all"}
               onPress={() => setSelectedUrgency(f.key)}
               className={`mr-2 px-4 py-2 rounded-full ${
@@ -229,7 +237,7 @@ export default function MercadoScreen() {
               >
                 {f.label}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </ScrollView>
@@ -246,7 +254,7 @@ export default function MercadoScreen() {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity
+          <Pressable
             onPress={() => setSelectedCategory(null)}
             className={`mr-2 px-4 py-2 rounded-full ${
               selectedCategory === null
@@ -261,11 +269,11 @@ export default function MercadoScreen() {
             >
               Todas
             </Text>
-          </TouchableOpacity>
+          </Pressable>
           {categories.map((cat) => {
             const isActive = selectedCategory === cat.id;
             return (
-              <TouchableOpacity
+              <Pressable
                 key={cat.id}
                 onPress={() => setSelectedCategory(cat.id)}
                 className={`mr-2 px-4 py-2 rounded-full ${
@@ -281,7 +289,7 @@ export default function MercadoScreen() {
                 >
                   {cat.nombre}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </ScrollView>

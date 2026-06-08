@@ -10,7 +10,6 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -185,13 +184,13 @@ export default function EditarPerfil() {
       >
         {/* Header */}
         <View className="flex-row items-center px-5 pt-4 pb-4 border-b border-gray-800">
-          <TouchableOpacity
+          <Pressable
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-white text-lg font-bold flex-1">
             Editar perfil
           </Text>
@@ -205,7 +204,7 @@ export default function EditarPerfil() {
         >
           {/* ── Avatar ──────────────────────────────────────────────────── */}
           <View className="items-center py-6">
-            <TouchableOpacity onPress={() => setShowPicker(true)} activeOpacity={0.8}>
+            <Pressable onPress={() => setShowPicker(true)}>
               <View className="relative">
                 {displayAvatar ? (
                   <Image
@@ -232,7 +231,7 @@ export default function EditarPerfil() {
                   )}
                 </View>
               </View>
-            </TouchableOpacity>
+            </Pressable>
             <Text className="text-gray-400 text-xs mt-3">
               Tocá para cambiar la foto
             </Text>
@@ -330,7 +329,7 @@ export default function EditarPerfil() {
             </View>
 
             {/* Guardar */}
-            <TouchableOpacity
+            <Pressable
               onPress={handleSave}
               disabled={saving}
               className="bg-emerald-500 rounded-2xl py-4 items-center justify-center mt-2"
@@ -340,7 +339,7 @@ export default function EditarPerfil() {
               ) : (
                 <Text className="text-gray-950 font-bold text-base">Guardar cambios</Text>
               )}
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -365,7 +364,7 @@ export default function EditarPerfil() {
           </Text>
 
           {/* Cámara */}
-          <TouchableOpacity
+          <Pressable
             onPress={pickFromCamera}
             className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
@@ -379,10 +378,10 @@ export default function EditarPerfil() {
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#6b7280" />
-          </TouchableOpacity>
+          </Pressable>
 
           {/* Galería */}
-          <TouchableOpacity
+          <Pressable
             onPress={pickFromGallery}
             className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
@@ -396,15 +395,15 @@ export default function EditarPerfil() {
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#6b7280" />
-          </TouchableOpacity>
+          </Pressable>
 
           {/* Cancelar */}
-          <TouchableOpacity
+          <Pressable
             onPress={() => setShowPicker(false)}
             className="items-center py-3.5 mt-1"
           >
             <Text className="text-gray-400 font-medium">Cancelar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </Modal>
     </SafeAreaView>

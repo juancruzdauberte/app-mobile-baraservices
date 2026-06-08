@@ -3,9 +3,9 @@ import {
   ActivityIndicator,
   Image,
   Linking,
+  Pressable,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -53,12 +53,12 @@ export default function ClientProfile() {
   if (loadError || client == null) {
     return (
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
-        <TouchableOpacity
+        <Pressable
           onPress={() => router.back()}
           className="flex-row items-center px-5 pt-4 pb-2"
         >
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
+        </Pressable>
 
         <View className="flex-1 items-center justify-center px-8">
           <Ionicons name="alert-circle-outline" size={48} color="#4b5563" />
@@ -68,12 +68,12 @@ export default function ClientProfile() {
           <Text className="text-gray-400 text-sm text-center mb-6">
             Verificá tu conexión e intentá de nuevo.
           </Text>
-          <TouchableOpacity
+          <Pressable
             onPress={load}
             className="bg-emerald-500 px-6 py-3 rounded-full"
           >
             <Text className="text-gray-950 font-bold">Reintentar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
@@ -89,13 +89,13 @@ export default function ClientProfile() {
       >
         {/* ── Header ────────────────────────────────────────────────────── */}
         <View className="flex-row items-center pt-4 pb-4">
-          <TouchableOpacity
+          <Pressable
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-white text-lg font-bold">Perfil del cliente</Text>
         </View>
 
@@ -133,7 +133,7 @@ export default function ClientProfile() {
             </Text>
 
             {client.telefono ? (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => Linking.openURL(`tel:${client.telefono}`)}
                 className="flex-row items-center py-3 border-b border-gray-800"
                 style={{ gap: 12 }}
@@ -148,11 +148,11 @@ export default function ClientProfile() {
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={16} color="#4b5563" />
-              </TouchableOpacity>
+              </Pressable>
             ) : null}
 
             {client.email ? (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => Linking.openURL(`mailto:${client.email}`)}
                 className="flex-row items-center pt-3"
                 style={{ gap: 12 }}
@@ -167,7 +167,7 @@ export default function ClientProfile() {
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={16} color="#4b5563" />
-              </TouchableOpacity>
+              </Pressable>
             ) : null}
           </View>
         ) : null}

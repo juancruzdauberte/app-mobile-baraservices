@@ -7,7 +7,7 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -111,7 +111,7 @@ export default function ResenaScreen() {
         <Text className="text-gray-400 text-sm text-center mt-2">
           Tu opinión ayuda a otros clientes a elegir mejor.
         </Text>
-        <TouchableOpacity
+        <Pressable
           onPress={() =>
             router.replace(isPro ? "/(profesional)" : ("/(cliente)" as any))
           }
@@ -120,7 +120,7 @@ export default function ResenaScreen() {
           <Text className="text-gray-950 font-bold text-base">
             Volver al inicio
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </SafeAreaView>
     );
   }
@@ -152,13 +152,13 @@ export default function ResenaScreen() {
         >
           {/* ── Header ────────────────────────────────────────────────────── */}
           <View className="flex-row items-center pt-4 pb-5">
-            <TouchableOpacity
+            <Pressable
               onPress={() => router.back()}
               className="mr-3 p-1"
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
               <Ionicons name="arrow-back" size={24} color="#ffffff" />
-            </TouchableOpacity>
+            </Pressable>
             <Text className="text-white text-lg font-bold flex-1">
               {isPro ? "Calificar cliente" : "Calificar profesional"}
             </Text>
@@ -195,7 +195,7 @@ export default function ResenaScreen() {
                     {order.solicitudes_trabajo.titulo}
                   </Text>
                 ) : null}
-                <TouchableOpacity
+                <Pressable
                   onPress={() => {
                     if (isPro) {
                       const clienteId = order?.solicitudes_trabajo?.clientes?.id;
@@ -210,7 +210,7 @@ export default function ResenaScreen() {
                   <Text className="text-emerald-500 text-xs mt-1">
                     Ver perfil →
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
           )}
@@ -222,7 +222,7 @@ export default function ResenaScreen() {
 
           <View className="flex-row gap-3 mb-2">
             {[1, 2, 3, 4, 5].map((n) => (
-              <TouchableOpacity
+              <Pressable
                 key={n}
                 onPress={() => setPuntaje(n)}
                 hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
@@ -232,7 +232,7 @@ export default function ResenaScreen() {
                   size={40}
                   color={n <= puntaje ? "#f59e0b" : "#4b5563"}
                 />
-              </TouchableOpacity>
+              </Pressable>
             ))}
           </View>
 
@@ -266,7 +266,7 @@ export default function ResenaScreen() {
           </Text>
 
           {/* ── Submit button ─────────────────────────────────────────────── */}
-          <TouchableOpacity
+          <Pressable
             onPress={handleSubmit}
             disabled={puntaje === 0 || submitting}
             className={`w-full mt-6 mb-4 py-4 rounded-2xl items-center ${
@@ -285,7 +285,7 @@ export default function ResenaScreen() {
                 Enviar reseña
               </Text>
             )}
-          </TouchableOpacity>
+          </Pressable>
 
           {/* Spacer */}
           <View className="h-8" />

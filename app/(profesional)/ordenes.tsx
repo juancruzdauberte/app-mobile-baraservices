@@ -1,18 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
 import {
+  Pressable, useCallback, useEffect, useState } from "react";
+import {
+  Pressable,
   ActivityIndicator,
   RefreshControl,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Pressable, FlashList } from "@shopify/flash-list";
+import {
+  Pressable, SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
+import {
+  Pressable, useRouter } from "expo-router";
 
-import { getMyWorkOrders } from "../../lib/lib";
-import { WorkOrder, WorkOrderEstado } from "../../types/types";
+import {
+  Pressable, getMyWorkOrders } from "../../lib/lib";
+import {
+  Pressable, WorkOrder, WorkOrderEstado } from "../../types/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -79,7 +86,7 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
   );
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       activeOpacity={0.7}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"
@@ -123,7 +130,7 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
         <Text className={`text-xs ${statusCfg.text}`}>{hint}</Text>
         <Ionicons name="chevron-forward" size={14} color="#6b7280" />
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

@@ -4,9 +4,9 @@ import {
   Alert,
   Image,
   Linking,
+  Pressable,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -172,7 +172,7 @@ function MyProposalCard({
       ) : null}
 
       {proposal.estado === "PENDIENTE" ? (
-        <TouchableOpacity
+        <Pressable
           onPress={onWithdraw}
           disabled={isWithdrawing}
           className="border border-red-500/30 bg-red-500/10 py-2.5 rounded-xl items-center mt-1"
@@ -184,7 +184,7 @@ function MyProposalCard({
               Retirar propuesta
             </Text>
           )}
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
 
       {proposal.estado === "RECHAZADA" ? (
@@ -269,7 +269,7 @@ function ProposalCard({
           <View>
             <Text className="text-white font-semibold text-sm">{fullName}</Text>
             {pro && (
-              <TouchableOpacity
+              <Pressable
                 onPress={() =>
                   router.push(`/profesional/${proposal.profesional_id}` as any)
                 }
@@ -281,7 +281,7 @@ function ProposalCard({
                   Ver perfil
                 </Text>
                 <Ionicons name="open-outline" size={13} color="#10b981" />
-              </TouchableOpacity>
+              </Pressable>
             )}
           </View>
         </View>
@@ -342,7 +342,7 @@ function ProposalCard({
           className="flex-row border-t border-gray-800 pt-3"
           style={{ gap: 8 }}
         >
-          <TouchableOpacity
+          <Pressable
             onPress={() => onReject(proposal.id)}
             disabled={isProcessing}
             className="flex-1 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 items-center justify-center"
@@ -354,9 +354,9 @@ function ProposalCard({
                 Rechazar
               </Text>
             )}
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             onPress={() => onAccept(proposal.id)}
             disabled={isProcessing}
             className="flex-1 py-2.5 rounded-xl bg-emerald-500 items-center justify-center"
@@ -366,7 +366,7 @@ function ProposalCard({
             ) : (
               <Text className="text-gray-950 font-bold text-sm">Aceptar</Text>
             )}
-          </TouchableOpacity>
+          </Pressable>
         </View>
       ) : null}
     </View>
@@ -551,12 +551,12 @@ export default function SolicitudDetalle() {
     return (
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
         {/* Back */}
-        <TouchableOpacity
+        <Pressable
           onPress={() => router.back()}
           className="flex-row items-center px-5 pt-4 pb-2"
         >
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
+        </Pressable>
 
         <View className="flex-1 items-center justify-center px-8">
           <Ionicons name="alert-circle-outline" size={48} color="#4b5563" />
@@ -566,12 +566,12 @@ export default function SolicitudDetalle() {
           <Text className="text-gray-400 text-sm text-center mb-6">
             Verificá tu conexión e intentá de nuevo.
           </Text>
-          <TouchableOpacity
+          <Pressable
             onPress={() => loadData()}
             className="bg-emerald-500 px-6 py-3 rounded-full"
           >
             <Text className="text-gray-950 font-bold">Reintentar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
@@ -610,18 +610,18 @@ export default function SolicitudDetalle() {
       >
         {/* ── Header ─────────────────────────────────────────────────────── */}
         <View className="flex-row items-center pt-4 pb-5">
-          <TouchableOpacity
+          <Pressable
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-white text-lg font-bold flex-1">
             Detalle de Solicitud
           </Text>
           {!isPro && jobRequest.estado === "ABIERTA" ? (
-            <TouchableOpacity
+            <Pressable
               onPress={() =>
                 Alert.alert(
                   "Eliminar solicitud",
@@ -645,7 +645,7 @@ export default function SolicitudDetalle() {
               ) : (
                 <Ionicons name="trash-outline" size={22} color="#f87171" />
               )}
-            </TouchableOpacity>
+            </Pressable>
           ) : null}
         </View>
 
@@ -675,7 +675,7 @@ export default function SolicitudDetalle() {
 
           {/* Address */}
           {jobRequest.direccion_formateada ? (
-            <TouchableOpacity
+            <Pressable
               onPress={() => {
                 const url = jobRequest.google_place_id
                   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(jobRequest.direccion_formateada!)}&query_place_id=${jobRequest.google_place_id}`
@@ -693,7 +693,7 @@ export default function SolicitudDetalle() {
               <Text className="text-emerald-400 text-sm ml-1.5 flex-1 underline">
                 {jobRequest.direccion_formateada}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           ) : null}
 
           {/* Date */}
@@ -766,7 +766,7 @@ export default function SolicitudDetalle() {
                 />
               ) : (
                 /* No envió propuesta → botón enviar */
-                <TouchableOpacity
+                <Pressable
                   onPress={() => router.push(`/enviar-propuesta/${id}` as any)}
                   className="bg-emerald-500 py-4 rounded-2xl items-center mb-4 flex-row justify-center gap-2"
                 >
@@ -774,14 +774,14 @@ export default function SolicitudDetalle() {
                   <Text className="text-gray-950 font-bold text-base">
                     Enviar propuesta
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               )
             ) : null}
 
             {/* Si ASIGNADA y ES la propuesta aceptada del pro */}
             {jobRequest.estado === "ASIGNADA" &&
             myProposal?.estado === "ACEPTADA" ? (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => router.push("/(profesional)/ordenes" as any)}
                 className="bg-gray-900 border border-emerald-500/30 rounded-2xl p-4 mt-2"
               >
@@ -801,7 +801,7 @@ export default function SolicitudDetalle() {
                 <Text className="text-gray-400 text-xs mt-1.5">
                   Tocá para ver la orden de trabajo
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             ) : null}
 
             {jobRequest.estado === "COMPLETA" ? (
@@ -813,7 +813,7 @@ export default function SolicitudDetalle() {
                   El cliente finalizó la orden exitosamente.
                 </Text>
                 {jobRequest.ordenes_trabajo?.[0]?.id ? (
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() =>
                       router.push(
                         `/orden/${jobRequest.ordenes_trabajo![0].id}` as any,
@@ -824,7 +824,7 @@ export default function SolicitudDetalle() {
                     <Text className="text-emerald-400 font-semibold text-sm">
                       Ver orden →
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 ) : null}
               </View>
             ) : null}
@@ -834,7 +834,7 @@ export default function SolicitudDetalle() {
           <>
             {/* ── Cancel button — only when ABIERTA ──────────────────────────── */}
             {jobRequest.estado === "ABIERTA" ? (
-              <TouchableOpacity
+              <Pressable
                 onPress={handleCancel}
                 disabled={isCancelProcessing}
                 className="border border-red-500/40 bg-red-500/10 py-3 rounded-2xl items-center mb-5"
@@ -846,7 +846,7 @@ export default function SolicitudDetalle() {
                     Cancelar solicitud
                   </Text>
                 )}
-              </TouchableOpacity>
+              </Pressable>
             ) : null}
 
             {/* ── Proposals section ──────────────────────────────────────────── */}
@@ -894,9 +894,8 @@ export default function SolicitudDetalle() {
 
             {/* ── Assigned work order card ───────────────────────────────────── */}
             {jobRequest.estado === "ASIGNADA" ? (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => router.push("/(cliente)/ordenes" as any)}
-                activeOpacity={0.7}
                 className="bg-gray-900 border border-amber-500/30 rounded-2xl p-4 mt-4"
               >
                 <View className="flex-row items-center justify-between">
@@ -915,7 +914,7 @@ export default function SolicitudDetalle() {
                 <Text className="text-gray-400 text-xs mt-1.5">
                   Tocá para ver la orden de trabajo
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             ) : null}
 
             {jobRequest.estado === "COMPLETA" ? (
@@ -927,7 +926,7 @@ export default function SolicitudDetalle() {
                   El trabajo fue finalizado exitosamente.
                 </Text>
                 {jobRequest.ordenes_trabajo?.[0]?.id ? (
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() =>
                       router.push(
                         `/orden/${jobRequest.ordenes_trabajo![0].id}` as any,
@@ -938,11 +937,11 @@ export default function SolicitudDetalle() {
                     <Text className="text-emerald-400 font-semibold text-sm">
                       Ver orden →
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 ) : null}
                 {jobRequest.ordenes_trabajo?.[0]?.id &&
                 (jobRequest.ordenes_trabajo?.[0]?._count?.resenas ?? 0) === 0 ? (
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() =>
                       router.push(
                         `/resena/${jobRequest.ordenes_trabajo![0].id}` as any,
@@ -953,7 +952,7 @@ export default function SolicitudDetalle() {
                     <Text className="text-gray-950 font-bold text-sm">
                       Calificar profesional
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 ) : null}
               </View>
             ) : null}

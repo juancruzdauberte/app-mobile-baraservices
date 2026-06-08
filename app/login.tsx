@@ -7,7 +7,6 @@ import {
   ScrollView,
   Platform,
   Modal,
-  TouchableOpacity,
   Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -237,7 +236,7 @@ export default function Login() {
               <Text className="text-xl font-bold text-white">
                 Restablecer Contraseña
               </Text>
-              <TouchableOpacity
+              <Pressable
                 onPress={() => {
                   setShowRecoveryModal(false);
                   setRecoveryEmail("");
@@ -245,7 +244,7 @@ export default function Login() {
                 className="p-2"
               >
                 <Ionicons name="close" size={24} color="#9ca3af" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <Text className="mb-4 text-base text-gray-400">
