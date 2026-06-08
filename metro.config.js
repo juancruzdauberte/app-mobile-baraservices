@@ -1,5 +1,3 @@
-const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
-
-const config = getDefaultConfig(__dirname);
-module.exports = withNativeWind(config, { input: "./global.css" });
+// Wrapper para evitar el bug de Node.js 24 con ESM loader en Windows
+// El archivo real está en metro.config.cjs
+module.exports = require('./metro.config.cjs');
