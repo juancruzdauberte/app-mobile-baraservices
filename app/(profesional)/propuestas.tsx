@@ -1,20 +1,27 @@
-import { useCallback, useEffect, useState } from "react";
 import {
+  Pressable, useCallback, useEffect, useState } from "react";
+import {
+  Pressable,
   ActivityIndicator,
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Pressable, FlashList } from "@shopify/flash-list";
+import {
+  Pressable, SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
+import {
+  Pressable, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import { deleteProposal, getMyProposals } from "../../lib/lib";
-import { Proposal, ProposalEstado } from "../../types/types";
+import {
+  Pressable, deleteProposal, getMyProposals } from "../../lib/lib";
+import {
+  Pressable, Proposal, ProposalEstado } from "../../types/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -104,7 +111,8 @@ function ProposalListCard({
 
       {/* Actions */}
       {proposal.estado === "PENDIENTE" ? (
-        <TouchableOpacity
+        <Pressable
+          accessibilityRole="button"
           onPress={() => onWithdraw(proposal.id)}
           disabled={isWithdrawing}
           className="border border-red-500/30 bg-red-500/10 py-2.5 rounded-xl items-center"
@@ -114,11 +122,12 @@ function ProposalListCard({
           ) : (
             <Text className="text-red-400 font-semibold text-sm">Retirar</Text>
           )}
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
 
       {proposal.estado === "ACEPTADA" && proposal.ordenes_trabajo?.[0]?.id ? (
-        <TouchableOpacity
+        <Pressable
+          accessibilityRole="button"
           onPress={() =>
             router.push(`/orden/${proposal.ordenes_trabajo![0].id}` as any)
           }
@@ -127,7 +136,7 @@ function ProposalListCard({
           <Text className="text-emerald-400 font-semibold text-sm">
             Ver orden →
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
     </View>
   );
@@ -229,7 +238,8 @@ export default function PropuestasScreen() {
           ListFooterComponent={
             cancelledProposals.length > 0 ? (
               <View className="mb-3">
-                <TouchableOpacity
+                <Pressable
+                  accessibilityRole="button"
                   onPress={() => setIsCancelledExpanded(!isCancelledExpanded)}
                   className="flex-row items-center justify-between py-3 px-1 mb-1"
                   activeOpacity={0.7}
@@ -242,7 +252,7 @@ export default function PropuestasScreen() {
                     size={16}
                     color="#9ca3af"
                   />
-                </TouchableOpacity>
+                </Pressable>
                 {isCancelledExpanded ? (
                   <View style={styles.cancelledSection}>
                     {cancelledProposals.map((proposal) => (

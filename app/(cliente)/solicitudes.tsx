@@ -1,18 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
 import {
+  Pressable, useCallback, useEffect, useState } from "react";
+import {
+  Pressable,
   ActivityIndicator,
   RefreshControl,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Pressable, FlashList } from "@shopify/flash-list";
+import {
+  Pressable, SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
-import { getMyJobRequests } from "../../lib/lib";
-import { JobRequest, JobRequestEstado, Urgencia } from "../../types/types";
+import {
+  Pressable, useRouter } from "expo-router";
+import {
+  Pressable, useFocusEffect } from "@react-navigation/native";
+import {
+  Pressable, getMyJobRequests } from "../../lib/lib";
+import {
+  Pressable, JobRequest, JobRequestEstado, Urgencia } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -98,7 +106,8 @@ function JobRequestCard({
   });
 
   return (
-    <TouchableOpacity
+    <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       activeOpacity={0.75}
       className="bg-gray-900 rounded-2xl p-4 border border-gray-800 mb-3"
@@ -136,7 +145,7 @@ function JobRequestCard({
           <Ionicons name="chevron-forward" size={14} color="#4b5563" />
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -153,13 +162,14 @@ function EmptyState({ onPress }: { onPress: () => void }) {
         Todavía no creaste ninguna solicitud de trabajo. Tocá el botón para
         publicar tu primera solicitud.
       </Text>
-      <TouchableOpacity
+      <Pressable
+        accessibilityRole="button"
         onPress={onPress}
         className="bg-emerald-500 px-6 py-3 rounded-full flex-row items-center"
       >
         <Ionicons name="add" size={18} color="#030712" />
         <Text className="text-gray-950 font-bold ml-1">Nueva solicitud</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
@@ -253,12 +263,13 @@ export default function Solicitudes() {
 
       {/* FAB */}
       {!loading && requests.length > 0 && (
-        <TouchableOpacity
+        <Pressable
+          accessibilityRole="button"
           onPress={() => setShowModal(true)}
           className="absolute bottom-28 right-5 bg-emerald-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
         >
           <Ionicons name="add" size={28} color="#030712" />
-        </TouchableOpacity>
+        </Pressable>
       )}
 
       <CreateJobRequestModal

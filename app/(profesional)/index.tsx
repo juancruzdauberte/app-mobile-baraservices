@@ -1,18 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
 import {
+  Pressable, useCallback, useEffect, useState } from "react";
+import {
+  Pressable,
   ActivityIndicator,
   ScrollView,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
-import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
-import { useAuth } from "../../providers/AuthProvider";
-import { getMyProposals, getMyWorkOrders } from "../../lib/lib";
 import {
+  Pressable, SafeAreaView } from "react-native-safe-area-context";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  Pressable, useRouter } from "expo-router";
+import {
+  Pressable, useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import {
+  Pressable, useAuth } from "../../providers/AuthProvider";
+import {
+  Pressable, getMyProposals, getMyWorkOrders } from "../../lib/lib";
+import {
+  Pressable,
   Proposal,
   ProposalEstado,
   WorkOrder,
@@ -69,7 +77,8 @@ function RecentOrderCard({
 }) {
   const s = ORDER_STATUS_COLORS[order.estado] ?? ORDER_STATUS_COLORS.PROGRAMADA;
   return (
-    <TouchableOpacity
+    <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
     >
@@ -86,7 +95,7 @@ function RecentOrderCard({
         ${order.precio_final.toLocaleString("es-AR")}
       </Text>
       <Ionicons name="chevron-forward" size={16} color="#4b5563" />
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -230,15 +239,17 @@ export default function DashboardPro() {
 
         {/* Quick Actions */}
         <View className="flex-row mb-8" style={{ gap: 12 }}>
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={() => router.push("/(profesional)/mercado" as any)}
             className="bg-emerald-500 flex-1 rounded-2xl items-center justify-center flex-row py-3.5"
             style={{ gap: 8 }}
           >
             <Ionicons name="search-outline" size={18} color="#030712" />
             <Text className="text-gray-950 font-bold text-sm">Ver mercado</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
             onPress={() => router.push("/(profesional)/propuestas" as any)}
             className="bg-gray-900 border border-gray-800 flex-1 rounded-2xl items-center justify-center flex-row py-3.5"
             style={{ gap: 8 }}
@@ -247,7 +258,7 @@ export default function DashboardPro() {
             <Text className="text-emerald-400 font-bold text-sm">
               Mis propuestas
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         {/* Propuestas recientes */}
@@ -257,11 +268,12 @@ export default function DashboardPro() {
               <Text className="text-white text-lg font-bold">
                 Propuestas recientes
               </Text>
-              <TouchableOpacity
+              <Pressable
+                accessibilityRole="button"
                 onPress={() => router.push("/(profesional)/propuestas" as any)}
               >
                 <Text className="text-emerald-500 font-medium">Ver todas</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             {recentProposals.map((p) => (
               <RecentProposalCard key={p.id} proposal={p} />
@@ -276,11 +288,12 @@ export default function DashboardPro() {
               <Text className="text-white text-lg font-bold">
                 Órdenes activas
               </Text>
-              <TouchableOpacity
+              <Pressable
+                accessibilityRole="button"
                 onPress={() => router.push("/(profesional)/ordenes" as any)}
               >
                 <Text className="text-emerald-500 font-medium">Ver todas</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             {recentOrders.map((o) => (
               <RecentOrderCard
@@ -308,12 +321,13 @@ export default function DashboardPro() {
               Explorá el mercado y enviá propuestas para empezar a recibir
               órdenes.
             </Text>
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={() => router.push("/(profesional)/mercado" as any)}
               className="bg-emerald-500 px-6 py-3 rounded-full"
             >
               <Text className="text-gray-950 font-bold">Ver oportunidades</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
 

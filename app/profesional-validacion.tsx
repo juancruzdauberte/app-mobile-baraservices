@@ -33,6 +33,7 @@ export default function ProfesionalValidacionScreen() {
         </Text>
 
         <Pressable
+          accessibilityRole="button"
           onPress={handleRefresh}
           className="mb-4 w-full rounded-2xl bg-emerald-600 px-6 py-4"
         >
@@ -42,6 +43,7 @@ export default function ProfesionalValidacionScreen() {
         </Pressable>
 
         <Pressable
+          accessibilityRole="button"
           onPress={handleLogout}
           className="w-full rounded-2xl border border-gray-700 px-6 py-4"
         >

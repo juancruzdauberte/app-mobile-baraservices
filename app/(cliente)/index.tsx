@@ -1,13 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
-import { ScrollView, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Pressable, useCallback, useEffect, useState } from "react";
+import {
+  Pressable, ScrollView, Text, View, TextInput, Pressable, ActivityIndicator } from "react-native";
+import {
+  Pressable, SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
-import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
-import { useAuth } from "../../providers/AuthProvider";
-import { useCategoriesStore } from "../../store/categorys.store";
-import { getCategories, getMyJobRequests, getMyWorkOrders } from "../../lib/lib";
-import { Category, WorkOrder, WorkOrderEstado } from "../../types/types";
+import {
+  Pressable, useRouter } from "expo-router";
+import {
+  Pressable, useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import {
+  Pressable, useAuth } from "../../providers/AuthProvider";
+import {
+  Pressable, useCategoriesStore } from "../../store/categorys.store";
+import {
+  Pressable, getCategories, getMyJobRequests, getMyWorkOrders } from "../../lib/lib";
+import {
+  Pressable, Category, WorkOrder, WorkOrderEstado } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -37,7 +46,8 @@ const ORDER_STATUS_COLORS: Record<WorkOrderEstado, { dot: string; text: string; 
 function RecentOrderCard({ order, onPress }: { order: WorkOrder; onPress: () => void }) {
   const s = ORDER_STATUS_COLORS[order.estado] ?? ORDER_STATUS_COLORS.PROGRAMADA;
   return (
-    <TouchableOpacity
+    <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
     >
@@ -54,7 +64,7 @@ function RecentOrderCard({ order, onPress }: { order: WorkOrder; onPress: () => 
         ${order.precio_final.toLocaleString("es-AR")}
       </Text>
       <Ionicons name="chevron-forward" size={16} color="#4b5563" />
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -110,9 +120,9 @@ export default function Home() {
               {profile?.nombre} {profile?.apellido}
             </Text>
           </View>
-          <TouchableOpacity className="bg-gray-900 p-3 rounded-full border border-gray-800">
+          <Pressable className="bg-gray-900 p-3 rounded-full border border-gray-800">
             <Ionicons name="notifications-outline" size={20} color="#f3f4f6" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         {/* Search Bar */}
@@ -157,13 +167,13 @@ export default function Home() {
         <View className="mb-8">
           <View className="flex-row items-center justify-between mb-4">
             <Text className="text-white text-lg font-bold">Categorías</Text>
-            <TouchableOpacity>
+            <Pressable>
               <Text className="text-emerald-500 font-medium">Ver todas</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <View className="flex-row flex-wrap justify-between" style={{ gap: 12 }}>
             {categories?.map((cat: Category) => (
-              <TouchableOpacity
+              <Pressable
                 key={cat.id}
                 className="items-center bg-gray-900 py-4 px-2 rounded-2xl border border-gray-800 active:bg-gray-800"
                 style={{ width: "31%" }}
@@ -172,7 +182,7 @@ export default function Home() {
                   <Ionicons name={getCategoryIcon(cat.nombre) as any} size={24} color="#10b981" />
                 </View>
                 <Text className="text-gray-300 text-xs font-medium text-center">{cat.nombre}</Text>
-              </TouchableOpacity>
+              </Pressable>
             ))}
           </View>
         </View>
@@ -182,9 +192,10 @@ export default function Home() {
           <View className="mb-8">
             <View className="flex-row items-center justify-between mb-4">
               <Text className="text-white text-lg font-bold">Órdenes recientes</Text>
-              <TouchableOpacity onPress={() => router.push("/(cliente)/ordenes" as any)}>
+              <Pressable onPress={() => router.push("/(cliente)/ordenes" as any)}>
+                accessibilityRole="button"
                 <Text className="text-emerald-500 font-medium">Ver todas</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             {recentOrders.map((order) => (
               <RecentOrderCard
@@ -212,12 +223,13 @@ export default function Home() {
       </ScrollView>
 
       {/* FAB */}
-      <TouchableOpacity
+      <Pressable
+        accessibilityRole="button"
         onPress={() => setShowModal(true)}
         className="absolute bottom-28 right-5 bg-emerald-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
       >
         <Ionicons name="add" size={28} color="#030712" />
-      </TouchableOpacity>
+      </Pressable>
 
       <CreateJobRequestModal
         visible={showModal}

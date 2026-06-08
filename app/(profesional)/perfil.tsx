@@ -1,4 +1,6 @@
-import { View, Text, Pressable, Alert, ScrollView, Image } from "react-native";
+import { View, Text, Pressable, Alert, ScrollView } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../providers/AuthProvider";
 import { Ionicons } from "@expo/vector-icons";
@@ -103,6 +105,10 @@ export default function Perfil() {
               {profile?.avatar ? (
                 <Image
                   source={{ uri: profile.avatar }}
+                  placeholder={AVATAR_PLACEHOLDER}
+                  transition={IMAGE_TRANSITION}
+                  cachePolicy={IMAGE_CACHE_POLICY}
+                  contentFit="cover"
                   style={{ width: 72, height: 72, borderRadius: 36 }}
                 />
               ) : (
@@ -158,6 +164,7 @@ export default function Perfil() {
           <View className="gap-3">
             {menuItems.map((item, index) => (
               <Pressable
+                accessibilityRole="button"
                 key={index}
                 onPress={item.onPress}
                 className="bg-gray-900 rounded-2xl p-4 flex-row items-center border border-gray-800 active:bg-gray-800"
@@ -182,6 +189,7 @@ export default function Perfil() {
         <View className="mb-8">
           <View className="gap-3">
             <Pressable
+              accessibilityRole="button"
               onPress={handleSignOut}
               className="bg-red-500/10 rounded-2xl p-4 flex-row items-center border border-red-500/20 active:bg-red-500/20"
             >

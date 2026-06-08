@@ -1,6 +1,8 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
-import { Pressable, View, Image, type ViewStyle } from "react-native";
+import { Pressable, View, type ViewStyle } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
@@ -68,6 +70,10 @@ export function AnimatedTabBar({
         return profile?.avatar ? (
           <Image
             source={{ uri: profile.avatar }}
+            placeholder={AVATAR_PLACEHOLDER}
+            transition={IMAGE_TRANSITION}
+            cachePolicy={IMAGE_CACHE_POLICY}
+            contentFit="cover"
             style={{ width: 30, height: 30, borderRadius: 22 }}
           />
         ) : (
@@ -88,6 +94,10 @@ export function AnimatedTabBar({
         return profile?.avatar ? (
           <Image
             source={{ uri: profile.avatar }}
+            placeholder={AVATAR_PLACEHOLDER}
+            transition={IMAGE_TRANSITION}
+            cachePolicy={IMAGE_CACHE_POLICY}
+            contentFit="cover"
             style={{ width: 30, height: 30, borderRadius: 22 }}
           />
         ) : (

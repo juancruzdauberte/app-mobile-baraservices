@@ -7,7 +7,7 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -195,9 +195,10 @@ export default function CreateJobRequestModal({
           <Text className="text-white text-xl font-bold">
             Nueva Solicitud de Trabajo
           </Text>
-          <TouchableOpacity onPress={handleClose} hitSlop={8}>
+          <Pressable onPress={handleClose} hitSlop={8}>
+            accessibilityRole="button"
             <Ionicons name="close" size={24} color="#9ca3af" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         <KeyboardAvoidingView
@@ -239,7 +240,8 @@ export default function CreateJobRequestModal({
                 {URGENCY_CONFIG.map((item) => {
                   const isActive = form.urgencia === item.value;
                   return (
-                    <TouchableOpacity
+                    <Pressable
+                      accessibilityRole="button"
                       key={item.value}
                       onPress={() => updateField("urgencia", item.value)}
                       className={`flex-1 items-center py-3 rounded-2xl border ${
@@ -255,7 +257,7 @@ export default function CreateJobRequestModal({
                       >
                         {item.label}
                       </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                   );
                 })}
               </View>
@@ -275,7 +277,8 @@ export default function CreateJobRequestModal({
                   {(categories ?? []).map((cat) => {
                     const isActive = form.categoria_id === cat.id;
                     return (
-                      <TouchableOpacity
+                      <Pressable
+                        accessibilityRole="button"
                         key={cat.id}
                         onPress={() => updateField("categoria_id", cat.id)}
                         className={`px-4 py-2 rounded-2xl border ${
@@ -292,7 +295,7 @@ export default function CreateJobRequestModal({
                           {cat.nombre.charAt(0).toUpperCase() +
                             cat.nombre.slice(1).toLowerCase()}
                         </Text>
-                      </TouchableOpacity>
+                      </Pressable>
                     );
                   })}
                 </View>
@@ -350,7 +353,8 @@ export default function CreateJobRequestModal({
             </View>
 
             {/* ── Submit ───────────────────────────────────────────────── */}
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={handleSubmit}
               disabled={submitting}
               className="bg-emerald-500 rounded-2xl py-4 items-center justify-center mb-2"
@@ -362,7 +366,7 @@ export default function CreateJobRequestModal({
                   Publicar solicitud
                 </Text>
               )}
-            </TouchableOpacity>
+            </Pressable>
 
             {/* Bottom padding */}
             <View className="h-8" />

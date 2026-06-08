@@ -2,14 +2,15 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   Modal,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -249,12 +250,14 @@ export default function OrdenDetalle() {
   if (loadError || order === null) {
     return (
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
-        <TouchableOpacity
+        <Pressable
+          accessibilityRole="button"
           onPress={() => router.back()}
+          accessibilityLabel="Volver"
           className="flex-row items-center px-5 pt-4 pb-2"
         >
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
+        </Pressable>
         <View className="flex-1 items-center justify-center px-8">
           <Ionicons name="alert-circle-outline" size={48} color="#4b5563" />
           <Text className="text-white text-lg font-bold mt-4 mb-2 text-center">
@@ -263,12 +266,13 @@ export default function OrdenDetalle() {
           <Text className="text-gray-400 text-sm text-center mb-6">
             Verificá tu conexión e intentá de nuevo.
           </Text>
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={() => loadOrder()}
             className="bg-emerald-500 px-6 py-3 rounded-full"
           >
             <Text className="text-gray-950 font-bold">Reintentar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
@@ -295,13 +299,15 @@ export default function OrdenDetalle() {
       >
         {/* ── Header ──────────────────────────────────────────────────────── */}
         <View className="flex-row items-center pt-4 pb-5">
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={() => router.back()}
+          accessibilityLabel="Volver"
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-white text-lg font-bold flex-1">
             Detalle de Orden
           </Text>
@@ -368,7 +374,11 @@ export default function OrdenDetalle() {
                 {order.propuestas?.profesionales?.avatar ? (
                   <Image
                     source={{ uri: order.propuestas.profesionales.avatar }}
-                    className="w-12 h-12 rounded-full"
+                    placeholder={AVATAR_PLACEHOLDER}
+                    transition={IMAGE_TRANSITION}
+                    cachePolicy={IMAGE_CACHE_POLICY}
+                    contentFit="cover"
+                    style={{ width: 48, height: 48, borderRadius: 24 }}
                   />
                 ) : (
                   <Ionicons
@@ -394,7 +404,8 @@ export default function OrdenDetalle() {
                     </Text>
                   ) : null}
                   {order.propuestas?.profesionales?.id ? (
-                    <TouchableOpacity
+                    <Pressable
+                      accessibilityRole="button"
                       onPress={() =>
                         router.push(
                           `/profesional/${order.propuestas!.profesionales!.id}` as any,
@@ -405,7 +416,7 @@ export default function OrdenDetalle() {
                       <Text className="text-emerald-500 text-xs mt-1">
                         Ver perfil →
                       </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                   ) : null}
                 </View>
 
@@ -444,7 +455,11 @@ export default function OrdenDetalle() {
                     source={{
                       uri: order.solicitudes_trabajo?.clientes?.avatar,
                     }}
-                    className="w-12 h-12 rounded-full"
+                    placeholder={AVATAR_PLACEHOLDER}
+                    transition={IMAGE_TRANSITION}
+                    cachePolicy={IMAGE_CACHE_POLICY}
+                    contentFit="cover"
+                    style={{ width: 48, height: 48, borderRadius: 24 }}
                   />
                 ) : (
                   <Ionicons
@@ -460,7 +475,8 @@ export default function OrdenDetalle() {
                       : "Cliente"}
                   </Text>
                   {order.solicitudes_trabajo?.clientes?.id ? (
-                    <TouchableOpacity
+                    <Pressable
+                      accessibilityRole="button"
                       onPress={() =>
                         router.push(
                           `/cliente/${order.solicitudes_trabajo!.clientes!.id}` as any,
@@ -471,7 +487,7 @@ export default function OrdenDetalle() {
                       <Text className="text-emerald-500 text-xs mt-1">
                         Ver perfil →
                       </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                   ) : null}
                 </View>
               </View>
@@ -485,7 +501,8 @@ export default function OrdenDetalle() {
 
         {isCliente && order.estado === "EN_PROGRESO" ? (
           <View className="mb-4">
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={handleDispute}
               disabled={actionLoading === "dispute"}
               className="bg-orange-500/10 border border-orange-500/30 py-3.5 rounded-2xl flex-row items-center justify-center gap-2"
@@ -500,7 +517,7 @@ export default function OrdenDetalle() {
                   </Text>
                 </>
               )}
-            </TouchableOpacity>
+            </Pressable>
             <Text className="text-gray-500 text-xs text-center mt-2 leading-4 px-2">
               Si hay un problema, podés disputar el trabajo para que lo revise
               nuestro equipo.
@@ -510,7 +527,8 @@ export default function OrdenDetalle() {
 
         {isCliente && order.estado === "COMPLETADA" ? (
           (order._count?.resenas ?? 0) === 0 ? (
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={handleLeaveReview}
               className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 mb-4"
             >
@@ -518,7 +536,7 @@ export default function OrdenDetalle() {
               <Text className="text-gray-950 font-bold">
                 Calificar profesional
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           ) : (
             <View className="flex-row items-center justify-center gap-2 py-3.5 mb-4 bg-gray-800 rounded-2xl">
               <Ionicons name="checkmark-circle" size={18} color="#10b981" />
@@ -548,18 +566,20 @@ export default function OrdenDetalle() {
               <Text className="text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
               <Text className="text-gray-500 text-xs mt-1">Revisá el precio antes de confirmar el inicio</Text>
             </View>
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={handleConfirmStart}
               className="bg-green-600 rounded-2xl py-4 items-center"
             >
               <Text className="text-white font-semibold text-base">Confirmar inicio</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
               onPress={handleCancel}
               className="bg-red-500/10 border border-red-500/40 rounded-2xl py-4 items-center"
             >
               <Text className="text-red-400 font-semibold text-base">Cancelar orden</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
 
@@ -578,17 +598,19 @@ export default function OrdenDetalle() {
               <Text className="text-gray-400 text-sm mb-1">Precio actual</Text>
               <Text className="text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
             </View>
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={() => setShowPriceModal(true)}
               className="bg-amber-500 rounded-2xl py-4 items-center"
             >
               <Text className="text-gray-950 font-bold text-base">Editar precio</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
 
         {isProfesional && order.estado === "EN_PROGRESO" ? (
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={handleComplete}
             disabled={actionLoading === "complete"}
             className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 w-full mb-4"
@@ -607,7 +629,7 @@ export default function OrdenDetalle() {
                 </Text>
               </>
             )}
-          </TouchableOpacity>
+          </Pressable>
         ) : null}
 
         {isProfesional && order.estado === "EN_DISPUTA" ? (
@@ -643,7 +665,8 @@ export default function OrdenDetalle() {
               className="bg-gray-800 text-white px-4 py-3 rounded-xl border border-gray-700 mb-4 text-base"
             />
 
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={handleUpdatePrice}
               disabled={actionLoading === "price"}
               className="bg-emerald-500 py-3 rounded-xl items-center mb-3"
@@ -653,14 +676,15 @@ export default function OrdenDetalle() {
               ) : (
                 <Text className="text-gray-950 font-bold">Confirmar</Text>
               )}
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={() => setShowPriceModal(false)}
               className="py-3 items-center"
             >
               <Text className="text-gray-400">Cancelar</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </Modal>

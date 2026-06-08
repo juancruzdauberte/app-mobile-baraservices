@@ -1,0 +1,1903 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Baraservices MVP</title>
+    <style>
+      /* ── Reset & Base ────────────────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Arial", "Helvetica", sans-serif;
+        font-size: 11pt;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #fff;
+      }
+
+      /* ── Page layout ──────────────────────────────────────────────────── */
+      @media print {
+        body {
+          font-size: 10.5pt;
+        }
+        .page {
+          padding: 2.2cm 2.5cm;
+          max-width: none;
+        }
+        .page-break {
+          page-break-after: always;
+        }
+        .no-break {
+          page-break-inside: avoid;
+        }
+      }
+
+      @media screen {
+        body {
+          background: #e8e8e8;
+        }
+        .page {
+          background: #fff;
+          max-width: 21cm;
+          margin: 24px auto;
+          padding: 2.5cm 3cm;
+          box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+        }
+      }
+
+      /* ── Cover ────────────────────────────────────────────────────────── */
+      .cover {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 85vh;
+        text-align: center;
+      }
+
+      .cover-institution {
+        font-size: 11pt;
+        color: #555;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 2.5cm;
+      }
+
+      .cover-logo {
+        width: 72px;
+        height: 72px;
+        background: #111827;
+        border-radius: 18px;
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cover-logo-inner {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+
+      .cover-title {
+        font-size: 36pt;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.5px;
+        margin-bottom: 10px;
+        font-family: "Arial", "Helvetica", sans-serif;
+      }
+
+      .cover-subtitle {
+        font-size: 14pt;
+        color: #475569;
+        font-style: italic;
+        margin-bottom: 2cm;
+      }
+
+      .cover-meta {
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 24px 0;
+        width: 80%;
+        margin: 0 auto 2cm;
+      }
+
+      .cover-meta-title {
+        font-size: 9pt;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #94a3b8;
+        margin-bottom: 12px;
+        font-family: "Arial", sans-serif;
+      }
+
+      .cover-authors {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 32px;
+        font-size: 11pt;
+        color: #334155;
+      }
+
+      .cover-footer {
+        font-size: 10pt;
+        color: #94a3b8;
+        margin-top: auto;
+        padding-top: 1cm;
+      }
+
+      /* ── Typography ───────────────────────────────────────────────────── */
+      h1 {
+        font-family: "Arial", "Helvetica", sans-serif;
+        font-size: 20pt;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 8px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #0f172a;
+      }
+
+      h2 {
+        font-family: "Arial", "Helvetica", sans-serif;
+        font-size: 14pt;
+        font-weight: 700;
+        color: #0f172a;
+        margin-top: 28px;
+        margin-bottom: 10px;
+      }
+
+      h3 {
+        font-family: "Arial", "Helvetica", sans-serif;
+        font-size: 11.5pt;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 20px;
+        margin-bottom: 6px;
+      }
+
+      h4 {
+        font-family: "Arial", "Helvetica", sans-serif;
+        font-size: 10.5pt;
+        font-weight: 700;
+        color: #334155;
+        margin-top: 14px;
+        margin-bottom: 4px;
+      }
+
+      p {
+        margin-bottom: 10px;
+        text-align: justify;
+      }
+
+      ul,
+      ol {
+        margin: 6px 0 12px 22px;
+      }
+
+      li {
+        margin-bottom: 4px;
+      }
+
+      /* ── Section heading decoration ───────────────────────────────────── */
+      .section-number {
+        display: inline-block;
+        background: #0f172a;
+        color: #fff;
+        font-family: "Arial", sans-serif;
+        font-size: 9pt;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        letter-spacing: 0.06em;
+      }
+
+      /* ── Feature tables ───────────────────────────────────────────────── */
+      .feature-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0 20px;
+        font-size: 10pt;
+      }
+
+      .feature-table th {
+        background: #0f172a;
+        color: #fff;
+        padding: 8px 12px;
+        text-align: left;
+        font-family: "Arial", sans-serif;
+        font-size: 9pt;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .feature-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #e2e8f0;
+        vertical-align: top;
+      }
+
+      .feature-table tr:nth-child(even) td {
+        background: #f8fafc;
+      }
+
+      /* ── Screen cards ─────────────────────────────────────────────────── */
+      .screen-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 16px;
+        page-break-inside: avoid;
+      }
+
+      .screen-card-header {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 8px;
+      }
+
+      .screen-name {
+        font-family: "Arial", sans-serif;
+        font-size: 12pt;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .screen-path {
+        font-family: "Courier New", monospace;
+        font-size: 9pt;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+
+      .badge {
+        display: inline-block;
+        font-family: "Arial", sans-serif;
+        font-size: 8pt;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 12px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .badge-green {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .badge-blue {
+        background: #dbeafe;
+        color: #1e3a8a;
+      }
+      .badge-purple {
+        background: #ede9fe;
+        color: #4c1d95;
+      }
+      .badge-orange {
+        background: #ffedd5;
+        color: #9a3412;
+      }
+      .badge-gray {
+        background: #f1f5f9;
+        color: #475569;
+      }
+
+      /* ── Note / warning boxes ─────────────────────────────────────────── */
+      .note {
+        border-left: 4px solid #f59e0b;
+        background: #fffbeb;
+        padding: 10px 14px;
+        margin: 12px 0;
+        font-size: 10pt;
+        border-radius: 0 6px 6px 0;
+      }
+
+      .note strong {
+        color: #92400e;
+      }
+
+      .info-box {
+        border-left: 4px solid #3b82f6;
+        background: #eff6ff;
+        padding: 10px 14px;
+        margin: 12px 0;
+        font-size: 10pt;
+        border-radius: 0 6px 6px 0;
+      }
+
+      /* ── State machine ────────────────────────────────────────────────── */
+      .state-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+
+      .state-chip {
+        display: inline-block;
+        font-family: "Arial", sans-serif;
+        font-size: 9pt;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+      }
+
+      .state-arrow {
+        font-size: 12pt;
+        color: #94a3b8;
+      }
+
+      .state-label {
+        font-size: 9pt;
+        color: #64748b;
+        font-style: italic;
+      }
+
+      /* ── Divider ──────────────────────────────────────────────────────── */
+      .divider {
+        border: none;
+        border-top: 1px solid #e2e8f0;
+        margin: 24px 0;
+      }
+
+      /* ── Feature list ─────────────────────────────────────────────────── */
+      .feature-list {
+        list-style: none;
+        margin-left: 0;
+      }
+
+      .feature-list li {
+        padding: 3px 0 3px 20px;
+        position: relative;
+      }
+
+      .feature-list li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: #94a3b8;
+        font-weight: 700;
+      }
+
+      /* ── Two column layout ────────────────────────────────────────────── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      /* ── Role section header ──────────────────────────────────────────── */
+      .role-header {
+        background: #0f172a;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-family: "Arial", sans-serif;
+      }
+
+      .role-header h2 {
+        color: #fff;
+        margin: 0;
+        border: none;
+        padding: 0;
+      }
+
+      .role-header p {
+        color: #94a3b8;
+        font-size: 10pt;
+        margin: 4px 0 0;
+        text-align: left;
+      }
+
+      /* ── Pending tag ──────────────────────────────────────────────────── */
+      .pending-tag {
+        display: inline-block;
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fcd34d;
+        font-family: "Arial", sans-serif;
+        font-size: 8pt;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 12px;
+        vertical-align: middle;
+        margin-left: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .done-tag {
+        display: inline-block;
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #6ee7b7;
+        font-family: "Arial", sans-serif;
+        font-size: 8pt;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 12px;
+        vertical-align: middle;
+        margin-left: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      /* ── Tab list ─────────────────────────────────────────────────────── */
+      .tab-list {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 8px 0 12px;
+      }
+
+      .tab-chip {
+        background: #f1f5f9;
+        color: #334155;
+        font-family: "Arial", sans-serif;
+        font-size: 9pt;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ════════════════════════════════════════════════════════════════════
+     PORTADA
+═══════════════════════════════════════════════════════════════════════ -->
+    <div class="page page-break">
+      <div class="cover">
+        <div class="cover-institution">
+          Computación Móvil Basada en Servicios
+        </div>
+
+        <div class="">
+          <img
+            src="./assets/icon-foreground.png"
+            alt="Logo de Baraservices"
+            style="width: 150px; height: 150px"
+          />
+        </div>
+
+        <div class="cover-title">Baraservices</div>
+        <div class="cover-subtitle">Documentación del Producto — MVP v1.0</div>
+
+        <div class="cover-meta">
+          <div class="cover-meta-title">Integrantes del equipo</div>
+          <div class="cover-authors">
+            <span>Juan Cruz Dauberte</span>
+            <span>Matías López</span>
+            <span>Leandro González</span>
+            <span>Loreley Córdoba</span>
+          </div>
+        </div>
+
+        <div class="cover-footer">Junio de 2026</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+     MÓDULO DE AUTENTICACIÓN
+═══════════════════════════════════════════════════════════════════════ -->
+    <div class="page page-break">
+      <div class="section-number">Módulo 1</div>
+      <h1>Autenticación</h1>
+
+      <p>
+        El módulo de autenticación es el punto de entrada de la aplicación para
+        todos los usuarios, independientemente de su rol. Gestiona el acceso
+        seguro mediante sesiones Supabase vinculadas a un backend REST propio, y
+        cubre los flujos de registro, inicio de sesión, verificación de
+        identidad por email y recuperación de contraseña.
+      </p>
+
+      <div class="info-box">
+        <strong>Infraestructura:</strong> La autenticación combina una API REST
+        propia (<code>/auth/*</code>) con Supabase Auth para la gestión de
+        sesiones. Los tokens <code>access_token</code> y
+        <code>refresh_token</code> devueltos por la API se inyectan directamente
+        en Supabase para centralizar el estado de sesión en el cliente.
+      </div>
+
+      <!-- ── 1.1 Inicio de Sesión ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Inicio de Sesión</span>
+          <span class="screen-path">app/login.tsx</span>
+          <span class="badge badge-gray">Público</span>
+        </div>
+
+        <p>
+          Pantalla de acceso principal. Es el primer punto de contacto del
+          usuario con la aplicación.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Campo de email con teclado tipo <em>email-address</em> y
+            autocapitalización desactivada.
+          </li>
+          <li>
+            Campo de contraseña con toggle de visibilidad (ojo/ojo-tachado).
+          </li>
+          <li>
+            Botón de inicio de sesión con estado de carga y deshabilitado
+            durante la petición.
+          </li>
+          <li>
+            Mensaje de error genérico ante credenciales inválidas, sin revelar
+            si el usuario existe o no (buena práctica de seguridad).
+          </li>
+          <li>Enlace a la pantalla de registro.</li>
+          <li>
+            Modal de recuperación de contraseña accesible desde «¿Olvidaste tu
+            contraseña?».
+          </li>
+          <li>
+            Redirección automática al home si el usuario ya tiene sesión activa.
+          </li>
+        </ul>
+
+        <h4>Modal — Restablecer Contraseña</h4>
+        <ul class="feature-list">
+          <li>
+            Formulario con campo de email y validación de formato con expresión
+            regular.
+          </li>
+          <li>Botón de envío con estado de carga.</li>
+          <li>Toast de confirmación al enviar.</li>
+        </ul>
+
+        <div class="note">
+          <strong>Pendiente (backend):</strong> El envío efectivo del email de
+          recuperación está sujeto a los límites de envío del plan gratuito de
+          Supabase. La interfaz de usuario está completamente desarrollada; la
+          lógica de backend (envío del correo) no está operativa en el MVP por
+          restricciones del proveedor.
+        </div>
+      </div>
+
+      <!-- ── 1.2 Registro ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Registro</span>
+          <span class="screen-path">app/register.tsx</span>
+          <span class="badge badge-gray">Público</span>
+        </div>
+
+        <p>
+          Formulario de creación de cuenta. El usuario selecciona su rol antes
+          de completar el registro, lo que determina el flujo de onboarding
+          posterior.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Selector de rol con dos opciones: <strong>Cliente</strong> y
+            <strong>Profesional</strong>. Presentado como tarjetas con borde
+            resaltado al seleccionar.
+          </li>
+          <li>
+            Campos: email, nombre, apellido, DNI (solo números, exactamente 8
+            dígitos) y teléfono.
+          </li>
+          <li>
+            Input de teléfono con selector de código de país (por defecto
+            Argentina, <code>+54</code>), implementado con
+            <em>react-native-phone-number-input</em>. Límite de 10 dígitos.
+          </li>
+          <li>
+            Campos de contraseña y confirmación, ambos con toggle de
+            visibilidad.
+          </li>
+          <li>
+            Validaciones síncronas: campos obligatorios, coincidencia de
+            contraseñas, longitud de DNI y teléfono.
+          </li>
+          <li>
+            Al completar el registro exitosamente, el rol elegido se persiste en
+            el store de flujo de autenticación (<em>authFlow.store</em>) y se
+            redirige a la pantalla de confirmación de email.
+          </li>
+        </ul>
+
+        <h4>Reglas de negocio aplicadas en el cliente</h4>
+        <ul class="feature-list">
+          <li>DNI: exactamente 8 dígitos numéricos, sin puntos.</li>
+          <li>
+            Teléfono: exactamente 10 dígitos, sin el prefijo «0» ni el «15».
+          </li>
+          <li>
+            El formato final del teléfono incluye el código de país (<em
+              >calling code</em
+            >), que se antepone al número antes del envío.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 1.3 Confirmación de Email ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Confirmación de Email</span>
+          <span class="screen-path">app/confirm-email.tsx</span>
+          <span class="badge badge-gray">Post-registro</span>
+          <span class="pending-tag">UI lista / Backend pendiente</span>
+        </div>
+
+        <p>
+          Pantalla informativa que se muestra inmediatamente después del
+          registro. Indica al usuario que debe verificar su dirección de correo
+          electrónico antes de continuar.
+        </p>
+
+        <ul class="feature-list">
+          <li>
+            Muestra el email registrado, pasado como parámetro de ruta
+            (<code>/confirm-email?email=…</code>).
+          </li>
+          <li>
+            Instrucciones para revisar la bandeja de entrada y la carpeta de
+            spam.
+          </li>
+          <li>Botón para reenviar el email de confirmación.</li>
+          <li>Enlace para volver a la pantalla de login.</li>
+        </ul>
+
+        <div class="note">
+          <strong>Pendiente (backend):</strong> El envío automático del email de
+          confirmación depende del servicio de correo de Supabase, cuyo plan
+          gratuito tiene un límite muy bajo de envíos mensuales. La interfaz
+          está desarrollada en su totalidad; la recepción efectiva del email no
+          está garantizada en el entorno de MVP.
+        </div>
+      </div>
+
+      <!-- ── 1.4 Onboarding Profesional ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Onboarding — Selección de Categorías</span>
+          <span class="screen-path">app/onboarding-profesional.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Paso del flujo de onboarding exclusivo para usuarios que se registran
+          como profesionales. Se accede automáticamente al completar el registro
+          con el rol «Profesional».
+        </p>
+
+        <ul class="feature-list">
+          <li>
+            Carga y muestra la lista completa de categorías disponibles desde la
+            API.
+          </li>
+          <li>
+            El usuario puede seleccionar una o más categorías en las que ofrece
+            servicios.
+          </li>
+          <li>
+            Opción de ingresar un precio base por hora para cada categoría
+            seleccionada.
+          </li>
+          <li>
+            Validación: al menos una categoría debe estar seleccionada para
+            continuar.
+          </li>
+          <li>
+            Al guardar, se crea el registro de
+            <em>trabajos_profesionales</em> en el backend y se avanza al
+            siguiente paso del flujo.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 1.5 Completar Perfil Profesional ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Completar Perfil — Documentación</span>
+          <span class="screen-path">app/completar-perfil-profesional.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Paso final del onboarding del profesional. El usuario completa su
+          perfil con datos adicionales y carga la documentación requerida para
+          la validación de identidad.
+        </p>
+
+        <ul class="feature-list">
+          <li>Campo de biografía / descripción personal del profesional.</li>
+          <li>
+            Carga de fotografía del DNI (frente y dorso) mediante la cámara del
+            dispositivo o la galería.
+          </li>
+          <li>
+            Envío de documentación al backend con
+            <code>multipart/form-data</code>.
+          </li>
+          <li>
+            Al completar, el perfil queda en estado
+            <strong>PENDIENTE_APROBACION</strong> hasta que un administrador
+            valide los documentos.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 1.6 Pantalla de Validación Pendiente ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Validación Pendiente</span>
+          <span class="screen-path">app/profesional-validacion.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Pantalla de espera para profesionales cuyo perfil se encuentra en
+          revisión por el equipo de administración. Bloquea el acceso a la app
+          hasta que el perfil sea aprobado.
+        </p>
+
+        <ul class="feature-list">
+          <li>
+            Mensaje explicativo del estado
+            <strong>PENDIENTE_APROBACION</strong>.
+          </li>
+          <li>Tiempo estimado de respuesta comunicado al usuario.</li>
+          <li>Botón de cierre de sesión disponible.</li>
+          <li>
+            La app redirige automáticamente a esta pantalla si el perfil del
+            profesional está en estado pendiente al iniciar sesión.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+     APP CLIENTE
+═══════════════════════════════════════════════════════════════════════ -->
+    <div class="page page-break">
+      <div class="role-header">
+        <div
+          class="section-number"
+          style="background: #10b981; margin-bottom: 6px"
+        >
+          Módulo 2
+        </div>
+        <h2>App Cliente</h2>
+        <p>
+          Conjunto de pantallas y flujos disponibles para usuarios con rol
+          <strong>CLIENTE</strong>. La app del cliente está organizada en cuatro
+          pestañas de navegación más pantallas de detalle accesibles desde
+          ellas.
+        </p>
+      </div>
+
+      <div class="tab-list">
+        <span class="tab-chip">🏠 Inicio</span>
+        <span class="tab-chip">📋 Mis Solicitudes</span>
+        <span class="tab-chip">📦 Mis Órdenes</span>
+        <span class="tab-chip">👤 Mi Perfil</span>
+      </div>
+
+      <p>
+        Adicionalmente, el cliente accede a pantallas de detalle:
+        <strong>Detalle de Solicitud</strong>,
+        <strong>Detalle de Orden</strong> y
+        <strong>Calificar Profesional</strong>.
+      </p>
+
+      <!-- ── 2.1 Home Cliente ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Inicio (Dashboard)</span>
+          <span class="screen-path">app/(cliente)/index.tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>
+          Pantalla principal del cliente. Ofrece un resumen del estado actual de
+          la cuenta y acceso rápido a las principales funciones.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Saludo personalizado con nombre y apellido del usuario autenticado.
+          </li>
+          <li>
+            Barra de búsqueda de servicios (UI implementada; búsqueda funcional
+            pendiente).
+          </li>
+          <li>Botón de notificaciones (UI implementada; lógica pendiente).</li>
+          <li>
+            Tres tarjetas de estadísticas en tiempo real:
+            <ul>
+              <li>
+                <strong>Solicitudes activas</strong>: conteo de solicitudes en
+                estado ABIERTA o ASIGNADA.
+              </li>
+              <li>
+                <strong>Órdenes en curso</strong>: conteo de órdenes en estado
+                PROGRAMADA o EN_PROGRESO.
+              </li>
+              <li>
+                <strong>Completadas</strong>: conteo de órdenes finalizadas.
+              </li>
+            </ul>
+          </li>
+          <li>
+            Grilla de categorías de servicios con íconos asociados. Cada
+            categoría tiene un ícono temático (electricidad, plomería,
+            jardinería, etc.).
+          </li>
+          <li>
+            Sección «Órdenes recientes» con las dos últimas órdenes, indicando
+            título, estado con color y precio.
+          </li>
+          <li>
+            Estado vacío de primer uso con mensaje de bienvenida si no hay
+            actividad registrada.
+          </li>
+          <li>
+            Botón flotante (FAB) para crear una nueva solicitud de trabajo.
+          </li>
+          <li>Pull-to-refresh implícito al volver a la pantalla.</li>
+        </ul>
+      </div>
+
+      <!-- ── 2.2 Crear Solicitud ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Crear Solicitud (Modal)</span>
+          <span class="screen-path">components/CreateJobRequestModal.tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>
+          Modal accesible desde el FAB del Inicio y desde la pantalla Mis
+          Solicitudes. Permite publicar una nueva solicitud de trabajo para que
+          los profesionales la vean en el mercado.
+        </p>
+
+        <h4>Campos del formulario</h4>
+        <ul class="feature-list">
+          <li>
+            <strong>Título</strong>: descripción breve del trabajo requerido.
+          </li>
+          <li><strong>Descripción</strong>: detalle adicional del trabajo.</li>
+          <li>
+            <strong>Categoría</strong>: selector de categoría (albañilería,
+            electricidad, plomería, etc.).
+          </li>
+          <li>
+            <strong>Urgencia</strong>: selector con tres niveles — BAJA, MEDIA y
+            EMERGENCIA (Alta).
+          </li>
+          <li>
+            <strong>Dirección</strong>: campo con integración de Google Places
+            para autocompletar la dirección. Almacena la dirección formateada,
+            el <code>google_place_id</code>, latitud y longitud.
+          </li>
+        </ul>
+
+        <h4>Comportamiento</h4>
+        <ul class="feature-list">
+          <li>Validación de campos obligatorios antes del envío.</li>
+          <li>Toast de confirmación al crear la solicitud exitosamente.</li>
+          <li>
+            La solicitud queda visible en el mercado para todos los
+            profesionales activos con estado ABIERTA.
+          </li>
+          <li>
+            Las solicitudes tienen una vigencia de 7 días antes de expirar
+            automáticamente.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 2.3 Mis Solicitudes ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Mis Solicitudes</span>
+          <span class="screen-path">app/(cliente)/solicitudes.tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>
+          Listado completo de todas las solicitudes de trabajo publicadas por el
+          cliente, con sus estados actuales.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Lista paginada de solicitudes (límite 50 por consulta) con tarjetas
+            que muestran: título, descripción (truncada a 2 líneas), dirección,
+            urgencia y estado.
+          </li>
+          <li>
+            Badge de urgencia con código de color: Verde (Baja), Amarillo
+            (Media), Rojo (Alta/Emergencia).
+          </li>
+          <li>
+            Badge de estado: Abierta (azul), Asignada (naranja), Cancelada
+            (rojo), Expirada (gris), Completada (verde).
+          </li>
+          <li>Pull-to-refresh para actualizar la lista.</li>
+          <li>
+            Estado vacío con botón directo para crear la primera solicitud.
+          </li>
+          <li>Contador de solicitudes en el encabezado.</li>
+          <li>
+            FAB para crear nueva solicitud (visible solo si ya hay solicitudes).
+          </li>
+          <li>Al tocar una solicitud, navega al Detalle de Solicitud.</li>
+        </ul>
+      </div>
+
+      <!-- ── 2.4 Detalle de Solicitud (cliente) ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Detalle de Solicitud</span>
+          <span class="screen-path">app/solicitud/[id].tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>
+          Pantalla central del flujo del cliente. Muestra el detalle completo de
+          una solicitud y permite gestionar las propuestas recibidas. El
+          contenido varía según el estado de la solicitud.
+        </p>
+
+        <h4>Información mostrada</h4>
+        <ul class="feature-list">
+          <li>
+            Tarjeta de información: título, badges de urgencia y estado,
+            descripción completa, dirección (con enlace a Google Maps), fecha de
+            creación.
+          </li>
+          <li>
+            Contador de días restantes antes de que la solicitud expire (visible
+            solo en estado ABIERTA).
+          </li>
+        </ul>
+
+        <h4>Gestión de propuestas</h4>
+        <ul class="feature-list">
+          <li>
+            Lista de todas las propuestas recibidas, cada una mostrando: avatar
+            y nombre del profesional, calificación y cantidad de trabajos
+            realizados, precio estimado (o «a coordinar»), mensaje, fecha y
+            estado.
+          </li>
+          <li>
+            Enlace «Ver perfil» para cada profesional, que navega al perfil
+            público.
+          </li>
+          <li>
+            Botones <strong>Aceptar</strong> y <strong>Rechazar</strong> por
+            propuesta (disponibles solo si la propuesta está en estado PENDIENTE
+            y la solicitud está ABIERTA).
+          </li>
+          <li>
+            Al aceptar una propuesta, se crea automáticamente una orden de
+            trabajo y el usuario es redirigido a su detalle.
+          </li>
+          <li>Estado vacío si aún no se recibieron propuestas.</li>
+        </ul>
+
+        <h4>Acciones por estado de la solicitud</h4>
+        <table class="feature-table">
+          <thead>
+            <tr>
+              <th>Estado</th>
+              <th>Acciones disponibles para el cliente</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ABIERTA</td>
+              <td>
+                Cancelar solicitud · Eliminar solicitud · Aceptar/Rechazar
+                propuestas
+              </td>
+            </tr>
+            <tr>
+              <td>ASIGNADA</td>
+              <td>Ver la orden de trabajo generada (acceso directo)</td>
+            </tr>
+            <tr>
+              <td>COMPLETA</td>
+              <td>
+                Ver orden · Calificar al profesional (si no se calificó aún)
+              </td>
+            </tr>
+            <tr>
+              <td>CANCELADA / EXPIRADA</td>
+              <td>Solo lectura — banner informativo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── 2.5 Mis Órdenes ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Mis Órdenes</span>
+          <span class="screen-path">app/(cliente)/ordenes.tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>
+          Listado de todas las órdenes de trabajo asociadas al cliente,
+          generadas a partir de propuestas aceptadas.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Tarjeta por orden: título del trabajo, badge de estado con color,
+            precio final, nombre del profesional asignado y fecha de creación.
+          </li>
+          <li>
+            Texto de estado secundario («Esperando inicio del trabajo», «Trabajo
+            en curso», «Completado ✓», etc.).
+          </li>
+          <li>Pull-to-refresh para actualizar.</li>
+          <li>Estado vacío con mensaje explicativo.</li>
+          <li>Contador de órdenes en el encabezado.</li>
+          <li>Al tocar una orden, navega al Detalle de Orden.</li>
+        </ul>
+      </div>
+
+      <!-- ── 2.6 Detalle de Orden (cliente) ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Detalle de Orden</span>
+          <span class="screen-path">app/orden/[id].tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>
+          Pantalla central de gestión de una orden de trabajo. El cliente puede
+          confirmar el inicio, disputar el trabajo o calificar al profesional
+          dependiendo del estado actual.
+        </p>
+
+        <h4>Información mostrada</h4>
+        <ul class="feature-list">
+          <li>
+            Título del trabajo, estado con badge, precio (con nota «estimado» si
+            es PROGRAMADA o «precio final» si está más avanzado).
+          </li>
+          <li>Descripción del trabajo proveniente de la solicitud original.</li>
+          <li>
+            Tarjeta del profesional asignado: avatar, nombre completo, mensaje
+            de la propuesta, calificación promedio, cantidad de trabajos
+            realizados y enlace al perfil público.
+          </li>
+        </ul>
+
+        <h4>Acciones por estado</h4>
+        <table class="feature-table">
+          <thead>
+            <tr>
+              <th>Estado</th>
+              <th>Acciones del cliente</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PROGRAMADA</td>
+              <td>
+                Ver precio confirmado por el profesional ·
+                <strong>Confirmar inicio</strong> (transiciona a EN_PROGRESO) ·
+                <strong>Cancelar orden</strong>
+              </td>
+            </tr>
+            <tr>
+              <td>EN_PROGRESO</td>
+              <td>
+                <strong>Disputar trabajo</strong> (transiciona a EN_DISPUTA)
+              </td>
+            </tr>
+            <tr>
+              <td>EN_DISPUTA</td>
+              <td>Solo lectura — banner «En revisión por el equipo»</td>
+            </tr>
+            <tr>
+              <td>COMPLETADA</td>
+              <td>
+                <strong>Calificar profesional</strong> (si no lo hizo aún) ·
+                Banner «Ya calificaste esta orden» (si ya calificó)
+              </td>
+            </tr>
+            <tr>
+              <td>CANCELADA</td>
+              <td>Solo lectura — banner informativo</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-box">
+          Todas las acciones destructivas (confirmar inicio, cancelar, disputar)
+          presentan un
+          <strong>Alert nativo de confirmación</strong> antes de ejecutarse.
+        </div>
+      </div>
+
+      <!-- ── 2.7 Calificar Profesional ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Calificar Profesional</span>
+          <span class="screen-path">app/resena/[orderId].tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>
+          Formulario para que el cliente deje una reseña del profesional luego
+          de que la orden queda en estado COMPLETADA. Solo puede dejarse una
+          reseña por orden.
+        </p>
+
+        <ul class="feature-list">
+          <li>Selector de puntaje del 1 al 5 (estrellas).</li>
+          <li>Campo de texto opcional para comentario.</li>
+          <li>Validación: puntaje obligatorio.</li>
+          <li>
+            Al enviar, el puntaje se refleja en la calificación promedio del
+            profesional.
+          </li>
+          <li>
+            La pantalla no es accesible una vez que ya se calificó la orden
+            (controlado desde la pantalla de Detalle de Orden).
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 2.8 Perfil Cliente ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Mi Perfil</span>
+          <span class="screen-path">app/(cliente)/perfil.tsx</span>
+          <span class="badge badge-green">Cliente</span>
+        </div>
+
+        <p>Pantalla de gestión del perfil del cliente autenticado.</p>
+
+        <ul class="feature-list">
+          <li>
+            Tarjeta de perfil con avatar (foto o iniciales generadas
+            automáticamente), nombre completo y email.
+          </li>
+          <li>
+            Acceso a <strong>Editar Perfil</strong> (nombre, apellido, teléfono,
+            avatar).
+          </li>
+          <li>
+            Opciones de menú: Configuración, Ayuda y Soporte, Términos y
+            Condiciones, Política de Privacidad.
+          </li>
+          <li>Botón de cierre de sesión con confirmación implícita.</li>
+          <li>Versión de la aplicación visible al pie.</li>
+        </ul>
+
+        <div class="note">
+          <strong>Nota:</strong> Las opciones «Configuración», «Términos y
+          Condiciones» y «Política de Privacidad» muestran actualmente un Alert
+          placeholder. Su implementación completa está prevista para versiones
+          futuras.
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+     APP PROFESIONAL
+═══════════════════════════════════════════════════════════════════════ -->
+    <div class="page page-break">
+      <div class="role-header">
+        <div
+          class="section-number"
+          style="background: #7c3aed; margin-bottom: 6px"
+        >
+          Módulo 3
+        </div>
+        <h2>App Profesional</h2>
+        <p>
+          Conjunto de pantallas disponibles para usuarios con rol
+          <strong>PROFESIONAL</strong> cuyo perfil se encuentre en estado
+          <strong>ACTIVO</strong>. La app del profesional está organizada en
+          cinco pestañas de navegación.
+        </p>
+      </div>
+
+      <div class="tab-list">
+        <span class="tab-chip">🏠 Inicio</span>
+        <span class="tab-chip">🏪 Mercado</span>
+        <span class="tab-chip">📤 Propuestas</span>
+        <span class="tab-chip">📦 Órdenes</span>
+        <span class="tab-chip">👤 Mi Perfil</span>
+      </div>
+
+      <p>
+        Adicionalmente accede a: <strong>Detalle de Solicitud</strong> (vista
+        profesional), <strong>Enviar Propuesta</strong> y
+        <strong>Detalle de Orden</strong> (vista profesional).
+      </p>
+
+      <!-- ── 3.1 Home Profesional ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Inicio (Dashboard)</span>
+          <span class="screen-path">app/(profesional)/index.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Dashboard principal del profesional. Concentra el estado del negocio
+          en un único vistazo.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Saludo personalizado con el nombre del profesional y badge de
+            calificación promedio (visible solo si tiene calificaciones).
+          </li>
+          <li>
+            Tres tarjetas de estadísticas:
+            <ul>
+              <li>
+                <strong>Propuestas pendientes</strong>: cuántas propuestas
+                enviadas esperan respuesta del cliente.
+              </li>
+              <li>
+                <strong>Órdenes activas</strong>: conteo de órdenes en
+                PROGRAMADA o EN_PROGRESO.
+              </li>
+              <li>
+                <strong>Trabajos completados</strong>: total histórico de
+                órdenes COMPLETADAS.
+              </li>
+            </ul>
+          </li>
+          <li>Dos acciones rápidas: «Ver mercado» y «Mis propuestas».</li>
+          <li>
+            Sección «Propuestas recientes» con las últimas 3 propuestas enviadas
+            (estado y precio).
+          </li>
+          <li>
+            Sección «Órdenes activas» con las últimas 2 órdenes activas (precio
+            y estado).
+          </li>
+          <li>
+            Estado vacío con llamada a la acción «Ver oportunidades» que navega
+            al Mercado.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 3.2 Mercado ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Mercado</span>
+          <span class="screen-path">app/(profesional)/mercado.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Feed de solicitudes de trabajo abiertas disponibles en el mercado. Es
+          el principal canal de adquisición de nuevos trabajos para el
+          profesional.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Listado de solicitudes en estado ABIERTA, cargadas desde la API con
+            paginación (página 1, límite 20).
+          </li>
+          <li>
+            Tarjeta por solicitud: título, badge de urgencia, badge de
+            categoría, descripción (2 líneas), dirección y tiempo transcurrido
+            desde la publicación («Hace X horas / días»).
+          </li>
+          <li>Contador del total de resultados en el encabezado.</li>
+          <li>
+            Filtro por urgencia (chips horizontales): Todos · Alta · Media ·
+            Baja. El filtro se envía al backend como parámetro de consulta.
+          </li>
+          <li>
+            Filtro por categoría (chips horizontales): Todas + cada categoría
+            disponible. Este filtro se aplica en el cliente sobre los resultados
+            ya cargados.
+          </li>
+          <li>Pull-to-refresh para actualizar el feed.</li>
+          <li>Estado vacío si no hay solicitudes disponibles.</li>
+          <li>
+            Al tocar una solicitud, navega al Detalle de Solicitud (vista
+            profesional).
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 3.3 Detalle de Solicitud (profesional) ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Detalle de Solicitud</span>
+          <span class="screen-path">app/solicitud/[id].tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          La misma pantalla de detalle de solicitud se adapta al rol del usuario
+          autenticado. Para el profesional, muestra el contexto del cliente y
+          las opciones de propuesta.
+        </p>
+
+        <h4>Funcionalidades (vista profesional)</h4>
+        <ul class="feature-list">
+          <li>
+            Tarjeta con información completa de la solicitud: título, urgencia,
+            estado, descripción, dirección (con enlace a Google Maps) y fecha.
+          </li>
+          <li>
+            Tarjeta del cliente que publicó la solicitud: avatar y nombre
+            (cargado desde la API).
+          </li>
+          <li>
+            Si la solicitud está <strong>ABIERTA</strong> y el profesional
+            <strong>aún no envió propuesta</strong>: botón «Enviar propuesta»
+            que navega al formulario.
+          </li>
+          <li>
+            Si la solicitud está <strong>ABIERTA</strong> y el profesional
+            <strong>ya envió propuesta</strong>: tarjeta «Tu propuesta» con
+            precio, mensaje, estado y botón «Retirar propuesta» (solo si está
+            PENDIENTE).
+          </li>
+          <li>
+            Si la solicitud está <strong>ASIGNADA</strong> y la propuesta del
+            profesional fue ACEPTADA: acceso directo a la orden de trabajo.
+          </li>
+          <li>
+            Si está COMPLETA: banner de trabajo completado con enlace a la
+            orden.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 3.4 Enviar Propuesta ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Enviar Propuesta</span>
+          <span class="screen-path">app/enviar-propuesta/[reqId].tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Formulario simple y conciso para que el profesional envíe una
+          propuesta sobre una solicitud específica.
+        </p>
+
+        <h4>Campos</h4>
+        <ul class="feature-list">
+          <li>
+            <strong>Precio estimado</strong> (opcional): campo numérico. Si se
+            deja vacío, se muestra «a coordinar» al cliente.
+          </li>
+          <li>
+            <strong>Mensaje</strong> (opcional): campo de texto de múltiples
+            líneas con límite de 500 caracteres. Contador de caracteres visible.
+          </li>
+        </ul>
+
+        <h4>Comportamiento</h4>
+        <ul class="feature-list">
+          <li>
+            Ambos campos son opcionales, permitiendo envíos ágiles sin datos.
+          </li>
+          <li>
+            Manejo de error 409 (conflicto): si el profesional ya envió una
+            propuesta para esa solicitud, se muestra un toast informativo en
+            lugar de un error genérico.
+          </li>
+          <li>Teclado flotante manejado con <em>KeyboardAvoidingView</em>.</li>
+          <li>
+            Al enviar con éxito, regresa automáticamente a la pantalla anterior.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 3.5 Mis Propuestas ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Mis Propuestas</span>
+          <span class="screen-path">app/(profesional)/propuestas.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Historial completo de propuestas enviadas por el profesional,
+          organizadas por estado.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>
+            Listado de propuestas activas (estados PENDIENTE, ACEPTADA,
+            RECHAZADA) con tarjeta por propuesta: título de la solicitud
+            asociada, precio, mensaje (truncado), fecha y badge de estado.
+          </li>
+          <li>
+            Para propuestas en estado <strong>PENDIENTE</strong>: botón
+            «Retirar» para cancelar la propuesta.
+          </li>
+          <li>
+            Para propuestas en estado <strong>ACEPTADA</strong>: botón «Ver
+            orden →» que navega a la orden de trabajo generada.
+          </li>
+          <li>
+            Sección colapsable de propuestas <strong>CANCELADAS</strong> al
+            final de la lista (expandible con toggle).
+          </li>
+          <li>
+            Estado vacío con mensaje y llamada a la acción para ir al Mercado.
+          </li>
+          <li>Contador total en el encabezado.</li>
+          <li>Pull-to-refresh.</li>
+        </ul>
+      </div>
+
+      <!-- ── 3.6 Mis Órdenes (profesional) ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Mis Órdenes</span>
+          <span class="screen-path">app/(profesional)/ordenes.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Listado de todas las órdenes de trabajo asignadas al profesional a
+          través de propuestas aceptadas.
+        </p>
+
+        <h4>Funcionalidades</h4>
+        <ul class="feature-list">
+          <li>Idéntica estructura visual a la lista de órdenes del cliente.</li>
+          <li>
+            Tarjeta por orden: título, estado con badge y color, precio final,
+            fecha de creación y texto de estado secundario.
+          </li>
+          <li>Estado vacío con mensaje contextualizado para el profesional.</li>
+          <li>Pull-to-refresh.</li>
+          <li>
+            Al tocar una orden, navega al Detalle de Orden (vista profesional).
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 3.7 Detalle de Orden (profesional) ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Detalle de Orden</span>
+          <span class="screen-path">app/orden/[id].tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          La misma pantalla de detalle de orden adapta su contenido al rol
+          profesional, mostrando la información del cliente y las acciones
+          disponibles según el estado.
+        </p>
+
+        <h4>Información mostrada</h4>
+        <ul class="feature-list">
+          <li>
+            Título, estado, precio con etiqueta («estimado» o «final»),
+            descripción del trabajo y fecha.
+          </li>
+          <li>
+            Tarjeta del cliente: avatar, nombre completo y enlace al perfil
+            público del cliente.
+          </li>
+        </ul>
+
+        <h4>Acciones por estado</h4>
+        <table class="feature-table">
+          <thead>
+            <tr>
+              <th>Estado</th>
+              <th>Acciones del profesional</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PROGRAMADA</td>
+              <td>
+                Ver precio actual · <strong>Editar precio</strong> (abre modal
+                para ingresar nuevo valor)
+              </td>
+            </tr>
+            <tr>
+              <td>EN_PROGRESO</td>
+              <td>
+                <strong>Marcar como completada</strong> (transiciona a
+                COMPLETADA)
+              </td>
+            </tr>
+            <tr>
+              <td>EN_DISPUTA</td>
+              <td>Solo lectura — banner «En revisión por el equipo»</td>
+            </tr>
+            <tr>
+              <td>COMPLETADA / CANCELADA</td>
+              <td>Solo lectura</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Modal — Editar Precio</h4>
+        <ul class="feature-list">
+          <li>
+            Bottom sheet modal con campo numérico para ingresar el nuevo precio.
+          </li>
+          <li>Validación: debe ser un número mayor a cero.</li>
+          <li>Toast de confirmación al actualizar.</li>
+        </ul>
+      </div>
+
+      <!-- ── 3.8 Perfil Profesional ── -->
+      <div class="screen-card no-break">
+        <div class="screen-card-header">
+          <span class="screen-name">Mi Perfil</span>
+          <span class="screen-path">app/(profesional)/perfil.tsx</span>
+          <span class="badge badge-purple">Profesional</span>
+        </div>
+
+        <p>
+          Pantalla de gestión del perfil del profesional autenticado con
+          estadísticas de desempeño.
+        </p>
+
+        <ul class="feature-list">
+          <li>
+            Tarjeta de perfil: avatar (foto o iniciales), nombre completo y
+            email.
+          </li>
+          <li>
+            Estadísticas integradas: calificación promedio (con ícono de
+            estrella) y total de trabajos realizados.
+          </li>
+          <li>
+            Acceso a <strong>Editar Perfil Profesional</strong>: nombre,
+            apellido, teléfono, biografía, categorías con precio base.
+          </li>
+          <li>
+            Mismas opciones de menú que el cliente: Configuración, Ayuda,
+            Términos, Privacidad.
+          </li>
+          <li>Botón de cierre de sesión.</li>
+          <li>Versión de la aplicación al pie.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+     FLUJO COMPLETO & ESTADOS (página separada, sin page-break-after)
+═══════════════════════════════════════════════════════════════════════ -->
+    <div class="page">
+      <div class="section-number">Anexo</div>
+      <h1>Flujo de Trabajo y Máquinas de Estado</h1>
+
+      <h2>Flujo completo de una transacción</h2>
+      <p>
+        El ciclo de vida de un servicio en BaraServices involucra cuatro
+        entidades principales:
+        <strong>Solicitud de Trabajo</strong>, <strong>Propuesta</strong>,
+        <strong>Orden de Trabajo</strong> y <strong>Reseña</strong>. A
+        continuación se describe la secuencia de pasos estándar.
+      </p>
+
+      <table class="feature-table no-break">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Paso</th>
+            <th>Actor</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Crear solicitud</td>
+            <td>Cliente</td>
+            <td>
+              El cliente publica una solicitud con título, descripción,
+              categoría, urgencia y ubicación.
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Ver en el mercado</td>
+            <td>Profesional</td>
+            <td>
+              La solicitud aparece en el feed del Mercado en estado ABIERTA.
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Enviar propuesta</td>
+            <td>Profesional</td>
+            <td>
+              El profesional envía una propuesta con precio estimado (opcional)
+              y mensaje (opcional).
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Revisar propuestas</td>
+            <td>Cliente</td>
+            <td>
+              El cliente ve todas las propuestas recibidas en el Detalle de
+              Solicitud.
+            </td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Aceptar propuesta</td>
+            <td>Cliente</td>
+            <td>
+              El cliente acepta una propuesta. Se crea automáticamente una Orden
+              de Trabajo (PROGRAMADA). La solicitud pasa a ASIGNADA.
+            </td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Revisar precio</td>
+            <td>Profesional</td>
+            <td>
+              El profesional puede ajustar el precio final antes del inicio del
+              trabajo.
+            </td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Confirmar inicio</td>
+            <td>Cliente</td>
+            <td>
+              El cliente revisa el precio y confirma el inicio. La orden pasa a
+              EN_PROGRESO.
+            </td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Ejecutar el trabajo</td>
+            <td>Profesional</td>
+            <td>El profesional realiza el servicio contratado.</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Marcar completada</td>
+            <td>Profesional</td>
+            <td>
+              Al terminar, el profesional marca la orden como completada. La
+              orden pasa a COMPLETADA.
+            </td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Calificar</td>
+            <td>Cliente</td>
+            <td>
+              El cliente deja una reseña con puntaje y comentario opcional para
+              el profesional.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>Caso de disputa:</strong> Si el cliente detecta un problema
+        durante la ejecución (estado EN_PROGRESO), puede disputar el trabajo. La
+        orden pasa a EN_DISPUTA y queda en espera de resolución por el equipo de
+        administración.
+      </div>
+
+      <hr class="divider" />
+
+      <h2>Estados de la Orden de Trabajo</h2>
+
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >PROGRAMADA</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #fef3c7; color: #92400e"
+          >EN_PROGRESO</span
+        >
+        <span class="state-label">(cliente confirma inicio)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #fef3c7; color: #92400e"
+          >EN_PROGRESO</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #d1fae5; color: #065f46"
+          >COMPLETADA</span
+        >
+        <span class="state-label">(profesional marca completada)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #fef3c7; color: #92400e"
+          >EN_PROGRESO</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #ffedd5; color: #9a3412"
+          >EN_DISPUTA</span
+        >
+        <span class="state-label">(cliente disputa)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >PROGRAMADA</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #fee2e2; color: #991b1b"
+          >CANCELADA</span
+        >
+        <span class="state-label">(cliente cancela)</span>
+      </div>
+
+      <hr class="divider" />
+
+      <h2>Estados de la Solicitud de Trabajo</h2>
+
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >ABIERTA</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #fef3c7; color: #92400e"
+          >ASIGNADA</span
+        >
+        <span class="state-label">(cliente acepta una propuesta)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #fef3c7; color: #92400e"
+          >ASIGNADA</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #d1fae5; color: #065f46"
+          >COMPLETA</span
+        >
+        <span class="state-label">(orden de trabajo completada)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >ABIERTA</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #fee2e2; color: #991b1b"
+          >CANCELADA</span
+        >
+        <span class="state-label">(cliente cancela)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >ABIERTA</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #f1f5f9; color: #475569"
+          >EXPIRADA</span
+        >
+        <span class="state-label">(sin propuesta aceptada en 7 días)</span>
+      </div>
+
+      <hr class="divider" />
+
+      <h2>Estados de la Propuesta</h2>
+
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >PENDIENTE</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #d1fae5; color: #065f46"
+          >ACEPTADA</span
+        >
+        <span class="state-label">(cliente acepta)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >PENDIENTE</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #fee2e2; color: #991b1b"
+          >RECHAZADA</span
+        >
+        <span class="state-label">(cliente rechaza)</span>
+      </div>
+      <div class="state-row">
+        <span class="state-chip" style="background: #dbeafe; color: #1e3a8a"
+          >PENDIENTE</span
+        >
+        <span class="state-arrow">→</span>
+        <span class="state-chip" style="background: #f1f5f9; color: #475569"
+          >CANCELADA</span
+        >
+        <span class="state-label">(profesional retira la propuesta)</span>
+      </div>
+
+      <hr class="divider" />
+
+      <h2>Estados del Perfil del Profesional</h2>
+
+      <table class="feature-table no-break">
+        <thead>
+          <tr>
+            <th>Estado</th>
+            <th>Descripción</th>
+            <th>Acceso a la app</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>INCOMPLETO</td>
+            <td>Registro completado pero sin documentación enviada</td>
+            <td>Solo onboarding</td>
+          </tr>
+          <tr>
+            <td>PENDIENTE_CATEGORÍAS</td>
+            <td>Documentación enviada, sin categorías seleccionadas</td>
+            <td>Solo selección de categorías</td>
+          </tr>
+          <tr>
+            <td>PENDIENTE_APROBACION</td>
+            <td>
+              Documentación y categorías completas, esperando validación del
+              equipo
+            </td>
+            <td>Pantalla de espera</td>
+          </tr>
+          <tr>
+            <td>ACTIVO</td>
+            <td>Perfil validado por el equipo</td>
+            <td>Acceso completo</td>
+          </tr>
+          <tr>
+            <td>RECHAZADO</td>
+            <td>Documentación rechazada por el equipo</td>
+            <td>Acceso bloqueado</td>
+          </tr>
+          <tr>
+            <td>SUSPENDIDO</td>
+            <td>Cuenta suspendida por el equipo de moderación</td>
+            <td>Pantalla de suspensión</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

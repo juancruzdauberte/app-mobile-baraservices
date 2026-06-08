@@ -224,6 +224,7 @@ export default function CompletarPerfilProfesionalScreen() {
                 >
                   {/* Category Header */}
                   <Pressable
+                    accessibilityRole="button"
                     onPress={() => toggleJob(cat.id)}
                     className="flex-row items-center justify-between"
                   >
@@ -301,6 +302,7 @@ export default function CompletarPerfilProfesionalScreen() {
         {/* Submit Button */}
         <View className="border-t border-gray-800 bg-gray-950 px-6 py-4">
           <Pressable
+            accessibilityRole="button"
             onPress={handleSubmit}
             disabled={isSubmitting || selectedJobs.length === 0}
             className={`flex-row items-center justify-center rounded-2xl p-4 ${

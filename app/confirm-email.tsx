@@ -30,6 +30,7 @@ export default function ConfirmEmail() {
       <View className="flex-1 justify-center px-8">
         {/* Botón atrás */}
         <Pressable
+          accessibilityRole="button"
           onPress={() => router.replace("/login")}
           className="absolute left-8 top-8 z-10"
         >
@@ -92,6 +93,7 @@ export default function ConfirmEmail() {
 
         {/* Botón reenviar */}
         <Pressable
+          accessibilityRole="button"
           onPress={handleResendEmail}
           disabled={resendLoading || resendSuccess}
           className={`mb-6 w-full flex-row items-center justify-center gap-2 rounded-2xl border-2 border-gray-700 px-6 py-4 active:bg-gray-800 ${resendSuccess ? "border-emerald-500 bg-emerald-500/10" : ""}`}
@@ -114,6 +116,7 @@ export default function ConfirmEmail() {
 
         {/* Botón ir a login */}
         <Pressable
+          accessibilityRole="button"
           onPress={() => router.replace("/login")}
           className="w-full rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
         >

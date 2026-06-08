@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Text, View, Pressable, Image, ActivityIndicator } from "react-native";
+import { Text, View, Pressable, ActivityIndicator } from "react-native";
+import { Image } from "expo-image";
+import { IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -128,6 +130,7 @@ export default function OnboardingProfesionalScreen() {
         </View>
 
         <Pressable
+          accessibilityRole="button"
           onPress={onSubmit}
           disabled={isLoading || !dniFront || !dniBack || !selfie}
           className={`mt-6 flex-row items-center justify-center rounded-2xl p-4 ${
@@ -169,6 +172,7 @@ function PhotoCaptureButton({
 }) {
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       className="flex-row items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 p-4"
     >
@@ -192,8 +196,10 @@ function PhotoCaptureButton({
       {uri && (
         <Image
           source={{ uri }}
-          className="h-12 w-16 rounded-lg bg-gray-800"
-          resizeMode="cover"
+          cachePolicy={IMAGE_CACHE_POLICY}
+          transition={IMAGE_TRANSITION}
+          contentFit="cover"
+          style={{ height: 48, width: 64, borderRadius: 8, backgroundColor: "#1f2937" }}
         />
       )}
     </Pressable>

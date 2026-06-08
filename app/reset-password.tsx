@@ -117,6 +117,7 @@ export default function ResetPassword() {
                   autoCapitalize="none"
                 />
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => setShowPassword(!showPassword)}
                   className="p-2"
                 >
@@ -140,6 +141,7 @@ export default function ResetPassword() {
                   autoCapitalize="none"
                 />
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="p-2"
                 >
@@ -154,6 +156,7 @@ export default function ResetPassword() {
 
             {/* Botón guardar */}
             <Pressable
+              accessibilityRole="button"
               onPress={handleResetPassword}
               disabled={loading}
               className="mb-4 w-full flex-row items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"

@@ -93,6 +93,7 @@ function ProposalListItemComponent({
       {/* Actions */}
       {proposal.estado === "PENDIENTE" ? (
         <Pressable
+          accessibilityRole="button"
           onPress={() => onWithdraw(proposal.id)}
           disabled={isWithdrawing}
           className="border border-red-500/30 bg-red-500/10 py-2.5 rounded-xl items-center"
@@ -109,6 +110,7 @@ function ProposalListItemComponent({
 
       {proposal.estado === "ACEPTADA" && proposal.ordenes_trabajo?.[0]?.id ? (
         <Pressable
+          accessibilityRole="button"
           onPress={() =>
             router.push(`/orden/${proposal.ordenes_trabajo![0].id}` as any)
           }

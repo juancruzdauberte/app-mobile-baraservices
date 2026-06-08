@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -10,9 +9,10 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
+import { Image } from "expo-image";
+import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import PhoneInput, { CountryCode } from "react-native-phone-number-input";
@@ -286,13 +286,14 @@ export default function EditarPerfilProfesional() {
       >
         {/* Header */}
         <View className="flex-row items-center px-5 pt-4 pb-4 border-b border-gray-800">
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-white text-lg font-bold flex-1">
             Editar perfil
           </Text>
@@ -306,11 +307,17 @@ export default function EditarPerfilProfesional() {
         >
           {/* ── Avatar ──────────────────────────────────────────────────── */}
           <View className="items-center py-6">
-            <TouchableOpacity onPress={() => setShowPicker(true)} activeOpacity={0.8}>
+            <Pressable onPress={() => setShowPicker(true)}>
+              accessibilityRole="button"
+              accessibilityRole="button"
               <View className="relative">
                 {displayAvatar ? (
                   <Image
                     source={{ uri: displayAvatar }}
+                    placeholder={AVATAR_PLACEHOLDER}
+                    transition={IMAGE_TRANSITION}
+                    cachePolicy={IMAGE_CACHE_POLICY}
+                    contentFit="cover"
                     style={{ width: 96, height: 96, borderRadius: 48 }}
                   />
                 ) : (
@@ -332,7 +339,7 @@ export default function EditarPerfilProfesional() {
                   )}
                 </View>
               </View>
-            </TouchableOpacity>
+            </Pressable>
             <Text className="text-gray-400 text-xs mt-3">
               Tocá para cambiar la foto
             </Text>
@@ -470,6 +477,7 @@ export default function EditarPerfilProfesional() {
                     }`}
                   >
                     <Pressable
+                      accessibilityRole="button"
                       onPress={() => toggleJob(cat.id)}
                       className="flex-row items-center justify-between"
                     >
@@ -521,7 +529,8 @@ export default function EditarPerfilProfesional() {
             </View>
 
             {/* Guardar */}
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={handleSave}
               disabled={saving}
               className="bg-emerald-500 rounded-2xl py-4 items-center justify-center mt-2"
@@ -533,7 +542,7 @@ export default function EditarPerfilProfesional() {
                   Guardar cambios
                 </Text>
               )}
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -546,6 +555,7 @@ export default function EditarPerfilProfesional() {
         onRequestClose={() => setShowPicker(false)}
       >
         <Pressable
+          accessibilityRole="button"
           className="flex-1 bg-black/60"
           onPress={() => setShowPicker(false)}
         />
@@ -553,7 +563,8 @@ export default function EditarPerfilProfesional() {
           <View className="w-10 h-1 bg-gray-700 rounded-full self-center mb-5" />
           <Text className="text-white text-base font-bold mb-4">Foto de perfil</Text>
 
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={pickFromCamera}
             className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
@@ -565,9 +576,10 @@ export default function EditarPerfilProfesional() {
               <Text className="text-gray-500 text-xs mt-0.5">Usar la cámara del dispositivo</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#6b7280" />
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={pickFromGallery}
             className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
@@ -579,14 +591,15 @@ export default function EditarPerfilProfesional() {
               <Text className="text-gray-500 text-xs mt-0.5">Seleccionar desde tus fotos</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#6b7280" />
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={() => setShowPicker(false)}
             className="items-center py-3.5 mt-1"
           >
             <Text className="text-gray-400 font-medium">Cancelar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </Modal>
     </SafeAreaView>

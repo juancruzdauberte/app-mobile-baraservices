@@ -6,7 +6,7 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -69,13 +69,14 @@ export default function EnviarPropuestaScreen() {
         >
           {/* ── Header ──────────────────────────────────────────────────── */}
           <View className="flex-row items-center pt-4 pb-5">
-            <TouchableOpacity
+            <Pressable
+              accessibilityRole="button"
               onPress={() => router.back()}
               className="mr-3 p-1"
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
               <Ionicons name="arrow-back" size={24} color="#ffffff" />
-            </TouchableOpacity>
+            </Pressable>
             <Text className="text-white text-lg font-bold flex-1">
               Nueva propuesta
             </Text>
@@ -123,7 +124,8 @@ export default function EnviarPropuestaScreen() {
           </View>
 
           {/* ── Submit button ────────────────────────────────────────────── */}
-          <TouchableOpacity
+          <Pressable
+            accessibilityRole="button"
             onPress={handleSubmit}
             disabled={loading}
             className="bg-emerald-500 py-4 rounded-2xl items-center"
@@ -135,7 +137,7 @@ export default function EnviarPropuestaScreen() {
                 Enviar propuesta
               </Text>
             )}
-          </TouchableOpacity>
+          </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

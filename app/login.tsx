@@ -7,9 +7,9 @@ import {
   ScrollView,
   Platform,
   Modal,
-  TouchableOpacity,
-  Image,
 } from "react-native";
+import { Image } from "expo-image";
+import { IMAGE_TRANSITION } from "../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -132,7 +132,9 @@ export default function Login() {
               <View className="mb-6 h-24 w-24 items-center justify-center rounded-3xl ">
                 <Image
                   source={require("../assets/icon-foreground.png")}
-                  className="h-full w-full"
+                  transition={IMAGE_TRANSITION}
+                  contentFit="contain"
+                  style={{ width: "100%", height: "100%" }}
                 />
               </View>
               <Text className="mb-2 text-4xl font-bold text-white">
@@ -164,6 +166,7 @@ export default function Login() {
                   onChangeText={setPassword}
                 />
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => setShowPassword(!showPassword)}
                   className="p-2"
                 >
@@ -178,6 +181,7 @@ export default function Login() {
 
             {/* Botón de inicio de sesión */}
             <Pressable
+              accessibilityRole="button"
               onPress={onLogin}
               disabled={loading}
               className="mb-4 w-full flex-row items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
@@ -190,6 +194,7 @@ export default function Login() {
 
             {/* Olvidaste tu contraseña */}
             <Pressable
+              accessibilityRole="button"
               onPress={() => setShowRecoveryModal(true)}
               className="mb-4 w-full items-center py-2"
             >
@@ -200,6 +205,7 @@ export default function Login() {
 
             {/* Enlace para registrarse */}
             <Pressable
+              accessibilityRole="button"
               onPress={() => router.push("/register")}
               className="mb-4 mt-2 w-full flex-row items-center justify-center py-4"
             >
@@ -213,6 +219,7 @@ export default function Login() {
 
             {session && (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => signOut()}
                 style={{ marginTop: 20 }}
                 className="items-center"
@@ -237,7 +244,8 @@ export default function Login() {
               <Text className="text-xl font-bold text-white">
                 Restablecer Contraseña
               </Text>
-              <TouchableOpacity
+              <Pressable
+                accessibilityRole="button"
                 onPress={() => {
                   setShowRecoveryModal(false);
                   setRecoveryEmail("");
@@ -245,7 +253,7 @@ export default function Login() {
                 className="p-2"
               >
                 <Ionicons name="close" size={24} color="#9ca3af" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <Text className="mb-4 text-base text-gray-400">
@@ -264,6 +272,7 @@ export default function Login() {
             />
 
             <Pressable
+              accessibilityRole="button"
               onPress={onRecoverPassword}
               disabled={recoveryLoading}
               className="w-full rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
