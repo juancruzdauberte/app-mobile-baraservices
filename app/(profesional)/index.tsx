@@ -1,26 +1,18 @@
-import {
-  Pressable, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   ActivityIndicator,
   ScrollView,
   Text,
-  Pressable,
   View,
 } from "react-native";
-import {
-  Pressable, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useRouter } from "expo-router";
+import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import { useAuth } from "../../providers/AuthProvider";
+import { getMyProposals, getMyWorkOrders } from "../../lib/lib";
 import {
-  Pressable, useRouter } from "expo-router";
-import {
-  Pressable, useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
-import {
-  Pressable, useAuth } from "../../providers/AuthProvider";
-import {
-  Pressable, getMyProposals, getMyWorkOrders } from "../../lib/lib";
-import {
-  Pressable,
   Proposal,
   ProposalEstado,
   WorkOrder,

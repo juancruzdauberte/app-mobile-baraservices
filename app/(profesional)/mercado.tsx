@@ -1,5 +1,4 @@
-import {
-  Pressable, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   ActivityIndicator,
@@ -7,24 +6,18 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  Pressable,
   View,
+  FlatList,
 } from "react-native";
-import {
-  Pressable, FlashList } from "@shopify/flash-list";
-import {
-  Pressable, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  Pressable, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import {
-  Pressable, getCategories, getMyJobRequests } from "../../lib/lib";
-import {
-  Pressable, Category, JobRequest, Urgencia } from "../../types/types";
-import {
-  Pressable, theme } from "@/constants/theme";
+import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import { getCategories, getMyJobRequests } from "../../lib/lib";
+import { Category, JobRequest, Urgencia } from "../../types/types";
+import { theme } from "@/constants/theme";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -135,6 +128,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
 
 export default function MercadoScreen() {
   const router = useRouter();
+  const scrollProps = useGlobalTabBarScroll();
 
   const [requests, setRequests] = useState<JobRequest[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -305,10 +299,11 @@ export default function MercadoScreen() {
           <ActivityIndicator size="large" color="#10b981" />
         </View>
       ) : (
-        <FlashList
+        <FlatList
+          style={{ flex: 1 }}
           data={filteredRequests}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={140}
+          {...scrollProps}
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingBottom: 40,

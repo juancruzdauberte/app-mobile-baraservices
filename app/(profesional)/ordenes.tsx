@@ -1,25 +1,19 @@
-import {
-  Pressable, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   ActivityIndicator,
   RefreshControl,
   Text,
-  Pressable,
   View,
+  FlatList,
 } from "react-native";
-import {
-  Pressable, FlashList } from "@shopify/flash-list";
-import {
-  Pressable, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  Pressable, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
-import {
-  Pressable, getMyWorkOrders } from "../../lib/lib";
-import {
-  Pressable, WorkOrder, WorkOrderEstado } from "../../types/types";
+import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import { getMyWorkOrders } from "../../lib/lib";
+import { WorkOrder, WorkOrderEstado } from "../../types/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -139,6 +133,7 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
 
 export default function OrdenesProScreen() {
   const router = useRouter();
+  const scrollProps = useGlobalTabBarScroll();
   const [orders, setOrders] = useState<WorkOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -184,10 +179,11 @@ export default function OrdenesProScreen() {
           <ActivityIndicator size="large" color="#10b981" />
         </View>
       ) : (
-        <FlashList
+        <FlatList
+          style={{ flex: 1 }}
           data={orders}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={84}
+          {...scrollProps}
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingBottom: 40,

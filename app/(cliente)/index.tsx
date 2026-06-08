@@ -1,22 +1,15 @@
+import { useCallback, useEffect, useState } from "react";
 import {
-  Pressable, useCallback, useEffect, useState } from "react";
-import {
-  Pressable, ScrollView, Text, View, TextInput, Pressable, ActivityIndicator } from "react-native";
-import {
-  Pressable, SafeAreaView } from "react-native-safe-area-context";
+  Pressable, ScrollView, Text, View, TextInput, ActivityIndicator
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  Pressable, useRouter } from "expo-router";
-import {
-  Pressable, useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
-import {
-  Pressable, useAuth } from "../../providers/AuthProvider";
-import {
-  Pressable, useCategoriesStore } from "../../store/categorys.store";
-import {
-  Pressable, getCategories, getMyJobRequests, getMyWorkOrders } from "../../lib/lib";
-import {
-  Pressable, Category, WorkOrder, WorkOrderEstado } from "../../types/types";
+import { useRouter } from "expo-router";
+import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import { useAuth } from "../../providers/AuthProvider";
+import { useCategoriesStore } from "../../store/categorys.store";
+import { getCategories, getMyJobRequests, getMyWorkOrders } from "../../lib/lib";
+import { Category, WorkOrder, WorkOrderEstado } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -192,8 +185,10 @@ export default function Home() {
           <View className="mb-8">
             <View className="flex-row items-center justify-between mb-4">
               <Text className="text-white text-lg font-bold">Órdenes recientes</Text>
-              <Pressable onPress={() => router.push("/(cliente)/ordenes" as any)}>
+              <Pressable
                 accessibilityRole="button"
+                onPress={() => router.push("/(cliente)/ordenes" as any)}
+              >
                 <Text className="text-emerald-500 font-medium">Ver todas</Text>
               </Pressable>
             </View>

@@ -1,27 +1,21 @@
-import {
-  Pressable, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   ActivityIndicator,
   RefreshControl,
   StyleSheet,
   Text,
-  Pressable,
   View,
+  FlatList,
 } from "react-native";
-import {
-  Pressable, FlashList } from "@shopify/flash-list";
-import {
-  Pressable, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  Pressable, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import {
-  Pressable, deleteProposal, getMyProposals } from "../../lib/lib";
-import {
-  Pressable, Proposal, ProposalEstado } from "../../types/types";
+import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import { deleteProposal, getMyProposals } from "../../lib/lib";
+import { Proposal, ProposalEstado } from "../../types/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -145,6 +139,7 @@ function ProposalListCard({
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function PropuestasScreen() {
+  const scrollProps = useGlobalTabBarScroll();
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -212,10 +207,11 @@ export default function PropuestasScreen() {
           <ActivityIndicator size="large" color="#10b981" />
         </View>
       ) : (
-        <FlashList
+        <FlatList
+          style={{ flex: 1 }}
           data={activeProposals}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={88}
+          {...scrollProps}
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingBottom: 40,

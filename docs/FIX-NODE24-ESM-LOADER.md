@@ -96,7 +96,17 @@ npx expo config --type prebuild
 
 ## Status
 
-✅ **RESUELTO** - Wrapper pattern implementado  
-📅 **Fecha:** 2026-06-08  
-🔧 **Node.js:** v24.15.0  
-📦 **Expo:** v54.0.34
+⚠️ **ACTUALIZACIÓN 2026-06-08**: El wrapper pattern dejó de funcionar en Expo CLI reciente  
+✅ **SOLUCIÓN DEFINITIVA**: Downgrade a Node.js 22 LTS (v22.22.3)  
+
+```bash
+nvm install 22 --lts
+nvm alias default 22
+nvm use 22
+npm run dev  # Funciona sin errores
+```
+
+📅 **Fecha original:** 2026-06-08  
+🔧 **Node.js problemático:** v24.15.0  
+✅ **Node.js estable:** v22.22.3  
+📦 **Expo:** v54.0.24

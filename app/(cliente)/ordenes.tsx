@@ -4,13 +4,14 @@ import {
   RefreshControl,
   Text,
   View,
+  FlatList,
 } from "react-native";
-import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
+import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
 import { getMyWorkOrders } from "../../lib/lib";
 import { WorkOrder } from "../../types/types";
 import { OrderListItem } from "../../components/OrderListItem";
@@ -19,6 +20,7 @@ import { OrderListItem } from "../../components/OrderListItem";
 
 export default function OrdenesScreen() {
   const router = useRouter();
+  const scrollProps = useGlobalTabBarScroll();
   const [orders, setOrders] = useState<WorkOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -82,10 +84,11 @@ export default function OrdenesScreen() {
           <ActivityIndicator size="large" color="#10b981" />
         </View>
       ) : (
-        <FlashList
+        <FlatList
+          style={{ flex: 1 }}
           data={orders}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={84}
+          {...scrollProps}
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingBottom: 40,

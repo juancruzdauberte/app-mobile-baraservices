@@ -1,26 +1,19 @@
-import {
-  Pressable, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   ActivityIndicator,
   RefreshControl,
   Text,
-  Pressable,
   View,
+  FlatList,
 } from "react-native";
-import {
-  Pressable, FlashList } from "@shopify/flash-list";
-import {
-  Pressable, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  Pressable, useRouter } from "expo-router";
-import {
-  Pressable, useFocusEffect } from "@react-navigation/native";
-import {
-  Pressable, getMyJobRequests } from "../../lib/lib";
-import {
-  Pressable, JobRequest, JobRequestEstado, Urgencia } from "../../types/types";
+import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
+import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
+import { getMyJobRequests } from "../../lib/lib";
+import { JobRequest, JobRequestEstado, Urgencia } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -31,7 +24,7 @@ const URGENCY_CONFIG: Record<
 > = {
   BAJA: { label: "Baja", bg: "bg-emerald-500/20", text: "text-emerald-400" },
   MEDIA: { label: "Media", bg: "bg-amber-500/20", text: "text-amber-400" },
-  ALTA: { label: "Alta", bg: "bg-red-500/20", text: "text-red-400" },
+  EMERGENCIA: { label: "Alta", bg: "bg-red-500/20", text: "text-red-400" },
 };
 
 const STATUS_CONFIG: Record<
@@ -58,10 +51,14 @@ const STATUS_CONFIG: Record<
     bg: "bg-gray-700/40",
     text: "text-gray-400",
   },
-  COMPLETA: { label: "Completada", bg: "bg-emerald-500/20", text: "text-emerald-400" },
+  COMPLETA: {
+    label: "Completada",
+    bg: "bg-emerald-500/20",
+    text: "text-emerald-400",
+  },
 };
 
-function getStatusConfig(estado: string) {
+function getStatusConfig(estado: JobRequestEstado) {
   return (
     STATUS_CONFIG[estado] ?? {
       label: estado,
@@ -178,6 +175,7 @@ function EmptyState({ onPress }: { onPress: () => void }) {
 
 export default function Solicitudes() {
   const router = useRouter();
+  const scrollProps = useGlobalTabBarScroll();
   const [requests, setRequests] = useState<JobRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -233,10 +231,11 @@ export default function Solicitudes() {
           <ActivityIndicator size="large" color="#10b981" />
         </View>
       ) : (
-        <FlashList
+        <FlatList
+          style={{ flex: 1 }}
           data={requests}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={120}
+          {...scrollProps}
           renderItem={({ item }) => (
             <JobRequestCard
               item={item}
