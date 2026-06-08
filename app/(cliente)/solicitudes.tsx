@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  FlatList,
   RefreshControl,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
@@ -223,9 +223,10 @@ export default function Solicitudes() {
           <ActivityIndicator size="large" color="#10b981" />
         </View>
       ) : (
-        <FlatList
+        <FlashList
           data={requests}
           keyExtractor={(item) => item.id}
+          estimatedItemSize={120}
           renderItem={({ item }) => (
             <JobRequestCard
               item={item}
@@ -236,7 +237,6 @@ export default function Solicitudes() {
             paddingHorizontal: 20,
             paddingTop: 16,
             paddingBottom: 120,
-            flexGrow: 1,
           }}
           ListEmptyComponent={<EmptyState onPress={() => setShowModal(true)} />}
           refreshControl={
