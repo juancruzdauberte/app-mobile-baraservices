@@ -136,6 +136,7 @@ export default function Perfil() {
           <View className="gap-3">
             {menuItems.map((item, index) => (
               <Pressable
+                accessibilityRole="button"
                 key={index}
                 onPress={item.onPress}
                 className="bg-gray-900 rounded-2xl p-4 flex-row items-center border border-gray-800 active:bg-gray-800"
@@ -160,6 +161,7 @@ export default function Perfil() {
         <View className="mb-8">
           <View className="gap-3">
             <Pressable
+              accessibilityRole="button"
               onPress={handleSignOut}
               className="bg-red-500/10 rounded-2xl p-4 flex-row items-center border border-red-500/20 active:bg-red-500/20"
             >

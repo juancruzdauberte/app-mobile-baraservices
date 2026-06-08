@@ -115,6 +115,7 @@ export default function Register() {
         >
           <View className="flex-1 justify-center px-8 py-12">
             <Pressable
+              accessibilityRole="button"
               onPress={() => router.back()}
               className="absolute left-8 top-0 z-10"
             >
@@ -133,6 +134,7 @@ export default function Register() {
             {/* Selección de Rol */}
             <View className="mb-6 flex-row gap-4">
               <Pressable
+                accessibilityRole="button"
                 onPress={() => setRole("CLIENTE")}
                 className={`flex-1 items-center rounded-2xl border-2 py-4 ${role === "CLIENTE" ? "border-emerald-500 bg-emerald-500/10" : "border-gray-800 bg-gray-800"}`}
               >
@@ -143,6 +145,7 @@ export default function Register() {
                 </Text>
               </Pressable>
               <Pressable
+                accessibilityRole="button"
                 onPress={() => setRole("PROFESIONAL")}
                 className={`flex-1 items-center rounded-2xl border-2 py-4 ${role === "PROFESIONAL" ? "border-emerald-500 bg-emerald-500/10" : "border-gray-800 bg-gray-800"}`}
               >
@@ -260,6 +263,7 @@ export default function Register() {
                   onChangeText={setPassword}
                 />
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => setShowPassword(!showPassword)}
                   className="p-2"
                 >
@@ -281,6 +285,7 @@ export default function Register() {
                   onChangeText={setConfirmPassword}
                 />
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="p-2"
                 >
@@ -295,6 +300,7 @@ export default function Register() {
 
             {/* Botón de Registro */}
             <Pressable
+              accessibilityRole="button"
               onPress={onRegister}
               disabled={loading}
               className="mb-4 w-full flex-row items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"

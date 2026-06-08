@@ -70,6 +70,7 @@ export default function EnviarPropuestaScreen() {
           {/* ── Header ──────────────────────────────────────────────────── */}
           <View className="flex-row items-center pt-4 pb-5">
             <Pressable
+              accessibilityRole="button"
               onPress={() => router.back()}
               className="mr-3 p-1"
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -124,6 +125,7 @@ export default function EnviarPropuestaScreen() {
 
           {/* ── Submit button ────────────────────────────────────────────── */}
           <Pressable
+            accessibilityRole="button"
             onPress={handleSubmit}
             disabled={loading}
             className="bg-emerald-500 py-4 rounded-2xl items-center"

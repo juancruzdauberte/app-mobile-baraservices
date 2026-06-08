@@ -139,6 +139,7 @@ export default function ProfessionalProfile() {
     return (
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
         <Pressable
+          accessibilityRole="button"
           onPress={() => router.back()}
           className="flex-row items-center px-5 pt-4 pb-2"
         >
@@ -154,6 +155,7 @@ export default function ProfessionalProfile() {
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
+            accessibilityRole="button"
             onPress={() => {
               setLoadError(false);
               setLoading(true);
@@ -187,6 +189,7 @@ export default function ProfessionalProfile() {
         {/* ── Header ────────────────────────────────────────────────────── */}
         <View className="flex-row items-center pt-4 pb-4">
           <Pressable
+            accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -356,6 +359,7 @@ export default function ProfessionalProfile() {
 
             {professional.telefono ? (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => Linking.openURL(`tel:${professional.telefono}`)}
                 className="flex-row items-center py-3 border-b border-gray-800"
                 style={{ gap: 12 }}
@@ -375,6 +379,7 @@ export default function ProfessionalProfile() {
 
             {professional.email ? (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => Linking.openURL(`mailto:${professional.email}`)}
                 className="flex-row items-center pt-3"
                 style={{ gap: 12 }}

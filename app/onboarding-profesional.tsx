@@ -130,6 +130,7 @@ export default function OnboardingProfesionalScreen() {
         </View>
 
         <Pressable
+          accessibilityRole="button"
           onPress={onSubmit}
           disabled={isLoading || !dniFront || !dniBack || !selfie}
           className={`mt-6 flex-row items-center justify-center rounded-2xl p-4 ${
@@ -171,6 +172,7 @@ function PhotoCaptureButton({
 }) {
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       className="flex-row items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 p-4"
     >

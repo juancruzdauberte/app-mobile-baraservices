@@ -92,6 +92,7 @@ function RequestListItemComponent({ request, onPress }: RequestListItemProps) {
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={() => onPress(request.id)}
       className="bg-gray-900 rounded-2xl p-4 border border-gray-800 mb-3"
       accessibilityRole="button"

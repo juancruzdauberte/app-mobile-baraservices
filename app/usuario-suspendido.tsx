@@ -49,6 +49,7 @@ export default function UsuarioSuspendido() {
         <View className="gap-4">
           {/* Contactar soporte */}
           <Pressable
+            accessibilityRole="button"
             onPress={handleContactSupport}
             className="w-full flex-row items-center justify-center gap-3 rounded-2xl border border-gray-700 bg-transparent px-6 py-4 active:bg-gray-800"
           >
@@ -60,6 +61,7 @@ export default function UsuarioSuspendido() {
 
           {/* Cerrar sesión */}
           <Pressable
+            accessibilityRole="button"
             onPress={handleSignOut}
             className="w-full flex-row items-center justify-center gap-3 rounded-2xl bg-red-600 px-6 py-4 active:bg-red-700"
           >

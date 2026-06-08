@@ -287,6 +287,7 @@ export default function EditarPerfilProfesional() {
         {/* Header */}
         <View className="flex-row items-center px-5 pt-4 pb-4 border-b border-gray-800">
           <Pressable
+            accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -307,6 +308,8 @@ export default function EditarPerfilProfesional() {
           {/* ── Avatar ──────────────────────────────────────────────────── */}
           <View className="items-center py-6">
             <Pressable onPress={() => setShowPicker(true)}>
+              accessibilityRole="button"
+              accessibilityRole="button"
               <View className="relative">
                 {displayAvatar ? (
                   <Image
@@ -474,6 +477,7 @@ export default function EditarPerfilProfesional() {
                     }`}
                   >
                     <Pressable
+                      accessibilityRole="button"
                       onPress={() => toggleJob(cat.id)}
                       className="flex-row items-center justify-between"
                     >
@@ -526,6 +530,7 @@ export default function EditarPerfilProfesional() {
 
             {/* Guardar */}
             <Pressable
+              accessibilityRole="button"
               onPress={handleSave}
               disabled={saving}
               className="bg-emerald-500 rounded-2xl py-4 items-center justify-center mt-2"
@@ -550,6 +555,7 @@ export default function EditarPerfilProfesional() {
         onRequestClose={() => setShowPicker(false)}
       >
         <Pressable
+          accessibilityRole="button"
           className="flex-1 bg-black/60"
           onPress={() => setShowPicker(false)}
         />
@@ -558,6 +564,7 @@ export default function EditarPerfilProfesional() {
           <Text className="text-white text-base font-bold mb-4">Foto de perfil</Text>
 
           <Pressable
+            accessibilityRole="button"
             onPress={pickFromCamera}
             className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
@@ -572,6 +579,7 @@ export default function EditarPerfilProfesional() {
           </Pressable>
 
           <Pressable
+            accessibilityRole="button"
             onPress={pickFromGallery}
             className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
@@ -586,6 +594,7 @@ export default function EditarPerfilProfesional() {
           </Pressable>
 
           <Pressable
+            accessibilityRole="button"
             onPress={() => setShowPicker(false)}
             className="items-center py-3.5 mt-1"
           >

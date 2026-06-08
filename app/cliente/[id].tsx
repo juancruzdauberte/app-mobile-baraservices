@@ -55,6 +55,7 @@ export default function ClientProfile() {
     return (
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
         <Pressable
+          accessibilityRole="button"
           onPress={() => router.back()}
           className="flex-row items-center px-5 pt-4 pb-2"
         >
@@ -70,6 +71,7 @@ export default function ClientProfile() {
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
+            accessibilityRole="button"
             onPress={load}
             className="bg-emerald-500 px-6 py-3 rounded-full"
           >
@@ -91,6 +93,7 @@ export default function ClientProfile() {
         {/* ── Header ────────────────────────────────────────────────────── */}
         <View className="flex-row items-center pt-4 pb-4">
           <Pressable
+            accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -139,6 +142,7 @@ export default function ClientProfile() {
 
             {client.telefono ? (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => Linking.openURL(`tel:${client.telefono}`)}
                 className="flex-row items-center py-3 border-b border-gray-800"
                 style={{ gap: 12 }}
@@ -158,6 +162,7 @@ export default function ClientProfile() {
 
             {client.email ? (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => Linking.openURL(`mailto:${client.email}`)}
                 className="flex-row items-center pt-3"
                 style={{ gap: 12 }}

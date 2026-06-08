@@ -196,6 +196,7 @@ export default function CreateJobRequestModal({
             Nueva Solicitud de Trabajo
           </Text>
           <Pressable onPress={handleClose} hitSlop={8}>
+            accessibilityRole="button"
             <Ionicons name="close" size={24} color="#9ca3af" />
           </Pressable>
         </View>
@@ -240,6 +241,7 @@ export default function CreateJobRequestModal({
                   const isActive = form.urgencia === item.value;
                   return (
                     <Pressable
+                      accessibilityRole="button"
                       key={item.value}
                       onPress={() => updateField("urgencia", item.value)}
                       className={`flex-1 items-center py-3 rounded-2xl border ${
@@ -276,6 +278,7 @@ export default function CreateJobRequestModal({
                     const isActive = form.categoria_id === cat.id;
                     return (
                       <Pressable
+                        accessibilityRole="button"
                         key={cat.id}
                         onPress={() => updateField("categoria_id", cat.id)}
                         className={`px-4 py-2 rounded-2xl border ${
@@ -351,6 +354,7 @@ export default function CreateJobRequestModal({
 
             {/* ── Submit ───────────────────────────────────────────────── */}
             <Pressable
+              accessibilityRole="button"
               onPress={handleSubmit}
               disabled={submitting}
               className="bg-emerald-500 rounded-2xl py-4 items-center justify-center mb-2"

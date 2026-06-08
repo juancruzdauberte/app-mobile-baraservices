@@ -47,6 +47,7 @@ function RecentOrderCard({ order, onPress }: { order: WorkOrder; onPress: () => 
   const s = ORDER_STATUS_COLORS[order.estado] ?? ORDER_STATUS_COLORS.PROGRAMADA;
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
     >
@@ -192,6 +193,7 @@ export default function Home() {
             <View className="flex-row items-center justify-between mb-4">
               <Text className="text-white text-lg font-bold">Órdenes recientes</Text>
               <Pressable onPress={() => router.push("/(cliente)/ordenes" as any)}>
+                accessibilityRole="button"
                 <Text className="text-emerald-500 font-medium">Ver todas</Text>
               </Pressable>
             </View>
@@ -222,6 +224,7 @@ export default function Home() {
 
       {/* FAB */}
       <Pressable
+        accessibilityRole="button"
         onPress={() => setShowModal(true)}
         className="absolute bottom-28 right-5 bg-emerald-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
       >

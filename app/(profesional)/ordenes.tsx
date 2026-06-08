@@ -87,6 +87,7 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       activeOpacity={0.7}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"

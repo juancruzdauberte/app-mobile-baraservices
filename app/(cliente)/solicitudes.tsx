@@ -107,6 +107,7 @@ function JobRequestCard({
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       activeOpacity={0.75}
       className="bg-gray-900 rounded-2xl p-4 border border-gray-800 mb-3"
@@ -162,6 +163,7 @@ function EmptyState({ onPress }: { onPress: () => void }) {
         publicar tu primera solicitud.
       </Text>
       <Pressable
+        accessibilityRole="button"
         onPress={onPress}
         className="bg-emerald-500 px-6 py-3 rounded-full flex-row items-center"
       >
@@ -262,6 +264,7 @@ export default function Solicitudes() {
       {/* FAB */}
       {!loading && requests.length > 0 && (
         <Pressable
+          accessibilityRole="button"
           onPress={() => setShowModal(true)}
           className="absolute bottom-28 right-5 bg-emerald-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
         >

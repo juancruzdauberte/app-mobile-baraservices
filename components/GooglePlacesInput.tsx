@@ -204,6 +204,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
           <ActivityIndicator size="small" color="#10b981" />
         ) : query.length > 0 ? (
           <Pressable onPress={handleClear} hitSlop={8}>
+            accessibilityRole="button"
             <Ionicons name="close-circle" size={18} color="#9ca3af" />
           </Pressable>
         ) : null}
@@ -219,6 +220,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
         <View className="bg-gray-900 border border-gray-800 rounded-b-2xl mt-14 overflow-hidden absolute z-10 w-full">
           {predictions.map((prediction, index) => (
             <Pressable
+              accessibilityRole="button"
               key={prediction.place_id}
               onPress={() => handleSelectPrediction(prediction)}
               className={`px-4 py-3 flex-row items-start ${

@@ -69,6 +69,7 @@ function OrderListItemComponent({ order, onPress }: OrderListItemProps) {
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={() => onPress(order.id)}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"
       accessibilityRole="button"

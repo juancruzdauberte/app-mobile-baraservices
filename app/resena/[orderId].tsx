@@ -112,6 +112,7 @@ export default function ResenaScreen() {
           Tu opinión ayuda a otros clientes a elegir mejor.
         </Text>
         <Pressable
+          accessibilityRole="button"
           onPress={() =>
             router.replace(isPro ? "/(profesional)" : ("/(cliente)" as any))
           }
@@ -153,6 +154,7 @@ export default function ResenaScreen() {
           {/* ── Header ────────────────────────────────────────────────────── */}
           <View className="flex-row items-center pt-4 pb-5">
             <Pressable
+              accessibilityRole="button"
               onPress={() => router.back()}
               className="mr-3 p-1"
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -196,6 +198,7 @@ export default function ResenaScreen() {
                   </Text>
                 ) : null}
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => {
                     if (isPro) {
                       const clienteId = order?.solicitudes_trabajo?.clientes?.id;
@@ -223,6 +226,7 @@ export default function ResenaScreen() {
           <View className="flex-row gap-3 mb-2">
             {[1, 2, 3, 4, 5].map((n) => (
               <Pressable
+                accessibilityRole="button"
                 key={n}
                 onPress={() => setPuntaje(n)}
                 hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
@@ -267,6 +271,7 @@ export default function ResenaScreen() {
 
           {/* ── Submit button ─────────────────────────────────────────────── */}
           <Pressable
+            accessibilityRole="button"
             onPress={handleSubmit}
             disabled={puntaje === 0 || submitting}
             className={`w-full mt-6 mb-4 py-4 rounded-2xl items-center ${

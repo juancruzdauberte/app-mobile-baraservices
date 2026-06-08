@@ -63,6 +63,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       activeOpacity={0.7}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"
@@ -222,6 +223,7 @@ export default function MercadoScreen() {
           const isActive = selectedUrgency === f.key;
           return (
             <Pressable
+              accessibilityRole="button"
               key={f.key ?? "all"}
               onPress={() => setSelectedUrgency(f.key)}
               className={`mr-2 px-4 py-2 rounded-full ${
@@ -255,6 +257,7 @@ export default function MercadoScreen() {
           }}
         >
           <Pressable
+            accessibilityRole="button"
             onPress={() => setSelectedCategory(null)}
             className={`mr-2 px-4 py-2 rounded-full ${
               selectedCategory === null
@@ -274,6 +277,7 @@ export default function MercadoScreen() {
             const isActive = selectedCategory === cat.id;
             return (
               <Pressable
+                accessibilityRole="button"
                 key={cat.id}
                 onPress={() => setSelectedCategory(cat.id)}
                 className={`mr-2 px-4 py-2 rounded-full ${

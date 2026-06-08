@@ -166,6 +166,7 @@ export default function Login() {
                   onChangeText={setPassword}
                 />
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => setShowPassword(!showPassword)}
                   className="p-2"
                 >
@@ -180,6 +181,7 @@ export default function Login() {
 
             {/* Botón de inicio de sesión */}
             <Pressable
+              accessibilityRole="button"
               onPress={onLogin}
               disabled={loading}
               className="mb-4 w-full flex-row items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
@@ -192,6 +194,7 @@ export default function Login() {
 
             {/* Olvidaste tu contraseña */}
             <Pressable
+              accessibilityRole="button"
               onPress={() => setShowRecoveryModal(true)}
               className="mb-4 w-full items-center py-2"
             >
@@ -202,6 +205,7 @@ export default function Login() {
 
             {/* Enlace para registrarse */}
             <Pressable
+              accessibilityRole="button"
               onPress={() => router.push("/register")}
               className="mb-4 mt-2 w-full flex-row items-center justify-center py-4"
             >
@@ -215,6 +219,7 @@ export default function Login() {
 
             {session && (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => signOut()}
                 style={{ marginTop: 20 }}
                 className="items-center"
@@ -240,6 +245,7 @@ export default function Login() {
                 Restablecer Contraseña
               </Text>
               <Pressable
+                accessibilityRole="button"
                 onPress={() => {
                   setShowRecoveryModal(false);
                   setRecoveryEmail("");
@@ -266,6 +272,7 @@ export default function Login() {
             />
 
             <Pressable
+              accessibilityRole="button"
               onPress={onRecoverPassword}
               disabled={recoveryLoading}
               className="w-full rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"

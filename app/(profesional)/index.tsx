@@ -78,6 +78,7 @@ function RecentOrderCard({
   const s = ORDER_STATUS_COLORS[order.estado] ?? ORDER_STATUS_COLORS.PROGRAMADA;
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
     >
@@ -239,6 +240,7 @@ export default function DashboardPro() {
         {/* Quick Actions */}
         <View className="flex-row mb-8" style={{ gap: 12 }}>
           <Pressable
+            accessibilityRole="button"
             onPress={() => router.push("/(profesional)/mercado" as any)}
             className="bg-emerald-500 flex-1 rounded-2xl items-center justify-center flex-row py-3.5"
             style={{ gap: 8 }}
@@ -247,6 +249,7 @@ export default function DashboardPro() {
             <Text className="text-gray-950 font-bold text-sm">Ver mercado</Text>
           </Pressable>
           <Pressable
+            accessibilityRole="button"
             onPress={() => router.push("/(profesional)/propuestas" as any)}
             className="bg-gray-900 border border-gray-800 flex-1 rounded-2xl items-center justify-center flex-row py-3.5"
             style={{ gap: 8 }}
@@ -266,6 +269,7 @@ export default function DashboardPro() {
                 Propuestas recientes
               </Text>
               <Pressable
+                accessibilityRole="button"
                 onPress={() => router.push("/(profesional)/propuestas" as any)}
               >
                 <Text className="text-emerald-500 font-medium">Ver todas</Text>
@@ -285,6 +289,7 @@ export default function DashboardPro() {
                 Órdenes activas
               </Text>
               <Pressable
+                accessibilityRole="button"
                 onPress={() => router.push("/(profesional)/ordenes" as any)}
               >
                 <Text className="text-emerald-500 font-medium">Ver todas</Text>
@@ -317,6 +322,7 @@ export default function DashboardPro() {
               órdenes.
             </Text>
             <Pressable
+              accessibilityRole="button"
               onPress={() => router.push("/(profesional)/mercado" as any)}
               className="bg-emerald-500 px-6 py-3 rounded-full"
             >

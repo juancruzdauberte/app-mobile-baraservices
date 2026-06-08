@@ -251,6 +251,7 @@ export default function OrdenDetalle() {
     return (
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
         <Pressable
+          accessibilityRole="button"
           onPress={() => router.back()}
           className="flex-row items-center px-5 pt-4 pb-2"
         >
@@ -265,6 +266,7 @@ export default function OrdenDetalle() {
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
+            accessibilityRole="button"
             onPress={() => loadOrder()}
             className="bg-emerald-500 px-6 py-3 rounded-full"
           >
@@ -297,6 +299,7 @@ export default function OrdenDetalle() {
         {/* ── Header ──────────────────────────────────────────────────────── */}
         <View className="flex-row items-center pt-4 pb-5">
           <Pressable
+            accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -400,6 +403,7 @@ export default function OrdenDetalle() {
                   ) : null}
                   {order.propuestas?.profesionales?.id ? (
                     <Pressable
+                      accessibilityRole="button"
                       onPress={() =>
                         router.push(
                           `/profesional/${order.propuestas!.profesionales!.id}` as any,
@@ -470,6 +474,7 @@ export default function OrdenDetalle() {
                   </Text>
                   {order.solicitudes_trabajo?.clientes?.id ? (
                     <Pressable
+                      accessibilityRole="button"
                       onPress={() =>
                         router.push(
                           `/cliente/${order.solicitudes_trabajo!.clientes!.id}` as any,
@@ -495,6 +500,7 @@ export default function OrdenDetalle() {
         {isCliente && order.estado === "EN_PROGRESO" ? (
           <View className="mb-4">
             <Pressable
+              accessibilityRole="button"
               onPress={handleDispute}
               disabled={actionLoading === "dispute"}
               className="bg-orange-500/10 border border-orange-500/30 py-3.5 rounded-2xl flex-row items-center justify-center gap-2"
@@ -520,6 +526,7 @@ export default function OrdenDetalle() {
         {isCliente && order.estado === "COMPLETADA" ? (
           (order._count?.resenas ?? 0) === 0 ? (
             <Pressable
+              accessibilityRole="button"
               onPress={handleLeaveReview}
               className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 mb-4"
             >
@@ -558,12 +565,14 @@ export default function OrdenDetalle() {
               <Text className="text-gray-500 text-xs mt-1">Revisá el precio antes de confirmar el inicio</Text>
             </View>
             <Pressable
+              accessibilityRole="button"
               onPress={handleConfirmStart}
               className="bg-green-600 rounded-2xl py-4 items-center"
             >
               <Text className="text-white font-semibold text-base">Confirmar inicio</Text>
             </Pressable>
             <Pressable
+              accessibilityRole="button"
               onPress={handleCancel}
               className="bg-red-500/10 border border-red-500/40 rounded-2xl py-4 items-center"
             >
@@ -588,6 +597,7 @@ export default function OrdenDetalle() {
               <Text className="text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
             </View>
             <Pressable
+              accessibilityRole="button"
               onPress={() => setShowPriceModal(true)}
               className="bg-amber-500 rounded-2xl py-4 items-center"
             >
@@ -598,6 +608,7 @@ export default function OrdenDetalle() {
 
         {isProfesional && order.estado === "EN_PROGRESO" ? (
           <Pressable
+            accessibilityRole="button"
             onPress={handleComplete}
             disabled={actionLoading === "complete"}
             className="bg-emerald-500 py-3.5 rounded-2xl flex-row items-center justify-center gap-2 w-full mb-4"
@@ -653,6 +664,7 @@ export default function OrdenDetalle() {
             />
 
             <Pressable
+              accessibilityRole="button"
               onPress={handleUpdatePrice}
               disabled={actionLoading === "price"}
               className="bg-emerald-500 py-3 rounded-xl items-center mb-3"
@@ -665,6 +677,7 @@ export default function OrdenDetalle() {
             </Pressable>
 
             <Pressable
+              accessibilityRole="button"
               onPress={() => setShowPriceModal(false)}
               className="py-3 items-center"
             >

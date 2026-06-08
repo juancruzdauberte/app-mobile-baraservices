@@ -174,6 +174,7 @@ function MyProposalCard({
 
       {proposal.estado === "PENDIENTE" ? (
         <Pressable
+          accessibilityRole="button"
           onPress={onWithdraw}
           disabled={isWithdrawing}
           className="border border-red-500/30 bg-red-500/10 py-2.5 rounded-xl items-center mt-1"
@@ -274,6 +275,7 @@ function ProposalCard({
             <Text className="text-white font-semibold text-sm">{fullName}</Text>
             {pro && (
               <Pressable
+                accessibilityRole="button"
                 onPress={() =>
                   router.push(`/profesional/${proposal.profesional_id}` as any)
                 }
@@ -347,6 +349,7 @@ function ProposalCard({
           style={{ gap: 8 }}
         >
           <Pressable
+            accessibilityRole="button"
             onPress={() => onReject(proposal.id)}
             disabled={isProcessing}
             className="flex-1 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 items-center justify-center"
@@ -361,6 +364,7 @@ function ProposalCard({
           </Pressable>
 
           <Pressable
+            accessibilityRole="button"
             onPress={() => onAccept(proposal.id)}
             disabled={isProcessing}
             className="flex-1 py-2.5 rounded-xl bg-emerald-500 items-center justify-center"
@@ -556,6 +560,7 @@ export default function SolicitudDetalle() {
       <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
         {/* Back */}
         <Pressable
+          accessibilityRole="button"
           onPress={() => router.back()}
           className="flex-row items-center px-5 pt-4 pb-2"
         >
@@ -571,6 +576,7 @@ export default function SolicitudDetalle() {
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
+            accessibilityRole="button"
             onPress={() => loadData()}
             className="bg-emerald-500 px-6 py-3 rounded-full"
           >
@@ -615,6 +621,7 @@ export default function SolicitudDetalle() {
         {/* ── Header ─────────────────────────────────────────────────────── */}
         <View className="flex-row items-center pt-4 pb-5">
           <Pressable
+            accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -626,6 +633,7 @@ export default function SolicitudDetalle() {
           </Text>
           {!isPro && jobRequest.estado === "ABIERTA" ? (
             <Pressable
+              accessibilityRole="button"
               onPress={() =>
                 Alert.alert(
                   "Eliminar solicitud",
@@ -680,6 +688,7 @@ export default function SolicitudDetalle() {
           {/* Address */}
           {jobRequest.direccion_formateada ? (
             <Pressable
+              accessibilityRole="button"
               onPress={() => {
                 const url = jobRequest.google_place_id
                   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(jobRequest.direccion_formateada!)}&query_place_id=${jobRequest.google_place_id}`
@@ -775,6 +784,7 @@ export default function SolicitudDetalle() {
               ) : (
                 /* No envió propuesta → botón enviar */
                 <Pressable
+                  accessibilityRole="button"
                   onPress={() => router.push(`/enviar-propuesta/${id}` as any)}
                   className="bg-emerald-500 py-4 rounded-2xl items-center mb-4 flex-row justify-center gap-2"
                 >
@@ -790,6 +800,7 @@ export default function SolicitudDetalle() {
             {jobRequest.estado === "ASIGNADA" &&
             myProposal?.estado === "ACEPTADA" ? (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => router.push("/(profesional)/ordenes" as any)}
                 className="bg-gray-900 border border-emerald-500/30 rounded-2xl p-4 mt-2"
               >
@@ -822,6 +833,7 @@ export default function SolicitudDetalle() {
                 </Text>
                 {jobRequest.ordenes_trabajo?.[0]?.id ? (
                   <Pressable
+                    accessibilityRole="button"
                     onPress={() =>
                       router.push(
                         `/orden/${jobRequest.ordenes_trabajo![0].id}` as any,
@@ -843,6 +855,7 @@ export default function SolicitudDetalle() {
             {/* ── Cancel button — only when ABIERTA ──────────────────────────── */}
             {jobRequest.estado === "ABIERTA" ? (
               <Pressable
+                accessibilityRole="button"
                 onPress={handleCancel}
                 disabled={isCancelProcessing}
                 className="border border-red-500/40 bg-red-500/10 py-3 rounded-2xl items-center mb-5"
@@ -903,6 +916,7 @@ export default function SolicitudDetalle() {
             {/* ── Assigned work order card ───────────────────────────────────── */}
             {jobRequest.estado === "ASIGNADA" ? (
               <Pressable
+                accessibilityRole="button"
                 onPress={() => router.push("/(cliente)/ordenes" as any)}
                 className="bg-gray-900 border border-amber-500/30 rounded-2xl p-4 mt-4"
               >
@@ -935,6 +949,7 @@ export default function SolicitudDetalle() {
                 </Text>
                 {jobRequest.ordenes_trabajo?.[0]?.id ? (
                   <Pressable
+                    accessibilityRole="button"
                     onPress={() =>
                       router.push(
                         `/orden/${jobRequest.ordenes_trabajo![0].id}` as any,
@@ -950,6 +965,7 @@ export default function SolicitudDetalle() {
                 {jobRequest.ordenes_trabajo?.[0]?.id &&
                 (jobRequest.ordenes_trabajo?.[0]?._count?.resenas ?? 0) === 0 ? (
                   <Pressable
+                    accessibilityRole="button"
                     onPress={() =>
                       router.push(
                         `/resena/${jobRequest.ordenes_trabajo![0].id}` as any,
