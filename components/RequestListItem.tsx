@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { JobRequest, JobRequestEstado, Urgencia } from "../types/types";
 
@@ -91,10 +91,12 @@ function RequestListItemComponent({ request, onPress }: RequestListItemProps) {
   });
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => onPress(request.id)}
-      activeOpacity={0.75}
       className="bg-gray-900 rounded-2xl p-4 border border-gray-800 mb-3"
+      accessibilityRole="button"
+      accessibilityLabel={`Solicitud: ${request.titulo}`}
+      accessibilityHint="Toca para ver detalles de la solicitud"
     >
       {/* Title row */}
       <View className="flex-row items-start justify-between mb-2">
@@ -129,7 +131,7 @@ function RequestListItemComponent({ request, onPress }: RequestListItemProps) {
           <Ionicons name="chevron-forward" size={14} color="#4b5563" />
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

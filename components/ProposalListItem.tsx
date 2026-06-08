@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { Proposal, ProposalEstado } from "../types/types";
@@ -92,30 +92,34 @@ function ProposalListItemComponent({
 
       {/* Actions */}
       {proposal.estado === "PENDIENTE" ? (
-        <TouchableOpacity
+        <Pressable
           onPress={() => onWithdraw(proposal.id)}
           disabled={isWithdrawing}
           className="border border-red-500/30 bg-red-500/10 py-2.5 rounded-xl items-center"
+          accessibilityRole="button"
+          accessibilityLabel="Retirar propuesta"
         >
           {isWithdrawing ? (
             <ActivityIndicator size="small" color="#f87171" />
           ) : (
             <Text className="text-red-400 font-semibold text-sm">Retirar</Text>
           )}
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
 
       {proposal.estado === "ACEPTADA" && proposal.ordenes_trabajo?.[0]?.id ? (
-        <TouchableOpacity
+        <Pressable
           onPress={() =>
             router.push(`/orden/${proposal.ordenes_trabajo![0].id}` as any)
           }
           className="border border-emerald-500/30 bg-emerald-500/10 py-2.5 rounded-xl items-center flex-row justify-center gap-1"
+          accessibilityRole="button"
+          accessibilityLabel="Ver orden de trabajo"
         >
           <Text className="text-emerald-400 font-semibold text-sm">
             Ver orden →
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
     </View>
   );
