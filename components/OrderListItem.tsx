@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { theme } from "@/constants/theme";
 import { WorkOrder, WorkOrderEstado } from "../types/types";
@@ -68,10 +68,12 @@ function OrderListItemComponent({ order, onPress }: OrderListItemProps) {
   );
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => onPress(order.id)}
-      activeOpacity={0.7}
       className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"
+      accessibilityRole="button"
+      accessibilityLabel={`Orden: ${titulo}`}
+      accessibilityHint="Toca para ver detalles de la orden"
     >
       {/* Top row: title + badge */}
       <View className="flex-row items-start justify-between mb-2">
@@ -112,7 +114,7 @@ function OrderListItemComponent({ order, onPress }: OrderListItemProps) {
         <Text className={`text-xs ${statusCfg.text}`}>{hint}</Text>
         <Ionicons name="chevron-forward" size={14} color="#6b7280" />
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
