@@ -17,7 +17,6 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
-.atl
 
 # Metro
 .metro-health-check*
@@ -34,7 +33,6 @@ yarn-error.*
 # local env files
 .env*
 eas.txt
-.atl
 
 # typescript
 *.tsbuildinfo
@@ -42,3 +40,13 @@ eas.txt
 # generated native folders
 /ios
 /android
+
+# Pi coding agent local config (credentials, personal settings)
+.pi/
+
+# ATL cache (auto-generated)
+.atl/.skill-registry.cache.json
+
+# OpenSpec work-in-progress artifacts (optional - uncomment if you want to ignore)
+# openspec/changes/*/apply-progress.md
+# openspec/changes/*/verify-report.md
