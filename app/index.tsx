@@ -115,8 +115,3 @@ function getRouteByProfesionalEstado(estado?: ProfesionalStateProfile): string {
   if (estado === "ACTIVO") return "/(profesional)";
   return "/profesional-validacion";
 }
-
-async function fetchAuthed(path: string) {
-  const { data } = await api.get(path);
-  return data;
-}

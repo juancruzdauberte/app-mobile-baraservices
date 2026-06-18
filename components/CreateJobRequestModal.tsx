@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useCategoriesStore } from "../store/categorys.store";
-import { createJobRequest } from "../lib/lib";
+import { createJobRequest, getCategories } from "../lib/lib";
 import { Urgencia } from "../types/types";
 import GooglePlacesInput from "./GooglePlacesInput";
 
@@ -109,11 +109,18 @@ export default function CreateJobRequestModal({
   onClose,
   onSuccess,
 }: Props) {
-  const { categories } = useCategoriesStore();
+  const { categories, setCategories } = useCategoriesStore();
 
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
+
+  // Load categories if store is empty (modal is self-sufficient)
+  useEffect(() => {
+    if (!categories || categories.length === 0) {
+      getCategories().then(setCategories).catch(() => {});
+    }
+  }, []);
 
   // ── Helpers ─────────────────────────────────────────────────────────────
 
@@ -195,8 +202,7 @@ export default function CreateJobRequestModal({
           <Text className="text-gray-900 dark:text-white text-xl font-bold">
             Nueva Solicitud de Trabajo
           </Text>
-          <Pressable onPress={handleClose} hitSlop={8}>
-            accessibilityRole="button"
+          <Pressable onPress={handleClose} accessibilityRole="button" hitSlop={8}>
             <Ionicons name="close" size={24} color="#9ca3af" />
           </Pressable>
         </View>

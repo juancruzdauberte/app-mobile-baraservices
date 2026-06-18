@@ -11,14 +11,42 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
 import { useAuth } from "../../providers/AuthProvider";
-import { getMyProposals, getMyWorkOrders } from "../../lib/lib";
+import { getMyProposals, getMyWorkOrders, getMyProfessionalJobs, getMyJobRequests } from "../../lib/lib";
 import {
+  JobRequest,
   Proposal,
   ProposalEstado,
+  Urgencia,
   WorkOrder,
   WorkOrderEstado,
 } from "../../types/types";
 import { useTheme } from '@/hooks/useTheme';
+
+// ─── Local types ─────────────────────────────────────────────────────────────
+
+type MatchedRequest = {
+  request: JobRequest;
+  categoryName: string;
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getTimeAgo(fechaCreacion: string): string {
+  const diff = Date.now() - new Date(fechaCreacion).getTime();
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  if (hours < 1) return "Hace menos de 1 hora";
+  if (hours < 24) return `Hace ${hours} h`;
+  const days = Math.floor(hours / 24);
+  return `Hace ${days} ${days === 1 ? "día" : "días"}`;
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const URGENCY_CONFIG: Record<Urgencia, { label: string; bg: string; text: string }> = {
+  BAJA:       { label: "Baja",    bg: "bg-emerald-500/20", text: "text-emerald-400" },
+  MEDIA:      { label: "Media",   bg: "bg-amber-500/20",   text: "text-amber-400"   },
+  EMERGENCIA: { label: "Urgente", bg: "bg-red-500/20",     text: "text-red-400"     },
+};
 
 const ORDER_STATUS_COLORS: Record<
   WorkOrderEstado,
@@ -60,6 +88,49 @@ const PROPOSAL_STATUS_COLORS: Record<
   CANCELADA: { dot: "bg-red-400", text: "text-red-400", label: "Cancelada" },
   RECHAZADA: { dot: "bg-red-400", text: "text-red-400", label: "Rechazada" },
 };
+
+function MatchedRequestCard({ item, onPress }: { item: MatchedRequest; onPress: () => void }) {
+  const { request, categoryName } = item;
+  const urgencyCfg = request.urgencia ? URGENCY_CONFIG[request.urgencia] : null;
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3"
+    >
+      {/* Category chip + urgency badge */}
+      <View className="flex-row items-center justify-between mb-2">
+        <View className="bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
+          <Text className="text-emerald-400 text-xs font-semibold capitalize">
+            {categoryName}
+          </Text>
+        </View>
+        {urgencyCfg && (
+          <View className={`px-2.5 py-1 rounded-full ${urgencyCfg.bg}`}>
+            <Text className={`text-xs font-semibold ${urgencyCfg.text}`}>
+              {urgencyCfg.label}
+            </Text>
+          </View>
+        )}
+      </View>
+      {/* Title */}
+      <Text
+        className="text-gray-900 dark:text-white font-semibold text-sm mb-1"
+        numberOfLines={2}
+      >
+        {request.titulo}
+      </Text>
+      {/* Footer: time ago + chevron */}
+      <View className="flex-row items-center justify-between mt-1">
+        <Text className="text-slate-400 dark:text-gray-500 text-xs">
+          {getTimeAgo(request.fecha_creacion)}
+        </Text>
+        <Ionicons name="chevron-forward" size={14} color="#4b5563" />
+      </View>
+    </Pressable>
+  );
+}
 
 function RecentOrderCard({
   order,
@@ -129,15 +200,44 @@ export default function DashboardPro() {
   const [loading, setLoading] = useState(true);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
+  const [matchedRequests, setMatchedRequests] = useState<MatchedRequest[]>([]);
 
   const fetchData = useCallback(async () => {
     try {
-      const [proposalsData, ordersData] = await Promise.all([
-        getMyProposals(),
-        getMyWorkOrders(),
-      ]);
-      setProposals(proposalsData);
-      setWorkOrders(ordersData);
+      const [proposalsResult, ordersResult, proJobsResult, openRequestsResult] =
+        await Promise.allSettled([
+          getMyProposals(),
+          getMyWorkOrders(),
+          getMyProfessionalJobs(),
+          getMyJobRequests({ estado: "ABIERTA", limit: 50 }),
+        ]);
+
+      if (proposalsResult.status === "fulfilled") setProposals(proposalsResult.value);
+      if (ordersResult.status === "fulfilled")    setWorkOrders(ordersResult.value);
+
+      if (
+        proJobsResult.status === "fulfilled" &&
+        openRequestsResult.status === "fulfilled"
+      ) {
+        const proJobs = proJobsResult.value;
+        const categoryIds = new Set(proJobs.map((j) => j.categoria_id));
+        const catNameMap = new Map(proJobs.map((j) => [j.categoria_id, j.nombre]));
+
+        const matched: MatchedRequest[] = openRequestsResult.value.data
+          .filter((r) => categoryIds.has(r.categoria_id))
+          .sort(
+            (a, b) =>
+              new Date(b.fecha_creacion).getTime() -
+              new Date(a.fecha_creacion).getTime(),
+          )
+          .slice(0, 3)
+          .map((r) => ({
+            request: r,
+            categoryName: catNameMap.get(r.categoria_id) ?? "",
+          }));
+
+        setMatchedRequests(matched);
+      }
     } catch {
       // silent
     } finally {
@@ -254,6 +354,30 @@ export default function DashboardPro() {
             </Text>
           </Pressable>
         </View>
+
+        {/* Solicitudes para vos */}
+        {!loading && matchedRequests.length > 0 && (
+          <View className="mb-8">
+            <View className="flex-row items-center justify-between mb-4">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold">
+                Solicitudes para vos
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push("/(profesional)/mercado" as any)}
+              >
+                <Text className="text-emerald-500 font-medium">Ver mercado</Text>
+              </Pressable>
+            </View>
+            {matchedRequests.map((item) => (
+              <MatchedRequestCard
+                key={item.request.id}
+                item={item}
+                onPress={() => router.push(`/solicitud/${item.request.id}` as any)}
+              />
+            ))}
+          </View>
+        )}
 
         {/* Propuestas recientes */}
         {!loading && recentProposals.length > 0 && (

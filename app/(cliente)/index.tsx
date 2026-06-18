@@ -1,33 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Pressable, ScrollView, Text, View, TextInput, ActivityIndicator
+  Pressable, ScrollView, Text, View, ActivityIndicator
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
 import { useAuth } from "../../providers/AuthProvider";
-import { useCategoriesStore } from "../../store/categorys.store";
-import { getCategories, getMyJobRequests, getMyWorkOrders } from "../../lib/lib";
-import { Category, WorkOrder, WorkOrderEstado } from "../../types/types";
+import { getMyJobRequests, getMyWorkOrders, getProposalsByJobRequest } from "../../lib/lib";
+import { JobRequest, WorkOrder, WorkOrderEstado } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
 import { useTheme } from '@/hooks/useTheme';
 
-const CATEGORY_ICONS: Record<string, string> = {
-  albañilería: "hammer-outline",
-  cerrajería: "key-outline",
-  jardinería: "leaf-outline",
-  electricidad: "flash-outline",
-  plomería: "water-outline",
-  gasista: "flame-outline",
-  pintura: "brush-outline",
-  "fletes y mudanza": "cube-outline",
-  climatización: "snow-outline",
+// ─── Local types ──────────────────────────────────────────────────────────────
+
+type RequestWithProposalCount = {
+  request: JobRequest;
+  proposalCount: number;
 };
 
-function getCategoryIcon(nombre: string): string {
-  return CATEGORY_ICONS[nombre.toLowerCase().trim()] ?? "construct-outline";
-}
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const ORDER_STATUS_COLORS: Record<WorkOrderEstado, { dot: string; text: string; label: string }> = {
   PROGRAMADA:  { dot: "bg-blue-400",    text: "text-blue-400",    label: "Programada" },
@@ -36,6 +28,89 @@ const ORDER_STATUS_COLORS: Record<WorkOrderEstado, { dot: string; text: string; 
   COMPLETADA:  { dot: "bg-emerald-400", text: "text-emerald-400", label: "Completada" },
   CANCELADA:   { dot: "bg-red-400",     text: "text-red-400",     label: "Cancelada" },
 };
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function AttentionBanner({ count, onPress }: { count: number; onPress: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 mb-6 flex-row items-center"
+    >
+      <View className="bg-emerald-500/20 p-2.5 rounded-full mr-3">
+        <Ionicons name="bulb-outline" size={20} color="#10b981" />
+      </View>
+      <View className="flex-1">
+        <Text className="text-emerald-400 font-bold text-sm">
+          ¡Tenés propuestas esperando!
+        </Text>
+        <Text className="text-slate-500 dark:text-gray-400 text-xs mt-0.5">
+          {count === 1
+            ? "1 solicitud tiene propuestas pendientes"
+            : `${count} solicitudes tienen propuestas pendientes`}
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={16} color="#10b981" />
+    </Pressable>
+  );
+}
+
+function ActiveRequestCard({
+  item,
+  onPress,
+}: {
+  item: RequestWithProposalCount;
+  onPress: () => void;
+}) {
+  const { request, proposalCount } = item;
+
+  const proposalLabel =
+    proposalCount > 9
+      ? "9+ propuestas"
+      : proposalCount > 0
+      ? `${proposalCount} ${proposalCount === 1 ? "propuesta" : "propuestas"}`
+      : request.estado === "ASIGNADA"
+      ? "Asignada"
+      : "Sin propuestas aún";
+
+  const chipBg =
+    proposalCount > 0
+      ? "bg-emerald-500/20"
+      : request.estado === "ASIGNADA"
+      ? "bg-amber-500/20"
+      : "bg-slate-200 dark:bg-gray-800";
+
+  const chipText =
+    proposalCount > 0
+      ? "text-emerald-400"
+      : request.estado === "ASIGNADA"
+      ? "text-amber-400"
+      : "text-slate-400 dark:text-gray-500";
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
+    >
+      <View className="flex-1 mr-3">
+        <Text
+          className="text-gray-900 dark:text-white font-semibold text-sm"
+          numberOfLines={1}
+        >
+          {request.titulo}
+        </Text>
+        <View className={`self-start mt-2 px-2.5 py-1 rounded-full ${chipBg}`}>
+          <Text className={`text-xs font-semibold ${chipText}`}>
+            {proposalLabel}
+          </Text>
+        </View>
+      </View>
+      <Ionicons name="chevron-forward" size={16} color="#4b5563" />
+    </Pressable>
+  );
+}
 
 function RecentOrderCard({ order, onPress }: { order: WorkOrder; onPress: () => void }) {
   const s = ORDER_STATUS_COLORS[order.estado] ?? ORDER_STATUS_COLORS.PROGRAMADA;
@@ -62,31 +137,57 @@ function RecentOrderCard({ order, onPress }: { order: WorkOrder; onPress: () => 
   );
 }
 
+// ─── Screen ───────────────────────────────────────────────────────────────────
+
 export default function Home() {
   const scrollProps = useGlobalTabBarScroll();
   const { profile } = useAuth();
   const router = useRouter();
   const { colorScheme } = useTheme();
-  const { categories, setCategories } = useCategoriesStore();
 
   const [showModal, setShowModal] = useState(false);
   const [loadingStats, setLoadingStats] = useState(true);
-  const [solicitudesActivas, setSolicitudesActivas] = useState(0);
+  const [activeRequests, setActiveRequests] = useState<RequestWithProposalCount[]>([]);
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
 
   const fetchData = useCallback(async () => {
     try {
-      const [jobsRes, orders, cats] = await Promise.all([
+      const [jobsRes, orders] = await Promise.all([
         getMyJobRequests({ limit: 50 }),
         getMyWorkOrders(),
-        getCategories(),
       ]);
-      const activas = jobsRes.data.filter(
+
+      const active = jobsRes.data.filter(
         (r) => r.estado === "ABIERTA" || r.estado === "ASIGNADA"
-      ).length;
-      setSolicitudesActivas(activas);
+      );
+
+      // Fetch proposal counts only for ABIERTA requests
+      const abiertas = active.filter((r) => r.estado === "ABIERTA");
+      const proposalResults = await Promise.allSettled(
+        abiertas.map((r) => getProposalsByJobRequest(r.id))
+      );
+
+      const countMap = new Map<string, number>();
+      abiertas.forEach((r, i) => {
+        const result = proposalResults[i];
+        if (result.status === "fulfilled") {
+          const pending = result.value.filter((p) => p.estado === "PENDIENTE");
+          countMap.set(r.id, pending.length);
+        } else {
+          countMap.set(r.id, 0);
+        }
+      });
+
+      const enriched: RequestWithProposalCount[] = active.map((r) => ({
+        request: r,
+        proposalCount: countMap.get(r.id) ?? 0,
+      }));
+
+      // Sort: requests with proposals first
+      enriched.sort((a, b) => b.proposalCount - a.proposalCount);
+
+      setActiveRequests(enriched);
       setWorkOrders(orders);
-      setCategories(cats);
     } catch {
       // silent
     } finally {
@@ -96,12 +197,15 @@ export default function Home() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
+  // ─── Derived values ─────────────────────────────────────────────────────────
+  const requestsWithProposals = activeRequests.filter((r) => r.proposalCount > 0);
+  const visibleRequests = activeRequests.slice(0, 3);
   const ordenesEnCurso = workOrders.filter(
     (o) => o.estado === "PROGRAMADA" || o.estado === "EN_PROGRESO"
   );
   const ordenesCompletadas = workOrders.filter((o) => o.estado === "COMPLETADA");
   const recentOrders = workOrders.slice(0, 2);
-  const hasActivity = solicitudesActivas > 0 || workOrders.length > 0;
+  const hasActivity = activeRequests.length > 0 || workOrders.length > 0;
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
@@ -120,16 +224,6 @@ export default function Home() {
           </Pressable>
         </View>
 
-        {/* Search Bar */}
-        <View className="flex-row items-center bg-slate-50 dark:bg-gray-900 rounded-2xl px-4 py-3 mb-6 border border-slate-200 dark:border-gray-800">
-          <Ionicons name="search" size={20} color="#9ca3af" />
-          <TextInput
-            placeholder="¿Qué servicio necesitás hoy?"
-            placeholderTextColor="#9ca3af"
-            className="flex-1 ml-3 text-gray-900 dark:text-white text-base font-medium"
-          />
-        </View>
-
         {/* Stats Row */}
         {loadingStats ? (
           <View className="items-center justify-center py-6 mb-8">
@@ -140,7 +234,7 @@ export default function Home() {
             {/* Solicitudes activas */}
             <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4">
               <Ionicons name="clipboard-outline" size={22} color="#10b981" style={{ marginBottom: 8 }} />
-              <Text className="text-gray-900 dark:text-white text-2xl font-bold">{solicitudesActivas}</Text>
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">{activeRequests.length}</Text>
               <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1">Activas</Text>
             </View>
             {/* Órdenes en curso */}
@@ -158,29 +252,42 @@ export default function Home() {
           </View>
         )}
 
-        {/* Categories */}
-        <View className="mb-8">
-          <View className="flex-row items-center justify-between mb-4">
-            <Text className="text-gray-900 dark:text-white text-lg font-bold">Categorías</Text>
-            <Pressable>
-              <Text className="text-emerald-500 font-medium">Ver todas</Text>
-            </Pressable>
-          </View>
-          <View className="flex-row flex-wrap justify-between" style={{ gap: 12 }}>
-            {categories?.map((cat: Category) => (
-              <Pressable
-                key={cat.id}
-                className="items-center bg-slate-50 dark:bg-gray-900 py-4 px-2 rounded-2xl border border-slate-200 dark:border-gray-800 active:bg-gray-800"
-                style={{ width: "31%" }}
-              >
-                <View className="bg-slate-100 dark:bg-gray-800 p-3 rounded-full mb-2">
-                  <Ionicons name={getCategoryIcon(cat.nombre) as any} size={24} color="#10b981" />
+        {/* Attention Banner — propuestas esperando */}
+        {!loadingStats && requestsWithProposals.length > 0 && (
+          <AttentionBanner
+            count={requestsWithProposals.length}
+            onPress={() => router.push("/(cliente)/solicitudes" as any)}
+          />
+        )}
+
+        {/* Solicitudes activas */}
+        {!loadingStats && activeRequests.length > 0 && (
+          <View className="mb-8">
+            <View className="flex-row items-center justify-between mb-4">
+              <View className="flex-row items-center" style={{ gap: 8 }}>
+                <Text className="text-gray-900 dark:text-white text-lg font-bold">Tus solicitudes</Text>
+                <View className="bg-slate-200 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+                  <Text className="text-slate-600 dark:text-gray-400 text-xs font-semibold">
+                    {activeRequests.length}
+                  </Text>
                 </View>
-                <Text className="text-slate-600 dark:text-gray-300 text-xs font-medium text-center">{cat.nombre}</Text>
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push("/(cliente)/solicitudes" as any)}
+              >
+                <Text className="text-emerald-500 font-medium">Ver todas</Text>
               </Pressable>
+            </View>
+            {visibleRequests.map((item) => (
+              <ActiveRequestCard
+                key={item.request.id}
+                item={item}
+                onPress={() => router.push(`/solicitud/${item.request.id}` as any)}
+              />
             ))}
           </View>
-        </View>
+        )}
 
         {/* Órdenes recientes */}
         {!loadingStats && recentOrders.length > 0 && (

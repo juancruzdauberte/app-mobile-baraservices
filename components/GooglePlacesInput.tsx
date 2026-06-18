@@ -203,8 +203,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
         {loading ? (
           <ActivityIndicator size="small" color="#10b981" />
         ) : query.length > 0 ? (
-          <Pressable onPress={handleClear} hitSlop={8}>
-            accessibilityRole="button"
+          <Pressable onPress={handleClear} accessibilityRole="button" hitSlop={8}>
             <Ionicons name="close-circle" size={18} color="#9ca3af" />
           </Pressable>
         ) : null}

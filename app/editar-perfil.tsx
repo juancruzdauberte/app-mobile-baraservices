@@ -208,9 +208,7 @@ export default function EditarPerfil() {
         >
           {/* ── Avatar ──────────────────────────────────────────────────── */}
           <View className="items-center py-6">
-            <Pressable onPress={() => setShowPicker(true)}>
-              accessibilityRole="button"
-              accessibilityRole="button"
+            <Pressable onPress={() => setShowPicker(true)} accessibilityRole="button">
               <View className="relative">
                 {displayAvatar ? (
                   <Image

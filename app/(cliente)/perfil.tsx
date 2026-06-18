@@ -1,6 +1,10 @@
 import { View, Text, Pressable, Alert, ScrollView } from "react-native";
 import { Image } from "expo-image";
-import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../../constants/image-config";
+import {
+  AVATAR_PLACEHOLDER,
+  IMAGE_CACHE_POLICY,
+  IMAGE_TRANSITION,
+} from "../../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../providers/AuthProvider";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,10 +15,13 @@ import { useTheme } from "../../hooks/useTheme";
 export default function Perfil() {
   const { signOut, profile } = useAuth();
   const { colorScheme, isSystemDefault, setTheme } = useTheme();
-  const themeIconName = colorScheme === 'dark' ? 'moon-outline' : 'sunny-outline';
+  const themeIconName =
+    colorScheme === "dark" ? "moon-outline" : "sunny-outline";
   const themeModeLabel = isSystemDefault
-    ? `Automático (${colorScheme === 'dark' ? 'Oscuro' : 'Claro'})`
-    : colorScheme === 'dark' ? 'Oscuro' : 'Claro';
+    ? `Automático (${colorScheme === "dark" ? "Oscuro" : "Claro"})`
+    : colorScheme === "dark"
+      ? "Oscuro"
+      : "Claro";
 
   const handleSignOut = async () => {
     await signOut();
@@ -33,8 +40,8 @@ export default function Perfil() {
           onPress: async () => {
             await signOut();
             await AsyncStorage.multiRemove([
-              'sb-vcbzebztlilhtomnedzw-auth-token',
-              '@bara:theme_override',
+              "sb-vcbzebztlilhtomnedzw-auth-token",
+              "@bara:theme_override",
             ]);
             router.replace("/login");
           },
@@ -101,7 +108,9 @@ export default function Perfil() {
     <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView className="flex-1 px-5 pt-4">
         {/* Header */}
-        <Text className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">Mi Perfil</Text>
+        <Text className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">
+          Mi Perfil
+        </Text>
 
         {/* Profile Card */}
         <View className="bg-slate-50 dark:bg-gray-900 rounded-3xl p-6 mb-6 border border-slate-200 dark:border-gray-800">
@@ -148,9 +157,11 @@ export default function Perfil() {
                 accessibilityRole="button"
                 key={index}
                 onPress={item.onPress}
-                className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 flex-row items-center border border-slate-200 dark:border-gray-800 active:bg-gray-800"
+                className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 flex-row items-center border border-slate-200 dark:border-gray-800 dark:active:bg-gray-800 active:bg-gray-200"
               >
-                <View className={`bg-slate-100 dark:bg-gray-800 p-2 rounded-lg mr-4`}>
+                <View
+                  className={`bg-slate-100 dark:bg-gray-800 p-2 rounded-lg mr-4`}
+                >
                   <Ionicons
                     name={item.icon as any}
                     size={20}
@@ -166,20 +177,30 @@ export default function Perfil() {
 
             {/* Theme Toggle */}
             <Pressable
-              onPress={() => setTheme(colorScheme === 'dark' ? 'light' : 'dark')}
+              onPress={() =>
+                setTheme(colorScheme === "dark" ? "light" : "dark")
+              }
               accessibilityRole="button"
-              accessibilityLabel={colorScheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+              accessibilityLabel={
+                colorScheme === "dark"
+                  ? "Cambiar a modo claro"
+                  : "Cambiar a modo oscuro"
+              }
               className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 flex-row items-center border border-slate-200 dark:border-gray-800 active:bg-gray-800"
             >
               <View className="bg-slate-100 dark:bg-gray-800 p-2 rounded-lg mr-4">
                 <Ionicons
                   name={themeIconName as any}
                   size={20}
-                  color={colorScheme === 'dark' ? '#CBD5E1' : '#64748B'}
+                  color={colorScheme === "dark" ? "#CBD5E1" : "#64748B"}
                 />
               </View>
-              <Text className="flex-1 text-gray-900 dark:text-white font-medium">Apariencia</Text>
-              <Text className="text-slate-500 dark:text-gray-400 text-sm">{themeModeLabel}</Text>
+              <Text className="flex-1 text-gray-900 dark:text-white font-medium">
+                Apariencia
+              </Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-sm">
+                {themeModeLabel}
+              </Text>
             </Pressable>
           </View>
         </View>
