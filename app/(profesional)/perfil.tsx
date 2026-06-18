@@ -6,9 +6,15 @@ import { useAuth } from "../../providers/AuthProvider";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function Perfil() {
   const { signOut, profile } = useAuth();
+  const { colorScheme, isSystemDefault, setTheme } = useTheme();
+  const themeIconName = colorScheme === 'dark' ? 'moon-outline' : 'sunny-outline';
+  const themeModeLabel = isSystemDefault
+    ? `Automático (${colorScheme === 'dark' ? 'Oscuro' : 'Claro'})`
+    : colorScheme === 'dark' ? 'Oscuro' : 'Claro';
 
   const handleSignOut = async () => {
     await signOut();
@@ -26,7 +32,10 @@ export default function Perfil() {
           style: "destructive",
           onPress: async () => {
             await signOut();
-            await AsyncStorage.clear();
+            await AsyncStorage.multiRemove([
+              'sb-vcbzebztlilhtomnedzw-auth-token',
+              '@bara:theme_override',
+            ]);
             router.replace("/login");
           },
         },
@@ -89,13 +98,13 @@ export default function Perfil() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView className="flex-1 px-5 pt-4">
         {/* Header */}
-        <Text className="mb-6 text-3xl font-bold text-white">Mi Perfil</Text>
+        <Text className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">Mi Perfil</Text>
 
         {/* Profile Card */}
-        <View className="bg-gray-900 rounded-3xl p-5 mb-6 border border-gray-800">
+        <View className="bg-slate-50 dark:bg-gray-900 rounded-3xl p-5 mb-6 border border-slate-200 dark:border-gray-800">
           {/* Avatar + info */}
           <View className="flex-row items-center mb-5">
             <View
@@ -112,7 +121,7 @@ export default function Perfil() {
                   style={{ width: 72, height: 72, borderRadius: 36 }}
                 />
               ) : (
-                <Text className="text-2xl font-bold text-white">
+                <Text className="text-2xl font-bold text-gray-900 dark:text-white">
                   {getInitials()}
                 </Text>
               )}
@@ -120,44 +129,44 @@ export default function Perfil() {
 
             <View className="flex-1">
               <Text
-                className="text-xl font-bold text-white mb-0.5"
+                className="text-xl font-bold text-gray-900 dark:text-white mb-0.5"
                 numberOfLines={1}
               >
                 {fullName}
               </Text>
-              <Text className="text-gray-400 text-sm" numberOfLines={1}>
+              <Text className="text-slate-500 dark:text-gray-400 text-sm" numberOfLines={1}>
                 {profile?.email || "Sin email"}
               </Text>
             </View>
           </View>
 
           {/* Divider */}
-          <View className="border-t border-gray-800 mb-4" />
+          <View className="border-t border-slate-200 dark:border-gray-800 mb-4" />
 
           {/* Stats */}
           <View className="flex-row" style={{ gap: 12 }}>
-            <View className="flex-1 bg-gray-800/60 rounded-2xl p-3 items-center">
+            <View className="flex-1 bg-slate-100/60 dark:bg-gray-800/60 rounded-2xl p-3 items-center">
               <Ionicons name="star" size={18} color="#f59e0b" />
-              <Text className="text-white text-lg font-bold mt-1">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold mt-1">
                 {profile?.calificacion_promedio
                   ? profile.calificacion_promedio.toFixed(1)
                   : "—"}
               </Text>
-              <Text className="text-gray-400 text-xs mt-0.5">Calificación</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-0.5">Calificación</Text>
             </View>
-            <View className="flex-1 bg-gray-800/60 rounded-2xl p-3 items-center">
+            <View className="flex-1 bg-slate-100/60 dark:bg-gray-800/60 rounded-2xl p-3 items-center">
               <Ionicons name="briefcase-outline" size={18} color="#10b981" />
-              <Text className="text-white text-lg font-bold mt-1">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold mt-1">
                 {profile?.total_trabajos_realizados ?? 0}
               </Text>
-              <Text className="text-gray-400 text-xs mt-0.5">Trabajos</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-0.5">Trabajos</Text>
             </View>
           </View>
         </View>
 
         {/* Menu Items */}
         <View className="mb-6">
-          <Text className="text-white text-lg font-bold mb-4">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold mb-4">
             Configuración
           </Text>
 
@@ -167,21 +176,39 @@ export default function Perfil() {
                 accessibilityRole="button"
                 key={index}
                 onPress={item.onPress}
-                className="bg-gray-900 rounded-2xl p-4 flex-row items-center border border-gray-800 active:bg-gray-800"
+                className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 flex-row items-center border border-slate-200 dark:border-gray-800 active:bg-gray-800"
               >
-                <View className={`bg-gray-800 p-2 rounded-lg mr-4`}>
+                <View className={`bg-slate-100 dark:bg-gray-800 p-2 rounded-lg mr-4`}>
                   <Ionicons
                     name={item.icon as any}
                     size={20}
                     color={item.color}
                   />
                 </View>
-                <Text className="flex-1 text-white font-medium">
+                <Text className="flex-1 text-gray-900 dark:text-white font-medium">
                   {item.label}
                 </Text>
                 <Ionicons name="chevron-forward" size={20} color="#6b7280" />
               </Pressable>
             ))}
+
+            {/* Theme Toggle */}
+            <Pressable
+              onPress={() => setTheme(colorScheme === 'dark' ? 'light' : 'dark')}
+              accessibilityRole="button"
+              accessibilityLabel={colorScheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+              className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 flex-row items-center border border-slate-200 dark:border-gray-800 active:bg-gray-800"
+            >
+              <View className="bg-slate-100 dark:bg-gray-800 p-2 rounded-lg mr-4">
+                <Ionicons
+                  name={themeIconName as any}
+                  size={20}
+                  color={colorScheme === 'dark' ? '#CBD5E1' : '#64748B'}
+                />
+              </View>
+              <Text className="flex-1 text-gray-900 dark:text-white font-medium">Apariencia</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-sm">{themeModeLabel}</Text>
+            </Pressable>
           </View>
         </View>
 

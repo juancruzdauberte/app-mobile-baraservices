@@ -92,16 +92,16 @@ export default function OnboardingProfesionalScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
       <View className="flex-1 px-8 py-6">
         <View className="mb-6 items-center">
           <View className="mb-4 h-16 w-16 items-center justify-center rounded-3xl bg-emerald-500/20">
             <Ionicons name="id-card-outline" size={32} color="#10b981" />
           </View>
-          <Text className="text-center text-2xl font-bold text-white">
+          <Text className="text-center text-2xl font-bold text-gray-900 dark:text-white">
             Verificá tu identidad
           </Text>
-          <Text className="mt-2 text-center text-sm text-gray-400">
+          <Text className="mt-2 text-center text-sm text-slate-500 dark:text-gray-400">
             Por seguridad, necesitamos fotos de tu DNI y una selfie para validar
             que sos vos.
           </Text>
@@ -135,7 +135,7 @@ export default function OnboardingProfesionalScreen() {
           disabled={isLoading || !dniFront || !dniBack || !selfie}
           className={`mt-6 flex-row items-center justify-center rounded-2xl p-4 ${
             !dniFront || !dniBack || !selfie
-              ? "bg-gray-800"
+              ? "bg-slate-100 dark:bg-gray-800"
               : "bg-emerald-500 active:bg-emerald-600"
           }`}
           style={{ opacity: isLoading ? 0.7 : 1 }}
@@ -147,7 +147,7 @@ export default function OnboardingProfesionalScreen() {
               className={`text-base font-semibold ${
                 !dniFront || !dniBack || !selfie
                   ? "text-gray-500"
-                  : "text-white"
+                  : "text-gray-900 dark:text-white"
               }`}
             >
               Enviar para validación
@@ -174,11 +174,11 @@ function PhotoCaptureButton({
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className="flex-row items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 p-4"
+      className="flex-row items-center justify-between rounded-2xl border border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-gray-900 p-4"
     >
       <View className="flex-row items-center gap-3">
         <View
-          className={`h-12 w-12 items-center justify-center rounded-xl ${uri ? "bg-emerald-500/20" : "bg-gray-800"}`}
+          className={`h-12 w-12 items-center justify-center rounded-xl ${uri ? "bg-emerald-500/20" : "bg-slate-100 dark:bg-gray-800"}`}
         >
           {uri ? (
             <Ionicons name="checkmark-circle" size={24} color="#10b981" />
@@ -187,7 +187,7 @@ function PhotoCaptureButton({
           )}
         </View>
         <Text
-          className={`text-base font-medium ${uri ? "text-white" : "text-gray-400"}`}
+          className={`text-base font-medium ${uri ? "text-gray-900 dark:text-white" : "text-slate-500 dark:text-gray-400"}`}
         >
           {title}
         </Text>

@@ -18,6 +18,7 @@ import {
   WorkOrder,
   WorkOrderEstado,
 } from "../../types/types";
+import { useTheme } from '@/hooks/useTheme';
 
 const ORDER_STATUS_COLORS: Record<
   WorkOrderEstado,
@@ -72,10 +73,10 @@ function RecentOrderCard({
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
+      className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
     >
       <View className="flex-1 mr-3">
-        <Text className="text-white font-semibold text-sm" numberOfLines={1}>
+        <Text className="text-gray-900 dark:text-white font-semibold text-sm" numberOfLines={1}>
           {order.solicitudes_trabajo?.titulo ?? "Orden de trabajo"}
         </Text>
         <View className="flex-row items-center mt-1" style={{ gap: 6 }}>
@@ -95,10 +96,10 @@ function RecentProposalCard({ proposal }: { proposal: Proposal }) {
   const s =
     PROPOSAL_STATUS_COLORS[proposal.estado] ?? PROPOSAL_STATUS_COLORS.PENDIENTE;
   return (
-    <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3">
+    <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3">
       <View className="flex-row items-center justify-between">
         <Text
-          className="text-white font-semibold text-sm flex-1 mr-3"
+          className="text-gray-900 dark:text-white font-semibold text-sm flex-1 mr-3"
           numberOfLines={1}
         >
           {proposal.solicitudes_trabajo?.titulo ?? "Solicitud"}
@@ -123,6 +124,7 @@ export default function DashboardPro() {
   const scrollProps = useGlobalTabBarScroll();
   const { profile } = useAuth();
   const router = useRouter();
+  const { colorScheme } = useTheme();
 
   const [loading, setLoading] = useState(true);
   const [proposals, setProposals] = useState<Proposal[]>([]);
@@ -158,15 +160,15 @@ export default function DashboardPro() {
   const rating = profile?.calificacion_promedio;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView {...scrollProps} className="flex-1 px-5 pt-4">
         {/* Header */}
         <View className="flex-row items-center justify-between mb-6">
           <View>
-            <Text className="text-gray-400 text-sm font-medium">
+            <Text className="text-slate-500 dark:text-gray-400 text-sm font-medium">
               Hola de nuevo,
             </Text>
-            <Text className="text-white text-2xl font-bold mt-1">
+            <Text className="text-gray-900 dark:text-white text-2xl font-bold mt-1">
               {profile?.nombre}
             </Text>
           </View>
@@ -190,41 +192,41 @@ export default function DashboardPro() {
           </View>
         ) : (
           <View className="flex-row mb-8" style={{ gap: 12 }}>
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4">
               <Ionicons
                 name="send-outline"
                 size={22}
                 color="#10b981"
                 style={{ marginBottom: 8 }}
               />
-              <Text className="text-white text-2xl font-bold">
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">
                 {pendingProposals.length}
               </Text>
-              <Text className="text-gray-400 text-xs mt-1">Pendientes</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1">Pendientes</Text>
             </View>
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4">
               <Ionicons
                 name="briefcase-outline"
                 size={22}
                 color="#f59e0b"
                 style={{ marginBottom: 8 }}
               />
-              <Text className="text-white text-2xl font-bold">
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">
                 {activeOrders.length}
               </Text>
-              <Text className="text-gray-400 text-xs mt-1">Activos</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1">Activos</Text>
             </View>
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4">
               <Ionicons
                 name="checkmark-circle-outline"
                 size={22}
                 color="#10b981"
                 style={{ marginBottom: 8 }}
               />
-              <Text className="text-white text-2xl font-bold">
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">
                 {completedOrders.length}
               </Text>
-              <Text className="text-gray-400 text-xs mt-1">Completados</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1">Completados</Text>
             </View>
           </View>
         )}
@@ -237,13 +239,13 @@ export default function DashboardPro() {
             className="bg-emerald-500 flex-1 rounded-2xl items-center justify-center flex-row py-3.5"
             style={{ gap: 8 }}
           >
-            <Ionicons name="search-outline" size={18} color="#030712" />
+            <Ionicons name="search-outline" size={18} color={colorScheme === 'dark' ? '#F8FAFC' : '#0F172A'} />
             <Text className="text-gray-950 font-bold text-sm">Ver mercado</Text>
           </Pressable>
           <Pressable
             accessibilityRole="button"
             onPress={() => router.push("/(profesional)/propuestas" as any)}
-            className="bg-gray-900 border border-gray-800 flex-1 rounded-2xl items-center justify-center flex-row py-3.5"
+            className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 flex-1 rounded-2xl items-center justify-center flex-row py-3.5"
             style={{ gap: 8 }}
           >
             <Ionicons name="document-text-outline" size={18} color="#10b981" />
@@ -257,7 +259,7 @@ export default function DashboardPro() {
         {!loading && recentProposals.length > 0 && (
           <View className="mb-8">
             <View className="flex-row items-center justify-between mb-4">
-              <Text className="text-white text-lg font-bold">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold">
                 Propuestas recientes
               </Text>
               <Pressable
@@ -277,7 +279,7 @@ export default function DashboardPro() {
         {!loading && recentOrders.length > 0 && (
           <View className="mb-8">
             <View className="flex-row items-center justify-between mb-4">
-              <Text className="text-white text-lg font-bold">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold">
                 Órdenes activas
               </Text>
               <Pressable
@@ -299,17 +301,17 @@ export default function DashboardPro() {
 
         {/* Empty state */}
         {!loading && !hasActivity && (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-6 items-center mb-8">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-6 items-center mb-8">
             <Ionicons
               name="rocket-outline"
               size={40}
               color="#4b5563"
               style={{ marginBottom: 12 }}
             />
-            <Text className="text-white font-bold text-base mb-2 text-center">
+            <Text className="text-gray-900 dark:text-white font-bold text-base mb-2 text-center">
               ¡Todo listo para trabajar!
             </Text>
-            <Text className="text-gray-400 text-sm text-center leading-5 mb-4">
+            <Text className="text-slate-500 dark:text-gray-400 text-sm text-center leading-5 mb-4">
               Explorá el mercado y enviá propuestas para empezar a recibir
               órdenes.
             </Text>

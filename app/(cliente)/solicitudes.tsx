@@ -15,6 +15,7 @@ import { useGlobalTabBarScroll } from "../../hooks/useGlobalTabBarScroll";
 import { getMyJobRequests } from "../../lib/lib";
 import { JobRequest, JobRequestEstado, Urgencia } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
+import { useTheme } from '@/hooks/useTheme';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -49,7 +50,7 @@ const STATUS_CONFIG: Record<
   EXPIRADA: {
     label: "Expirada",
     bg: "bg-gray-700/40",
-    text: "text-gray-400",
+    text: "text-slate-500 dark:text-gray-400",
   },
   COMPLETA: {
     label: "Completada",
@@ -63,7 +64,7 @@ function getStatusConfig(estado: JobRequestEstado) {
     STATUS_CONFIG[estado] ?? {
       label: estado,
       bg: "bg-gray-700/40",
-      text: "text-gray-400",
+      text: "text-slate-500 dark:text-gray-400",
     }
   );
 }
@@ -107,12 +108,12 @@ function JobRequestCard({
       accessibilityRole="button"
       onPress={onPress}
       activeOpacity={0.75}
-      className="bg-gray-900 rounded-2xl p-4 border border-gray-800 mb-3"
+      className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 border border-slate-200 dark:border-gray-800 mb-3"
     >
       {/* Title row */}
       <View className="flex-row items-start justify-between mb-2">
         <Text
-          className="text-white font-bold text-base flex-1 mr-3"
+          className="text-gray-900 dark:text-white font-bold text-base flex-1 mr-3"
           numberOfLines={2}
         >
           {item.titulo}
@@ -121,7 +122,7 @@ function JobRequestCard({
       </View>
 
       {/* Description */}
-      <Text className="text-gray-400 text-sm leading-5 mb-3" numberOfLines={2}>
+      <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5 mb-3" numberOfLines={2}>
         {item.descripcion}
       </Text>
 
@@ -134,7 +135,7 @@ function JobRequestCard({
       </View>
 
       {/* Footer */}
-      <View className="flex-row items-center justify-between border-t border-gray-800 pt-3">
+      <View className="flex-row items-center justify-between border-t border-slate-200 dark:border-gray-800 pt-3">
         <Badge bg={status.bg} text={status.text} label={status.label} />
         <View className="flex-row items-center gap-1.5">
           <Ionicons name="calendar-outline" size={13} color="#6b7280" />
@@ -147,15 +148,16 @@ function JobRequestCard({
 }
 
 function EmptyState({ onPress }: { onPress: () => void }) {
+  const { colorScheme } = useTheme();
   return (
     <View className="flex-1 items-center justify-center px-8 mt-20">
-      <View className="bg-gray-900 p-5 rounded-full mb-5 border border-gray-800">
+      <View className="bg-slate-50 dark:bg-gray-900 p-5 rounded-full mb-5 border border-slate-200 dark:border-gray-800">
         <Ionicons name="clipboard-outline" size={40} color="#4b5563" />
       </View>
-      <Text className="text-white text-xl font-bold mb-2 text-center">
+      <Text className="text-gray-900 dark:text-white text-xl font-bold mb-2 text-center">
         Sin solicitudes aún
       </Text>
-      <Text className="text-gray-400 text-sm text-center leading-5 mb-6">
+      <Text className="text-slate-500 dark:text-gray-400 text-sm text-center leading-5 mb-6">
         Todavía no creaste ninguna solicitud de trabajo. Tocá el botón para
         publicar tu primera solicitud.
       </Text>
@@ -164,7 +166,7 @@ function EmptyState({ onPress }: { onPress: () => void }) {
         onPress={onPress}
         className="bg-emerald-500 px-6 py-3 rounded-full flex-row items-center"
       >
-        <Ionicons name="add" size={18} color="#030712" />
+        <Ionicons name="add" size={18} color={colorScheme === 'dark' ? '#F8FAFC' : '#0F172A'} />
         <Text className="text-gray-950 font-bold ml-1">Nueva solicitud</Text>
       </Pressable>
     </View>
@@ -175,6 +177,7 @@ function EmptyState({ onPress }: { onPress: () => void }) {
 
 export default function Solicitudes() {
   const router = useRouter();
+  const { colorScheme } = useTheme();
   const scrollProps = useGlobalTabBarScroll();
   const [requests, setRequests] = useState<JobRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -213,10 +216,10 @@ export default function Solicitudes() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       {/* Header */}
       <View className="px-5 pt-4 pb-2 flex-row items-center justify-between">
-        <Text className="text-white text-3xl font-bold">Mis Solicitudes</Text>
+        <Text className="text-gray-900 dark:text-white text-3xl font-bold">Mis Solicitudes</Text>
         {requests.length > 0 && (
           <View className="bg-emerald-500/20 px-2.5 py-1 rounded-full">
             <Text className="text-emerald-400 text-xs font-bold">
@@ -267,7 +270,7 @@ export default function Solicitudes() {
           onPress={() => setShowModal(true)}
           className="absolute bottom-28 right-5 bg-emerald-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
         >
-          <Ionicons name="add" size={28} color="#030712" />
+          <Ionicons name="add" size={28} color={colorScheme === 'dark' ? '#F8FAFC' : '#0F172A'} />
         </Pressable>
       )}
 

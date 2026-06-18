@@ -18,9 +18,11 @@ import { useAuthFlowStore } from "../store/authFlow.store";
 import { useAuth } from "../providers/AuthProvider";
 import PhoneInput from "react-native-phone-number-input";
 import { useRef } from "react";
+import { useTheme } from '@/hooks/useTheme';
 
 export default function Register() {
   const [email, setEmail] = useState("");
+  const { colorScheme } = useTheme();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -104,7 +106,7 @@ export default function Register() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -119,14 +121,14 @@ export default function Register() {
               onPress={() => router.back()}
               className="absolute left-8 top-0 z-10"
             >
-              <Ionicons name="arrow-back" size={28} color="#fff" />
+              <Ionicons name="arrow-back" size={28} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
             </Pressable>
 
             <View className="mb-12 mt-8 items-center">
-              <Text className="mb-2 text-4xl font-bold text-white">
+              <Text className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">
                 Registro
               </Text>
-              <Text className="text-center text-base text-gray-400">
+              <Text className="text-center text-base text-slate-500 dark:text-gray-400">
                 Crea tu cuenta para continuar
               </Text>
             </View>
@@ -136,10 +138,10 @@ export default function Register() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => setRole("CLIENTE")}
-                className={`flex-1 items-center rounded-2xl border-2 py-4 ${role === "CLIENTE" ? "border-emerald-500 bg-emerald-500/10" : "border-gray-800 bg-gray-800"}`}
+                className={`flex-1 items-center rounded-2xl border-2 py-4 ${role === "CLIENTE" ? "border-emerald-500 bg-emerald-500/10" : "border-slate-200 dark:border-gray-800 bg-slate-100 dark:bg-gray-800"}`}
               >
                 <Text
-                  className={`font-semibold ${role === "CLIENTE" ? "text-emerald-500" : "text-gray-400"}`}
+                  className={`font-semibold ${role === "CLIENTE" ? "text-emerald-500" : "text-slate-500 dark:text-gray-400"}`}
                 >
                   Cliente
                 </Text>
@@ -147,10 +149,10 @@ export default function Register() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => setRole("PROFESIONAL")}
-                className={`flex-1 items-center rounded-2xl border-2 py-4 ${role === "PROFESIONAL" ? "border-emerald-500 bg-emerald-500/10" : "border-gray-800 bg-gray-800"}`}
+                className={`flex-1 items-center rounded-2xl border-2 py-4 ${role === "PROFESIONAL" ? "border-emerald-500 bg-emerald-500/10" : "border-slate-200 dark:border-gray-800 bg-slate-100 dark:bg-gray-800"}`}
               >
                 <Text
-                  className={`font-semibold ${role === "PROFESIONAL" ? "text-emerald-500" : "text-gray-400"}`}
+                  className={`font-semibold ${role === "PROFESIONAL" ? "text-emerald-500" : "text-slate-500 dark:text-gray-400"}`}
                 >
                   Profesional
                 </Text>
@@ -160,7 +162,7 @@ export default function Register() {
             {/* Formulario */}
             <View className="mb-6 w-full">
               <TextInput
-                className="mb-4 w-full rounded-2xl bg-gray-800 px-6 py-4 text-white"
+                className="mb-4 w-full rounded-2xl bg-slate-100 dark:bg-gray-800 px-6 py-4 text-gray-900 dark:text-white"
                 placeholder="Email"
                 placeholderTextColor="#9ca3af"
                 keyboardType="email-address"
@@ -169,21 +171,21 @@ export default function Register() {
                 onChangeText={setEmail}
               />
               <TextInput
-                className="mb-4 w-full rounded-2xl bg-gray-800 px-6 py-4 text-white"
+                className="mb-4 w-full rounded-2xl bg-slate-100 dark:bg-gray-800 px-6 py-4 text-gray-900 dark:text-white"
                 placeholder="Nombre"
                 placeholderTextColor="#9ca3af"
                 value={nombre}
                 onChangeText={setNombre}
               />
               <TextInput
-                className="mb-4 w-full rounded-2xl bg-gray-800 px-6 py-4 text-white"
+                className="mb-4 w-full rounded-2xl bg-slate-100 dark:bg-gray-800 px-6 py-4 text-gray-900 dark:text-white"
                 placeholder="Apellido"
                 placeholderTextColor="#9ca3af"
                 value={apellido}
                 onChangeText={setApellido}
               />
               <TextInput
-                className="mb-1 w-full rounded-2xl bg-gray-800 px-6 py-4 text-white"
+                className="mb-1 w-full rounded-2xl bg-slate-100 dark:bg-gray-800 px-6 py-4 text-gray-900 dark:text-white"
                 placeholder="DNI (8 dígitos)"
                 placeholderTextColor="#9ca3af"
                 keyboardType="number-pad"
@@ -198,7 +200,7 @@ export default function Register() {
               <Text className="mb-4 text-xs text-gray-500">
                 Ingresa el número sin puntos
               </Text>
-              <View className="mb-1 w-full rounded-2xl bg-gray-800 px-2 py-2">
+              <View className="mb-1 w-full rounded-2xl bg-slate-100 dark:bg-gray-800 px-2 py-2">
                 <PhoneInput
                   ref={phoneInput}
                   defaultCode="AR"
@@ -253,9 +255,9 @@ export default function Register() {
                 Ingresa el número sin el 15 ni el 0
               </Text>
 
-              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-gray-800 pr-4">
+              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-slate-100 dark:bg-gray-800 pr-4">
                 <TextInput
-                  className="flex-1 px-6 py-4 text-white"
+                  className="flex-1 px-6 py-4 text-gray-900 dark:text-white"
                   placeholder="Contraseña"
                   placeholderTextColor="#9ca3af"
                   secureTextEntry={!showPassword}
@@ -275,9 +277,9 @@ export default function Register() {
                 </Pressable>
               </View>
 
-              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-gray-800 pr-4">
+              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-slate-100 dark:bg-gray-800 pr-4">
                 <TextInput
-                  className="flex-1 px-6 py-4 text-white"
+                  className="flex-1 px-6 py-4 text-gray-900 dark:text-white"
                   placeholder="Confirmar contraseña"
                   placeholderTextColor="#9ca3af"
                   secureTextEntry={!showConfirmPassword}
@@ -306,7 +308,7 @@ export default function Register() {
               className="mb-4 w-full flex-row items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
               style={{ opacity: loading ? 0.7 : 1 }}
             >
-              <Text className="text-base font-semibold text-white">
+              <Text className="text-base font-semibold text-gray-900 dark:text-white">
                 {loading ? "Registrando..." : "Registrarme"}
               </Text>
             </Pressable>

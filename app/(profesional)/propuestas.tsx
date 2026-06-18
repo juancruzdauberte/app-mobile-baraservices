@@ -34,7 +34,7 @@ const STATUS_CONFIG: Record<
     text: "text-emerald-400",
   },
   RECHAZADA: { label: "Rechazada", bg: "bg-red-500/20", text: "text-red-400" },
-  CANCELADA: { label: "Cancelada", bg: "bg-gray-800", text: "text-gray-500" },
+  CANCELADA: { label: "Cancelada", bg: "bg-slate-100 dark:bg-gray-800", text: "text-gray-500" },
 };
 
 // ─── ProposalListCard ─────────────────────────────────────────────────────────
@@ -62,11 +62,11 @@ function ProposalListCard({
   );
 
   return (
-    <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3">
+    <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3">
       {/* Top row: title + status badge */}
       <View className="flex-row items-start justify-between mb-2">
         <Text
-          className="text-white font-semibold text-sm flex-1 mr-2"
+          className="text-gray-900 dark:text-white font-semibold text-sm flex-1 mr-2"
           numberOfLines={2}
         >
           {titulo}
@@ -90,7 +90,7 @@ function ProposalListCard({
       {/* Message */}
       {proposal.mensaje ? (
         <Text
-          className="text-gray-400 text-sm italic leading-5 mb-2"
+          className="text-slate-500 dark:text-gray-400 text-sm italic leading-5 mb-2"
           numberOfLines={2}
         >
           "{proposal.mensaje}"
@@ -100,7 +100,7 @@ function ProposalListCard({
       {/* Date */}
       <View className="flex-row items-center mb-3">
         <Ionicons name="calendar-outline" size={13} color="#6b7280" />
-        <Text className="text-gray-400 text-xs ml-1.5">{createdDate}</Text>
+        <Text className="text-slate-500 dark:text-gray-400 text-xs ml-1.5">{createdDate}</Text>
       </View>
 
       {/* Actions */}
@@ -189,10 +189,10 @@ export default function PropuestasScreen() {
   const cancelledProposals = proposals.filter((p) => p.estado === "CANCELADA");
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <View className="px-5 pt-4 pb-3 flex-row items-center justify-between">
-        <Text className="text-white text-3xl font-bold">Mis Propuestas</Text>
+        <Text className="text-gray-900 dark:text-white text-3xl font-bold">Mis Propuestas</Text>
         {proposals.length > 0 ? (
           <View className="bg-emerald-500/20 px-2.5 py-1 rounded-full">
             <Text className="text-emerald-400 text-xs font-semibold">
@@ -240,7 +240,7 @@ export default function PropuestasScreen() {
                   className="flex-row items-center justify-between py-3 px-1 mb-1"
                   activeOpacity={0.7}
                 >
-                  <Text className="text-gray-400 font-semibold text-sm">
+                  <Text className="text-slate-500 dark:text-gray-400 font-semibold text-sm">
                     Canceladas ({cancelledProposals.length})
                   </Text>
                   <Ionicons
@@ -268,10 +268,10 @@ export default function PropuestasScreen() {
             cancelledProposals.length === 0 ? (
               <View className="flex-1 items-center justify-center py-20">
                 <Ionicons name="send-outline" size={56} color="#374151" />
-                <Text className="text-white text-lg font-bold mt-5 mb-2">
+                <Text className="text-gray-900 dark:text-white text-lg font-bold mt-5 mb-2">
                   Sin propuestas enviadas
                 </Text>
-                <Text className="text-gray-400 text-sm text-center leading-5 px-6">
+                <Text className="text-slate-500 dark:text-gray-400 text-sm text-center leading-5 px-6">
                   Explorá el mercado y enviá tu primera propuesta.
                 </Text>
               </View>

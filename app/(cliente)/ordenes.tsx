@@ -66,10 +66,10 @@ export default function OrdenesScreen() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <View className="px-5 pt-4 pb-3 flex-row items-center justify-between">
-        <Text className="text-white text-3xl font-bold">Mis Órdenes</Text>
+        <Text className="text-gray-900 dark:text-white text-3xl font-bold">Mis Órdenes</Text>
         {orders.length > 0 ? (
           <View className="bg-emerald-500/20 px-2.5 py-1 rounded-full">
             <Text className="text-emerald-400 text-xs font-semibold">
@@ -105,10 +105,10 @@ export default function OrdenesScreen() {
           ListEmptyComponent={
             <View className="flex-1 items-center justify-center py-20">
               <Ionicons name="briefcase-outline" size={56} color="#374151" />
-              <Text className="text-white text-lg font-bold mt-5 mb-2">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold mt-5 mb-2">
                 Sin órdenes aún
               </Text>
-              <Text className="text-gray-400 text-sm text-center leading-5 px-6">
+              <Text className="text-slate-500 dark:text-gray-400 text-sm text-center leading-5 px-6">
                 Cuando aceptes una propuesta, tu orden de trabajo aparecerá acá.
               </Text>
             </View>

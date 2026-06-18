@@ -17,17 +17,17 @@ export default function UsuarioSuspendido() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
       <View className="flex-1 justify-center px-8 py-12">
         {/* Icono y título */}
         <View className="mb-8 items-center">
           <View className="mb-6 h-24 w-24 items-center justify-center rounded-full bg-red-500/20">
             <Ionicons name="alert" size={48} color="#ef4444" />
           </View>
-          <Text className="mb-4 text-3xl font-bold text-white">
+          <Text className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
             Cuenta Suspendida
           </Text>
-          <Text className="text-center text-base text-gray-400">
+          <Text className="text-center text-base text-slate-500 dark:text-gray-400">
             Tu cuenta ha sido temporalmente suspendida. Esto puede deberse a una
             violación de nuestros términos de servicio o una investigación en
             curso.
@@ -35,10 +35,10 @@ export default function UsuarioSuspendido() {
         </View>
 
         {/* Información adicional */}
-        <View className="mb-8 rounded-2xl bg-gray-900 p-6">
+        <View className="mb-8 rounded-2xl bg-slate-50 dark:bg-gray-900 p-6">
           <View className="flex-row items-center gap-3">
             <Ionicons name="information-circle" size={24} color="#f59e0b" />
-            <Text className="flex-1 text-base text-gray-300">
+            <Text className="flex-1 text-base text-slate-600 dark:text-gray-300">
               Si crees que esto es un error o necesitas más información,
               contacta con nuestro equipo de soporte.
             </Text>
@@ -51,7 +51,7 @@ export default function UsuarioSuspendido() {
           <Pressable
             accessibilityRole="button"
             onPress={handleContactSupport}
-            className="w-full flex-row items-center justify-center gap-3 rounded-2xl border border-gray-700 bg-transparent px-6 py-4 active:bg-gray-800"
+            className="w-full flex-row items-center justify-center gap-3 rounded-2xl border border-slate-300 dark:border-gray-700 bg-transparent px-6 py-4 active:bg-gray-800"
           >
             <Ionicons name="mail-outline" size={20} color="#10b981" />
             <Text className="text-base font-semibold text-emerald-500">
@@ -66,7 +66,7 @@ export default function UsuarioSuspendido() {
             className="w-full flex-row items-center justify-center gap-3 rounded-2xl bg-red-600 px-6 py-4 active:bg-red-700"
           >
             <Ionicons name="log-out-outline" size={20} color="white" />
-            <Text className="text-base font-semibold text-white">
+            <Text className="text-base font-semibold text-gray-900 dark:text-white">
               Cerrar Sesión
             </Text>
           </Pressable>

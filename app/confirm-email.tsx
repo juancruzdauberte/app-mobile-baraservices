@@ -4,9 +4,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { api } from "../config/axios.config";
+import { useTheme } from '@/hooks/useTheme';
 
 export default function ConfirmEmail() {
   const { email } = useLocalSearchParams<{ email: string }>();
+  const { colorScheme } = useTheme();
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
 
@@ -26,7 +28,7 @@ export default function ConfirmEmail() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
       <View className="flex-1 justify-center px-8">
         {/* Botón atrás */}
         <Pressable
@@ -34,7 +36,7 @@ export default function ConfirmEmail() {
           onPress={() => router.replace("/login")}
           className="absolute left-8 top-8 z-10"
         >
-          <Ionicons name="arrow-back" size={28} color="#fff" />
+          <Ionicons name="arrow-back" size={28} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
         </Pressable>
 
         {/* Icono de verificación */}
@@ -46,37 +48,37 @@ export default function ConfirmEmail() {
 
         {/* Título y descripción */}
         <View className="mb-8 items-center">
-          <Text className="mb-4 text-3xl font-bold text-white">
+          <Text className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
             Verifica tu email
           </Text>
-          <Text className="text-center text-base text-gray-400">
+          <Text className="text-center text-base text-slate-500 dark:text-gray-400">
             Te hemos enviado un correo de verificación a{" "}
             <Text className="font-semibold text-emerald-400">{email}</Text>
           </Text>
         </View>
 
         {/* Instrucciones */}
-        <View className="mb-8 rounded-2xl bg-gray-800 p-6">
-          <Text className="mb-4 text-lg font-semibold text-white">
+        <View className="mb-8 rounded-2xl bg-slate-100 dark:bg-gray-800 p-6">
+          <Text className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             ¿Qué debes hacer?
           </Text>
           <View className="gap-3">
             <View className="flex-row items-start gap-3">
               <View className="mt-1 h-2 w-2 rounded-full bg-emerald-500" />
-              <Text className="flex-1 text-gray-300">
+              <Text className="flex-1 text-slate-600 dark:text-gray-300">
                 Revisa tu bandeja de entrada
               </Text>
             </View>
             <View className="flex-row items-start gap-3">
               <View className="mt-1 h-2 w-2 rounded-full bg-emerald-500" />
-              <Text className="flex-1 text-gray-300">
+              <Text className="flex-1 text-slate-600 dark:text-gray-300">
                 Busca el correo de{" "}
-                <Text className="font-semibold text-white">BaraServices</Text>
+                <Text className="font-semibold text-gray-900 dark:text-white">BaraServices</Text>
               </Text>
             </View>
             <View className="flex-row items-start gap-3">
               <View className="mt-1 h-2 w-2 rounded-full bg-emerald-500" />
-              <Text className="flex-1 text-gray-300">
+              <Text className="flex-1 text-slate-600 dark:text-gray-300">
                 Haz clic en el enlace de confirmación
               </Text>
             </View>
@@ -96,7 +98,7 @@ export default function ConfirmEmail() {
           accessibilityRole="button"
           onPress={handleResendEmail}
           disabled={resendLoading || resendSuccess}
-          className={`mb-6 w-full flex-row items-center justify-center gap-2 rounded-2xl border-2 border-gray-700 px-6 py-4 active:bg-gray-800 ${resendSuccess ? "border-emerald-500 bg-emerald-500/10" : ""}`}
+          className={`mb-6 w-full flex-row items-center justify-center gap-2 rounded-2xl border-2 border-slate-300 dark:border-gray-700 px-6 py-4 active:bg-gray-800 ${resendSuccess ? "border-emerald-500 bg-emerald-500/10" : ""}`}
         >
           <Ionicons
             name={resendSuccess ? "checkmark-circle" : "refresh"}
@@ -104,7 +106,7 @@ export default function ConfirmEmail() {
             color={resendSuccess ? "#10b981" : "#9ca3af"}
           />
           <Text
-            className={`text-base font-semibold ${resendSuccess ? "text-emerald-500" : "text-gray-300"}`}
+            className={`text-base font-semibold ${resendSuccess ? "text-emerald-500" : "text-slate-600 dark:text-gray-300"}`}
           >
             {resendLoading
               ? "Enviando..."
@@ -120,7 +122,7 @@ export default function ConfirmEmail() {
           onPress={() => router.replace("/login")}
           className="w-full rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
         >
-          <Text className="text-center text-base font-semibold text-white">
+          <Text className="text-center text-base font-semibold text-gray-900 dark:text-white">
             Ya verifiqué mi email
           </Text>
         </Pressable>

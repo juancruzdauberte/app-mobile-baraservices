@@ -18,6 +18,7 @@ import Toast from "react-native-toast-message";
 import { createReview, getWorkOrderById } from "../../lib/lib";
 import { CreateReviewPayload, WorkOrder } from "../../types/types";
 import { useAuth } from "../../providers/AuthProvider";
+import { useTheme } from '@/hooks/useTheme';
 
 // ─── Star label map ────────────────────────────────────────────────────────────
 
@@ -35,6 +36,7 @@ const STAR_LABELS: Record<number, { text: string; textClass: string }> = {
 export default function ResenaScreen() {
   const { orderId } = useLocalSearchParams<{ orderId: string }>();
   const router = useRouter();
+  const { colorScheme } = useTheme();
   const { profile } = useAuth();
   const isPro = profile?.rol === "PROFESIONAL";
 
@@ -103,12 +105,12 @@ export default function ResenaScreen() {
 
   if (submitted) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950 items-center justify-center px-8">
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950 items-center justify-center px-8">
         <Ionicons name="checkmark-circle" size={72} color="#10b981" />
-        <Text className="text-white text-2xl font-bold text-center mt-4">
+        <Text className="text-gray-900 dark:text-white text-2xl font-bold text-center mt-4">
           ¡Gracias por tu reseña!
         </Text>
-        <Text className="text-gray-400 text-sm text-center mt-2">
+        <Text className="text-slate-500 dark:text-gray-400 text-sm text-center mt-2">
           Tu opinión ayuda a otros clientes a elegir mejor.
         </Text>
         <Pressable
@@ -141,7 +143,7 @@ export default function ResenaScreen() {
   // ─── Main render ──────────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -159,9 +161,9 @@ export default function ResenaScreen() {
               className="mr-3 p-1"
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Ionicons name="arrow-back" size={24} color="#ffffff" />
+              <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
             </Pressable>
-            <Text className="text-white text-lg font-bold flex-1">
+            <Text className="text-gray-900 dark:text-white text-lg font-bold flex-1">
               {isPro ? "Calificar cliente" : "Calificar profesional"}
             </Text>
           </View>
@@ -172,7 +174,7 @@ export default function ResenaScreen() {
               <ActivityIndicator size="large" color="#10b981" />
             </View>
           ) : (
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-6 flex-row items-center gap-3">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-6 flex-row items-center gap-3">
               {order?.propuestas?.profesionales?.avatar ? (
                 <Image
                   source={{ uri: order.propuestas.profesionales.avatar }}
@@ -186,10 +188,10 @@ export default function ResenaScreen() {
                 />
               )}
               <View className="flex-1">
-                <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-0.5">
+                <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-0.5">
                   Calificando a
                 </Text>
-                <Text className="text-white font-bold text-base">
+                <Text className="text-gray-900 dark:text-white font-bold text-base">
                   {evaluatedName}
                 </Text>
                 {order?.solicitudes_trabajo?.titulo ? (
@@ -219,7 +221,7 @@ export default function ResenaScreen() {
           )}
 
           {/* ── Stars section ─────────────────────────────────────────────── */}
-          <Text className="text-white font-bold text-lg mb-4">
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">
             Tu calificación
           </Text>
 
@@ -250,7 +252,7 @@ export default function ResenaScreen() {
           </View>
 
           {/* ── Comment section ───────────────────────────────────────────── */}
-          <Text className="text-white font-bold mt-6 mb-2">
+          <Text className="text-gray-900 dark:text-white font-bold mt-6 mb-2">
             Comentario (opcional)
           </Text>
 
@@ -262,7 +264,7 @@ export default function ResenaScreen() {
             onChangeText={setComentario}
             placeholder="Contá cómo fue tu experiencia..."
             placeholderTextColor="#6b7280"
-            className="bg-gray-900 border border-gray-800 rounded-2xl px-4 py-3 text-white text-sm"
+            className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl px-4 py-3 text-gray-900 dark:text-white text-sm"
             style={{ textAlignVertical: "top", minHeight: 100 }}
           />
           <Text className="text-gray-500 text-xs text-right mt-1">
@@ -275,7 +277,7 @@ export default function ResenaScreen() {
             onPress={handleSubmit}
             disabled={puntaje === 0 || submitting}
             className={`w-full mt-6 mb-4 py-4 rounded-2xl items-center ${
-              puntaje === 0 ? "bg-gray-800" : "bg-emerald-500"
+              puntaje === 0 ? "bg-slate-100 dark:bg-gray-800" : "bg-emerald-500"
             }`}
           >
             {submitting ? (

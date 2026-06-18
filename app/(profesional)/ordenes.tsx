@@ -84,12 +84,12 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
       accessibilityRole="button"
       onPress={onPress}
       activeOpacity={0.7}
-      className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"
+      className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3"
     >
       {/* Top row: title + badge */}
       <View className="flex-row items-start justify-between mb-2">
         <Text
-          className="text-white font-semibold text-sm flex-1 mr-2"
+          className="text-gray-900 dark:text-white font-semibold text-sm flex-1 mr-2"
           numberOfLines={2}
         >
           {titulo}
@@ -111,17 +111,17 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
       {/* Professional */}
       <View className="flex-row items-center mb-1.5">
         <Ionicons name="person-outline" size={13} color="#6b7280" />
-        <Text className="text-gray-400 text-xs ml-1.5">{proNombre}</Text>
+        <Text className="text-slate-500 dark:text-gray-400 text-xs ml-1.5">{proNombre}</Text>
       </View>
 
       {/* Date */}
       <View className="flex-row items-center mb-3">
         <Ionicons name="calendar-outline" size={13} color="#6b7280" />
-        <Text className="text-gray-400 text-xs ml-1.5">{createdDate}</Text>
+        <Text className="text-slate-500 dark:text-gray-400 text-xs ml-1.5">{createdDate}</Text>
       </View>
 
       {/* Footer: hint + chevron */}
-      <View className="flex-row items-center justify-between border-t border-gray-800 pt-2.5">
+      <View className="flex-row items-center justify-between border-t border-slate-200 dark:border-gray-800 pt-2.5">
         <Text className={`text-xs ${statusCfg.text}`}>{hint}</Text>
         <Ionicons name="chevron-forward" size={14} color="#6b7280" />
       </View>
@@ -161,10 +161,10 @@ export default function OrdenesProScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <View className="px-5 pt-4 pb-3 flex-row items-center justify-between">
-        <Text className="text-white text-3xl font-bold">Mis Órdenes</Text>
+        <Text className="text-gray-900 dark:text-white text-3xl font-bold">Mis Órdenes</Text>
         {orders.length > 0 ? (
           <View className="bg-emerald-500/20 px-2.5 py-1 rounded-full">
             <Text className="text-emerald-400 text-xs font-semibold">
@@ -205,10 +205,10 @@ export default function OrdenesProScreen() {
           ListEmptyComponent={
             <View className="flex-1 items-center justify-center py-20">
               <Ionicons name="briefcase-outline" size={56} color="#374151" />
-              <Text className="text-white text-lg font-bold mt-5 mb-2">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold mt-5 mb-2">
                 Sin órdenes aún
               </Text>
-              <Text className="text-gray-400 text-sm text-center leading-5 px-6">
+              <Text className="text-slate-500 dark:text-gray-400 text-sm text-center leading-5 px-6">
                 Cuando un cliente acepte tu propuesta, tu orden de trabajo
                 aparecerá acá.
               </Text>

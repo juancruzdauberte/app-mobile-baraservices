@@ -117,7 +117,7 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -137,10 +137,10 @@ export default function Login() {
                   style={{ width: "100%", height: "100%" }}
                 />
               </View>
-              <Text className="mb-2 text-4xl font-bold text-white">
+              <Text className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">
                 Baraservices
               </Text>
-              <Text className="text-center text-base text-gray-400">
+              <Text className="text-center text-base text-slate-500 dark:text-gray-400">
                 Administrá tus servicios de forma simple y compartida
               </Text>
             </View>
@@ -148,7 +148,7 @@ export default function Login() {
             {/* Formulario */}
             <View className="mb-6 w-full">
               <TextInput
-                className="mb-4 w-full rounded-2xl bg-gray-800 px-6 py-4 text-white"
+                className="mb-4 w-full rounded-2xl bg-slate-100 dark:bg-gray-800 px-6 py-4 text-gray-900 dark:text-white"
                 placeholder="Email"
                 placeholderTextColor="#9ca3af"
                 keyboardType="email-address"
@@ -156,9 +156,9 @@ export default function Login() {
                 value={email}
                 onChangeText={setEmail}
               />
-              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-gray-800 pr-4">
+              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-slate-100 dark:bg-gray-800 pr-4">
                 <TextInput
-                  className="flex-1 px-6 py-4 text-white"
+                  className="flex-1 px-6 py-4 text-gray-900 dark:text-white"
                   placeholder="Contraseña"
                   placeholderTextColor="#9ca3af"
                   secureTextEntry={!showPassword}
@@ -187,7 +187,7 @@ export default function Login() {
               className="mb-4 w-full flex-row items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
               style={{ opacity: loading ? 0.7 : 1 }}
             >
-              <Text className="text-base font-semibold text-white">
+              <Text className="text-base font-semibold text-gray-900 dark:text-white">
                 {loading ? "Iniciando..." : "Iniciar Sesión"}
               </Text>
             </Pressable>
@@ -198,7 +198,7 @@ export default function Login() {
               onPress={() => setShowRecoveryModal(true)}
               className="mb-4 w-full items-center py-2"
             >
-              <Text className="text-base text-gray-400">
+              <Text className="text-base text-slate-500 dark:text-gray-400">
                 ¿Olvidaste tu contraseña?
               </Text>
             </Pressable>
@@ -209,7 +209,7 @@ export default function Login() {
               onPress={() => router.push("/register")}
               className="mb-4 mt-2 w-full flex-row items-center justify-center py-4"
             >
-              <Text className="text-base text-gray-400">
+              <Text className="text-base text-slate-500 dark:text-gray-400">
                 ¿No tienes cuenta?{" "}
                 <Text className="font-semibold text-emerald-500">
                   Regístrate
@@ -239,9 +239,9 @@ export default function Login() {
         onRequestClose={() => setShowRecoveryModal(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/60 px-6">
-          <View className="w-full max-w-sm rounded-3xl bg-gray-900 p-6">
+          <View className="w-full max-w-sm rounded-3xl bg-slate-50 dark:bg-gray-900 p-6">
             <View className="mb-6 flex-row items-center justify-between">
-              <Text className="text-xl font-bold text-white">
+              <Text className="text-xl font-bold text-gray-900 dark:text-white">
                 Restablecer Contraseña
               </Text>
               <Pressable
@@ -256,13 +256,13 @@ export default function Login() {
               </Pressable>
             </View>
 
-            <Text className="mb-4 text-base text-gray-400">
+            <Text className="mb-4 text-base text-slate-500 dark:text-gray-400">
               Ingresa tu email y te enviaremos un enlace para restablecer tu
               contraseña.
             </Text>
 
             <TextInput
-              className="mb-6 w-full rounded-2xl bg-gray-800 px-6 py-4 text-white"
+              className="mb-6 w-full rounded-2xl bg-slate-100 dark:bg-gray-800 px-6 py-4 text-gray-900 dark:text-white"
               placeholder="Tu email"
               placeholderTextColor="#9ca3af"
               keyboardType="email-address"
@@ -278,7 +278,7 @@ export default function Login() {
               className="w-full rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
               style={{ opacity: recoveryLoading ? 0.7 : 1 }}
             >
-              <Text className="text-center text-base font-semibold text-white">
+              <Text className="text-center text-base font-semibold text-gray-900 dark:text-white">
                 {recoveryLoading ? "Enviando..." : "Enviar Enlace"}
               </Text>
             </Pressable>

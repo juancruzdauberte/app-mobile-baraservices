@@ -11,6 +11,7 @@ import { useCategoriesStore } from "../../store/categorys.store";
 import { getCategories, getMyJobRequests, getMyWorkOrders } from "../../lib/lib";
 import { Category, WorkOrder, WorkOrderEstado } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
+import { useTheme } from '@/hooks/useTheme';
 
 const CATEGORY_ICONS: Record<string, string> = {
   albañilería: "hammer-outline",
@@ -42,10 +43,10 @@ function RecentOrderCard({ order, onPress }: { order: WorkOrder; onPress: () => 
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
+      className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3 flex-row items-center"
     >
       <View className="flex-1 mr-3">
-        <Text className="text-white font-semibold text-sm" numberOfLines={1}>
+        <Text className="text-gray-900 dark:text-white font-semibold text-sm" numberOfLines={1}>
           {order.solicitudes_trabajo?.titulo ?? "Orden de trabajo"}
         </Text>
         <View className="flex-row items-center mt-1" style={{ gap: 6 }}>
@@ -65,6 +66,7 @@ export default function Home() {
   const scrollProps = useGlobalTabBarScroll();
   const { profile } = useAuth();
   const router = useRouter();
+  const { colorScheme } = useTheme();
   const { categories, setCategories } = useCategoriesStore();
 
   const [showModal, setShowModal] = useState(false);
@@ -102,29 +104,29 @@ export default function Home() {
   const hasActivity = solicitudesActivas > 0 || workOrders.length > 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView {...scrollProps} className="flex-1 px-5 pt-4">
 
         {/* Header */}
         <View className="mb-6 flex-row items-center justify-between">
           <View>
-            <Text className="text-gray-400 text-sm font-medium">Bienvenido de vuelta,</Text>
-            <Text className="text-white text-2xl font-bold mt-1">
+            <Text className="text-slate-500 dark:text-gray-400 text-sm font-medium">Bienvenido de vuelta,</Text>
+            <Text className="text-gray-900 dark:text-white text-2xl font-bold mt-1">
               {profile?.nombre} {profile?.apellido}
             </Text>
           </View>
-          <Pressable className="bg-gray-900 p-3 rounded-full border border-gray-800">
+          <Pressable className="bg-slate-50 dark:bg-gray-900 p-3 rounded-full border border-slate-200 dark:border-gray-800">
             <Ionicons name="notifications-outline" size={20} color="#f3f4f6" />
           </Pressable>
         </View>
 
         {/* Search Bar */}
-        <View className="flex-row items-center bg-gray-900 rounded-2xl px-4 py-3 mb-6 border border-gray-800">
+        <View className="flex-row items-center bg-slate-50 dark:bg-gray-900 rounded-2xl px-4 py-3 mb-6 border border-slate-200 dark:border-gray-800">
           <Ionicons name="search" size={20} color="#9ca3af" />
           <TextInput
             placeholder="¿Qué servicio necesitás hoy?"
             placeholderTextColor="#9ca3af"
-            className="flex-1 ml-3 text-white text-base font-medium"
+            className="flex-1 ml-3 text-gray-900 dark:text-white text-base font-medium"
           />
         </View>
 
@@ -136,22 +138,22 @@ export default function Home() {
         ) : (
           <View className="flex-row mb-8" style={{ gap: 12 }}>
             {/* Solicitudes activas */}
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4">
               <Ionicons name="clipboard-outline" size={22} color="#10b981" style={{ marginBottom: 8 }} />
-              <Text className="text-white text-2xl font-bold">{solicitudesActivas}</Text>
-              <Text className="text-gray-400 text-xs mt-1">Activas</Text>
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">{solicitudesActivas}</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1">Activas</Text>
             </View>
             {/* Órdenes en curso */}
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4">
               <Ionicons name="briefcase-outline" size={22} color="#f59e0b" style={{ marginBottom: 8 }} />
-              <Text className="text-white text-2xl font-bold">{ordenesEnCurso.length}</Text>
-              <Text className="text-gray-400 text-xs mt-1">En curso</Text>
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">{ordenesEnCurso.length}</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1">En curso</Text>
             </View>
             {/* Completadas */}
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4">
               <Ionicons name="checkmark-circle-outline" size={22} color="#10b981" style={{ marginBottom: 8 }} />
-              <Text className="text-white text-2xl font-bold">{ordenesCompletadas.length}</Text>
-              <Text className="text-gray-400 text-xs mt-1">Completadas</Text>
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">{ordenesCompletadas.length}</Text>
+              <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1">Completadas</Text>
             </View>
           </View>
         )}
@@ -159,7 +161,7 @@ export default function Home() {
         {/* Categories */}
         <View className="mb-8">
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="text-white text-lg font-bold">Categorías</Text>
+            <Text className="text-gray-900 dark:text-white text-lg font-bold">Categorías</Text>
             <Pressable>
               <Text className="text-emerald-500 font-medium">Ver todas</Text>
             </Pressable>
@@ -168,13 +170,13 @@ export default function Home() {
             {categories?.map((cat: Category) => (
               <Pressable
                 key={cat.id}
-                className="items-center bg-gray-900 py-4 px-2 rounded-2xl border border-gray-800 active:bg-gray-800"
+                className="items-center bg-slate-50 dark:bg-gray-900 py-4 px-2 rounded-2xl border border-slate-200 dark:border-gray-800 active:bg-gray-800"
                 style={{ width: "31%" }}
               >
-                <View className="bg-gray-800 p-3 rounded-full mb-2">
+                <View className="bg-slate-100 dark:bg-gray-800 p-3 rounded-full mb-2">
                   <Ionicons name={getCategoryIcon(cat.nombre) as any} size={24} color="#10b981" />
                 </View>
-                <Text className="text-gray-300 text-xs font-medium text-center">{cat.nombre}</Text>
+                <Text className="text-slate-600 dark:text-gray-300 text-xs font-medium text-center">{cat.nombre}</Text>
               </Pressable>
             ))}
           </View>
@@ -184,7 +186,7 @@ export default function Home() {
         {!loadingStats && recentOrders.length > 0 && (
           <View className="mb-8">
             <View className="flex-row items-center justify-between mb-4">
-              <Text className="text-white text-lg font-bold">Órdenes recientes</Text>
+              <Text className="text-gray-900 dark:text-white text-lg font-bold">Órdenes recientes</Text>
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push("/(cliente)/ordenes" as any)}
@@ -208,7 +210,7 @@ export default function Home() {
             <Text className="text-emerald-400 font-bold text-base mb-1">
               ¡Empezá a usar BaraServices!
             </Text>
-            <Text className="text-gray-300 text-sm leading-5">
+            <Text className="text-slate-600 dark:text-gray-300 text-sm leading-5">
               Creá tu primera solicitud y recibí propuestas de profesionales cerca tuyo.
             </Text>
           </View>
@@ -223,7 +225,7 @@ export default function Home() {
         onPress={() => setShowModal(true)}
         className="absolute bottom-28 right-5 bg-emerald-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
       >
-        <Ionicons name="add" size={28} color="#030712" />
+        <Ionicons name="add" size={28} color={colorScheme === 'dark' ? '#F8FAFC' : '#0F172A'} />
       </Pressable>
 
       <CreateJobRequestModal

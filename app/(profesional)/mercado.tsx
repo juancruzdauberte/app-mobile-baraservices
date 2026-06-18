@@ -59,12 +59,12 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
       accessibilityRole="button"
       onPress={onPress}
       activeOpacity={0.7}
-      className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3"
+      className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3"
     >
       {/* Top row: title + urgency badge */}
       <View className="flex-row items-start justify-between mb-2">
         <Text
-          className="text-white font-semibold text-sm flex-1 mr-2"
+          className="text-gray-900 dark:text-white font-semibold text-sm flex-1 mr-2"
           numberOfLines={2}
         >
           {item.titulo}
@@ -82,8 +82,8 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
       {categoryName ? (
         <View className="flex-row items-center mb-2" style={styles.categoryBadgeRow}>
           <Ionicons name="pricetag-outline" size={13} color="#6b7280" />
-          <View className="bg-gray-800 px-2 py-0.5 rounded-full">
-            <Text className="text-gray-400 text-xs font-semibold">
+          <View className="bg-slate-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+            <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold">
               {categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}
             </Text>
           </View>
@@ -93,7 +93,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
       {/* Description */}
       {item.descripcion ? (
         <Text
-          className="text-gray-400 text-sm leading-5 mb-2"
+          className="text-slate-500 dark:text-gray-400 text-sm leading-5 mb-2"
           numberOfLines={2}
         >
           {item.descripcion}
@@ -105,7 +105,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
         <View className="flex-row items-center mb-2">
           <Ionicons name="location-outline" size={13} color="#6b7280" />
           <Text
-            className="text-gray-400 text-xs ml-1.5 flex-1"
+            className="text-slate-500 dark:text-gray-400 text-xs ml-1.5 flex-1"
             numberOfLines={1}
           >
             {item.direccion_formateada}
@@ -114,7 +114,7 @@ function MarketJobCard({ item, categoryName, onPress }: MarketJobCardProps) {
       ) : null}
 
       {/* Footer: time ago + chevron */}
-      <View className="flex-row items-center justify-between border-t border-gray-800 pt-2.5 mt-1">
+      <View className="flex-row items-center justify-between border-t border-slate-200 dark:border-gray-800 pt-2.5 mt-1">
         <Text className="text-gray-500 text-xs">
           {getTimeAgo(item.fecha_creacion)}
         </Text>
@@ -189,10 +189,10 @@ export default function MercadoScreen() {
     : requests;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <View className="px-5 pt-4 pb-3 flex-row items-center justify-between">
-        <Text className="text-white text-3xl font-bold">Mercado</Text>
+        <Text className="text-gray-900 dark:text-white text-3xl font-bold">Mercado</Text>
         {filteredRequests.length > 0 ? (
           <View className="bg-emerald-500/20 px-2.5 py-1 rounded-full">
             <Text className="text-emerald-400 text-xs font-semibold">
@@ -223,12 +223,12 @@ export default function MercadoScreen() {
               className={`mr-2 px-4 py-2 rounded-full ${
                 isActive
                   ? "bg-emerald-500"
-                  : "bg-gray-900 border border-gray-800"
+                  : "bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800"
               }`}
             >
               <Text
                 className={`text-sm font-semibold ${
-                  isActive ? "text-gray-950" : "text-gray-400"
+                  isActive ? "text-gray-950" : "text-slate-500 dark:text-gray-400"
                 }`}
               >
                 {f.label}
@@ -255,13 +255,13 @@ export default function MercadoScreen() {
             onPress={() => setSelectedCategory(null)}
             className={`mr-2 px-4 py-2 rounded-full ${
               selectedCategory === null
-                ? "bg-gray-700"
-                : "bg-gray-900 border border-gray-800"
+                ? "bg-slate-200 dark:bg-gray-700"
+                : "bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800"
             }`}
           >
             <Text
               className={`text-sm font-semibold capitalize ${
-                selectedCategory === null ? "text-white" : "text-gray-400"
+                selectedCategory === null ? "text-gray-900 dark:text-white" : "text-slate-500 dark:text-gray-400"
               }`}
             >
               Todas
@@ -276,13 +276,13 @@ export default function MercadoScreen() {
                 onPress={() => setSelectedCategory(cat.id)}
                 className={`mr-2 px-4 py-2 rounded-full ${
                   isActive
-                    ? "bg-gray-700"
-                    : "bg-gray-900 border border-gray-800"
+                    ? "bg-slate-200 dark:bg-gray-700"
+                    : "bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800"
                 }`}
               >
                 <Text
                   className={`text-sm font-semibold capitalize ${
-                    isActive ? "text-white" : "text-gray-400"
+                    isActive ? "text-gray-900 dark:text-white" : "text-slate-500 dark:text-gray-400"
                   }`}
                 >
                   {cat.nombre}
@@ -328,10 +328,10 @@ export default function MercadoScreen() {
           ListEmptyComponent={
             <View className="flex-1 items-center justify-center py-20">
               <Ionicons name="search-outline" size={56} color="#374151" />
-              <Text className="text-white text-lg font-bold mt-5 mb-2">
+              <Text className="text-gray-900 dark:text-white text-lg font-bold mt-5 mb-2">
                 Sin oportunidades disponibles
               </Text>
-              <Text className="text-gray-400 text-sm text-center leading-5 px-6">
+              <Text className="text-slate-500 dark:text-gray-400 text-sm text-center leading-5 px-6">
                 No hay solicitudes en tu categoría por el momento. Volvé a
                 revisar más tarde.
               </Text>

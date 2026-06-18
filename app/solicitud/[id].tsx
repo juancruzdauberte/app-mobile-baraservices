@@ -37,6 +37,7 @@ import {
   WorkOrder,
 } from "../../types/types";
 import { useAuth } from "../../providers/AuthProvider";
+import { useTheme } from '@/hooks/useTheme';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -82,7 +83,7 @@ const STATUS_CONFIG: Record<
   EXPIRADA: {
     label: "Expirada",
     bg: "bg-gray-700/40",
-    text: "text-gray-400",
+    text: "text-slate-500 dark:text-gray-400",
   },
   COMPLETA: { label: "Completada", bg: "bg-emerald-500/20", text: "text-emerald-400" },
 };
@@ -108,7 +109,7 @@ const PROPOSAL_STATUS_CONFIG: Record<
   },
   CANCELADA: {
     label: "Cancelada",
-    bg: "bg-gray-800",
+    bg: "bg-slate-100 dark:bg-gray-800",
     text: "text-gray-500",
   },
 };
@@ -145,9 +146,9 @@ function MyProposalCard({
     PROPOSAL_STATUS_CONFIG[proposal.estado] ?? PROPOSAL_STATUS_CONFIG.PENDIENTE;
 
   return (
-    <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
+    <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
       <View className="flex-row items-center justify-between mb-3">
-        <Text className="text-white font-bold text-sm">Tu propuesta</Text>
+        <Text className="text-gray-900 dark:text-white font-bold text-sm">Tu propuesta</Text>
         <Badge
           bg={statusCfg.bg}
           text={statusCfg.text}
@@ -165,7 +166,7 @@ function MyProposalCard({
 
       {proposal.mensaje ? (
         <Text
-          className="text-gray-400 text-sm italic leading-5 mb-3"
+          className="text-slate-500 dark:text-gray-400 text-sm italic leading-5 mb-3"
           numberOfLines={3}
         >
           "{proposal.mensaje}"
@@ -250,7 +251,7 @@ function ProposalCard({
     : `Profesional #${index + 1}`;
 
   return (
-    <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3">
+    <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3">
       {/* ── Header: avatar + nombre + badge ── */}
       <View className="flex-row items-center justify-between mb-3">
         <View className="flex-row items-center" style={{ gap: 10 }}>
@@ -265,14 +266,14 @@ function ProposalCard({
               style={{ width: 40, height: 40, borderRadius: 20 }}
             />
           ) : (
-            <View className="w-10 h-10 rounded-full bg-gray-800 items-center justify-center border border-gray-700">
+            <View className="w-10 h-10 rounded-full bg-slate-100 dark:bg-gray-800 items-center justify-center border border-slate-300 dark:border-gray-700">
               <Ionicons name="person" size={20} color="#6b7280" />
             </View>
           )}
 
           {/* Nombre + "ver perfil" */}
           <View>
-            <Text className="text-white font-semibold text-sm">{fullName}</Text>
+            <Text className="text-gray-900 dark:text-white font-semibold text-sm">{fullName}</Text>
             {pro && (
               <Pressable
                 accessibilityRole="button"
@@ -326,9 +327,9 @@ function ProposalCard({
 
       {/* Mensaje */}
       {proposal.mensaje ? (
-        <View className="bg-gray-800/60 rounded-xl px-3 py-2.5 mb-3">
+        <View className="bg-slate-100/60 dark:bg-gray-800/60 rounded-xl px-3 py-2.5 mb-3">
           <Text
-            className="text-gray-300 text-sm leading-5 italic"
+            className="text-slate-600 dark:text-gray-300 text-sm leading-5 italic"
             numberOfLines={3}
           >
             "{proposal.mensaje}"
@@ -345,7 +346,7 @@ function ProposalCard({
       {/* Botones PENDIENTE */}
       {proposal.estado === "PENDIENTE" ? (
         <View
-          className="flex-row border-t border-gray-800 pt-3"
+          className="flex-row border-t border-slate-200 dark:border-gray-800 pt-3"
           style={{ gap: 8 }}
         >
           <Pressable
@@ -388,6 +389,7 @@ export default function SolicitudDetalle() {
   const router = useRouter();
   const { profile } = useAuth();
   const isPro = profile?.rol === "PROFESIONAL";
+  const { colorScheme } = useTheme();
 
   const [jobRequest, setJobRequest] = useState<JobRequest | null>(null);
   const [proposals, setProposals] = useState<Proposal[]>([]);
@@ -547,7 +549,7 @@ export default function SolicitudDetalle() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#10b981" />
         </View>
@@ -557,7 +559,7 @@ export default function SolicitudDetalle() {
 
   if (loadError || jobRequest === null) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         {/* Back */}
         <Pressable
           accessibilityRole="button"
@@ -565,15 +567,15 @@ export default function SolicitudDetalle() {
           accessibilityLabel="Volver"
           className="flex-row items-center px-5 pt-4 pb-2"
         >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
         </Pressable>
 
         <View className="flex-1 items-center justify-center px-8">
           <Ionicons name="alert-circle-outline" size={48} color="#4b5563" />
-          <Text className="text-white text-lg font-bold mt-4 mb-2 text-center">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold mt-4 mb-2 text-center">
             No se pudo cargar la solicitud
           </Text>
-          <Text className="text-gray-400 text-sm text-center mb-6">
+          <Text className="text-slate-500 dark:text-gray-400 text-sm text-center mb-6">
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
@@ -593,7 +595,7 @@ export default function SolicitudDetalle() {
   const urgency = jobRequest.urgencia
     ? (URGENCY_CONFIG[jobRequest.urgencia] ?? URGENCY_CONFIG.BAJA)
     : URGENCY_CONFIG.BAJA;
-  const status = STATUS_CONFIG[jobRequest.estado] ?? { label: "Desconocido", bg: "bg-gray-500/20", text: "text-gray-400" };
+  const status = STATUS_CONFIG[jobRequest.estado] ?? { label: "Desconocido", bg: "bg-gray-500/20", text: "text-slate-500 dark:text-gray-400" };
 
   const createdDate = new Date(jobRequest.fecha_creacion).toLocaleDateString(
     "es-AR",
@@ -614,7 +616,7 @@ export default function SolicitudDetalle() {
   // ─── Main render ─────────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
@@ -628,9 +630,9 @@ export default function SolicitudDetalle() {
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
           </Pressable>
-          <Text className="text-white text-lg font-bold flex-1">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold flex-1">
             Detalle de Solicitud
           </Text>
           {!isPro && jobRequest.estado === "ABIERTA" ? (
@@ -664,9 +666,9 @@ export default function SolicitudDetalle() {
         </View>
 
         {/* ── Info card ──────────────────────────────────────────────────── */}
-        <View className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-4">
+        <View className="bg-slate-50 dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-5 mb-4">
           {/* Title */}
-          <Text className="text-white text-xl font-bold mb-3">
+          <Text className="text-gray-900 dark:text-white text-xl font-bold mb-3">
             {jobRequest.titulo}
           </Text>
 
@@ -683,7 +685,7 @@ export default function SolicitudDetalle() {
           </View>
 
           {/* Description */}
-          <Text className="text-gray-400 text-sm leading-5 mb-4">
+          <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5 mb-4">
             {jobRequest.descripcion}
           </Text>
 
@@ -714,7 +716,7 @@ export default function SolicitudDetalle() {
           {/* Date */}
           <View className="flex-row items-center mb-3">
             <Ionicons name="calendar-outline" size={15} color="#6b7280" />
-            <Text className="text-gray-400 text-sm ml-1.5">{createdDate}</Text>
+            <Text className="text-slate-500 dark:text-gray-400 text-sm ml-1.5">{createdDate}</Text>
           </View>
 
           {/* Expiry countdown */}
@@ -737,8 +739,8 @@ export default function SolicitudDetalle() {
           /* ── Sección PROFESIONAL ─────────────────────────────────────────── */
           <>
             {/* Card del cliente que publicó la solicitud */}
-            <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
+            <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
                 Publicado por
               </Text>
               <View className="flex-row items-center" style={{ gap: 12 }}>
@@ -754,7 +756,7 @@ export default function SolicitudDetalle() {
                   />
                 ) : (
                   <View
-                    className="bg-gray-800 border border-gray-700 items-center justify-center"
+                    className="bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 items-center justify-center"
                     style={{ width: 44, height: 44, borderRadius: 22 }}
                   >
                     <Ionicons name="person" size={22} color="#6b7280" />
@@ -763,7 +765,7 @@ export default function SolicitudDetalle() {
                 {/* Nombre */}
                 <View className="flex-1">
                   {clientProfile ? (
-                    <Text className="text-white font-semibold text-base">
+                    <Text className="text-gray-900 dark:text-white font-semibold text-base">
                       {clientProfile.nombre} {clientProfile.apellido}
                     </Text>
                   ) : (
@@ -804,7 +806,7 @@ export default function SolicitudDetalle() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push("/(profesional)/ordenes" as any)}
-                className="bg-gray-900 border border-emerald-500/30 rounded-2xl p-4 mt-2"
+                className="bg-slate-50 dark:bg-gray-900 border border-emerald-500/30 rounded-2xl p-4 mt-2"
               >
                 <View className="flex-row items-center justify-between">
                   <View className="flex-row items-center gap-2">
@@ -819,7 +821,7 @@ export default function SolicitudDetalle() {
                   </View>
                   <Ionicons name="chevron-forward" size={16} color="#6b7280" />
                 </View>
-                <Text className="text-gray-400 text-xs mt-1.5">
+                <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1.5">
                   Tocá para ver la orden de trabajo
                 </Text>
               </Pressable>
@@ -830,7 +832,7 @@ export default function SolicitudDetalle() {
                 <Text className="text-emerald-400 font-semibold text-sm mb-1">
                   Trabajo completado
                 </Text>
-                <Text className="text-gray-400 text-xs mb-3">
+                <Text className="text-slate-500 dark:text-gray-400 text-xs mb-3">
                   El cliente finalizó la orden exitosamente.
                 </Text>
                 {jobRequest.ordenes_trabajo?.[0]?.id ? (
@@ -876,7 +878,7 @@ export default function SolicitudDetalle() {
             {showProposals ? (
               <View>
                 {/* Section title */}
-                <Text className="text-white font-bold text-base mb-3">
+                <Text className="text-gray-900 dark:text-white font-bold text-base mb-3">
                   Propuestas recibidas ({proposals.length})
                 </Text>
 
@@ -887,14 +889,14 @@ export default function SolicitudDetalle() {
                   </View>
                 ) : proposals.length === 0 ? (
                   /* Empty state */
-                  <View className="bg-gray-900 border border-gray-800 rounded-2xl p-5 items-center">
+                  <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-5 items-center">
                     <Ionicons
                       name="people-outline"
                       size={36}
                       color="#4b5563"
                       style={{ marginBottom: 12 }}
                     />
-                    <Text className="text-gray-400 text-sm text-center leading-5">
+                    <Text className="text-slate-500 dark:text-gray-400 text-sm text-center leading-5">
                       Aún no recibiste propuestas. Los profesionales podrán ver
                       tu solicitud y enviar propuestas.
                     </Text>
@@ -920,7 +922,7 @@ export default function SolicitudDetalle() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push("/(cliente)/ordenes" as any)}
-                className="bg-gray-900 border border-amber-500/30 rounded-2xl p-4 mt-4"
+                className="bg-slate-50 dark:bg-gray-900 border border-amber-500/30 rounded-2xl p-4 mt-4"
               >
                 <View className="flex-row items-center justify-between">
                   <View className="flex-row items-center gap-2">
@@ -935,7 +937,7 @@ export default function SolicitudDetalle() {
                   </View>
                   <Ionicons name="chevron-forward" size={16} color="#6b7280" />
                 </View>
-                <Text className="text-gray-400 text-xs mt-1.5">
+                <Text className="text-slate-500 dark:text-gray-400 text-xs mt-1.5">
                   Tocá para ver la orden de trabajo
                 </Text>
               </Pressable>
@@ -946,7 +948,7 @@ export default function SolicitudDetalle() {
                 <Text className="text-emerald-400 font-semibold text-sm mb-1">
                   Trabajo completado
                 </Text>
-                <Text className="text-gray-400 text-xs mb-3">
+                <Text className="text-slate-500 dark:text-gray-400 text-xs mb-3">
                   El trabajo fue finalizado exitosamente.
                 </Text>
                 {jobRequest.ordenes_trabajo?.[0]?.id ? (
@@ -988,7 +990,7 @@ export default function SolicitudDetalle() {
         {/* ── Read-only banner for CANCELADA / EXPIRADA ─────────────────── */}
         {jobRequest.estado === "CANCELADA" ||
         jobRequest.estado === "EXPIRADA" ? (
-          <View className="bg-gray-800 rounded-xl p-4 mt-2">
+          <View className="bg-slate-100 dark:bg-gray-800 rounded-xl p-4 mt-2">
             <View className="flex-row items-center gap-2 mb-2">
               <Ionicons
                 name={
@@ -1005,7 +1007,7 @@ export default function SolicitudDetalle() {
                 className={`font-semibold text-sm ${
                   jobRequest.estado === "CANCELADA"
                     ? "text-red-400"
-                    : "text-gray-400"
+                    : "text-slate-500 dark:text-gray-400"
                 }`}
               >
                 {jobRequest.estado === "CANCELADA"

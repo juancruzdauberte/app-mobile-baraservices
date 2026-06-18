@@ -76,7 +76,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -95,10 +95,10 @@ export default function ResetPassword() {
                   color="#10b981"
                 />
               </View>
-              <Text className="mb-2 text-3xl font-bold text-white">
+              <Text className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
                 Nueva Contraseña
               </Text>
-              <Text className="text-center text-base text-gray-400">
+              <Text className="text-center text-base text-slate-500 dark:text-gray-400">
                 Ingresa tu nueva contraseña y confírmala
               </Text>
             </View>
@@ -106,9 +106,9 @@ export default function ResetPassword() {
             {/* Formulario */}
             <View className="mb-6 w-full">
               {/* Campo nueva contraseña */}
-              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-gray-800 pr-4">
+              <View className="mb-4 w-full flex-row items-center rounded-2xl bg-slate-100 dark:bg-gray-800 pr-4">
                 <TextInput
-                  className="flex-1 px-6 py-4 text-white"
+                  className="flex-1 px-6 py-4 text-gray-900 dark:text-white"
                   placeholder="Nueva contraseña"
                   placeholderTextColor="#9ca3af"
                   secureTextEntry={!showPassword}
@@ -130,9 +130,9 @@ export default function ResetPassword() {
               </View>
 
               {/* Campo confirmar contraseña */}
-              <View className="w-full flex-row items-center rounded-2xl bg-gray-800 pr-4">
+              <View className="w-full flex-row items-center rounded-2xl bg-slate-100 dark:bg-gray-800 pr-4">
                 <TextInput
-                  className="flex-1 px-6 py-4 text-white"
+                  className="flex-1 px-6 py-4 text-gray-900 dark:text-white"
                   placeholder="Confirmar contraseña"
                   placeholderTextColor="#9ca3af"
                   secureTextEntry={!showConfirmPassword}
@@ -162,7 +162,7 @@ export default function ResetPassword() {
               className="mb-4 w-full flex-row items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-6 py-4 active:bg-emerald-600"
               style={{ opacity: loading ? 0.7 : 1 }}
             >
-              <Text className="text-base font-semibold text-white">
+              <Text className="text-base font-semibold text-gray-900 dark:text-white">
                 {loading ? "Guardando..." : "Guardar Contraseña"}
               </Text>
             </Pressable>
