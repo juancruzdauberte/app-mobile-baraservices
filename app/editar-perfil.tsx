@@ -22,6 +22,7 @@ import Toast from "react-native-toast-message";
 
 import { uploadUserAvatar, updateUserProfile } from "../lib/lib";
 import { useAuth } from "../providers/AuthProvider";
+import { useTheme } from '@/hooks/useTheme';
 
 // ─── Phone parsing ────────────────────────────────────────────────────────────
 
@@ -56,6 +57,7 @@ type FormState = {
 
 export default function EditarPerfil() {
   const router = useRouter();
+  const { colorScheme } = useTheme();
   const { profile, refreshProfile } = useAuth();
   const phoneInput = useRef<PhoneInput>(null);
 
@@ -178,22 +180,22 @@ export default function EditarPerfil() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         {/* Header */}
-        <View className="flex-row items-center px-5 pt-4 pb-4 border-b border-gray-800">
+        <View className="flex-row items-center px-5 pt-4 pb-4 border-b border-slate-200 dark:border-gray-800">
           <Pressable
             accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
           </Pressable>
-          <Text className="text-white text-lg font-bold flex-1">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold flex-1">
             Editar perfil
           </Text>
         </View>
@@ -221,7 +223,7 @@ export default function EditarPerfil() {
                   />
                 ) : (
                   <View
-                    className="bg-gray-800 border border-gray-700 items-center justify-center"
+                    className="bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 items-center justify-center"
                     style={{ width: 96, height: 96, borderRadius: 48 }}
                   >
                     <Ionicons name="person" size={40} color="#6b7280" />
@@ -240,7 +242,7 @@ export default function EditarPerfil() {
                 </View>
               </View>
             </Pressable>
-            <Text className="text-gray-400 text-xs mt-3">
+            <Text className="text-slate-500 dark:text-gray-400 text-xs mt-3">
               Tocá para cambiar la foto
             </Text>
           </View>
@@ -249,7 +251,7 @@ export default function EditarPerfil() {
           <View className="gap-4">
             {/* Nombre */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 Nombre
               </Text>
               <TextInput
@@ -257,13 +259,13 @@ export default function EditarPerfil() {
                 onChangeText={(v) => updateField("nombre", v)}
                 placeholder="Tu nombre"
                 placeholderTextColor="#6b7280"
-                className="bg-gray-900 border border-gray-800 rounded-2xl px-4 py-4 text-white text-base"
+                className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base"
               />
             </View>
 
             {/* Apellido */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 Apellido
               </Text>
               <TextInput
@@ -271,16 +273,16 @@ export default function EditarPerfil() {
                 onChangeText={(v) => updateField("apellido", v)}
                 placeholder="Tu apellido"
                 placeholderTextColor="#6b7280"
-                className="bg-gray-900 border border-gray-800 rounded-2xl px-4 py-4 text-white text-base"
+                className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base"
               />
             </View>
 
             {/* Teléfono */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 Teléfono
               </Text>
-              <View className="w-full rounded-2xl bg-gray-900 border border-gray-800 px-2 py-2">
+              <View className="w-full rounded-2xl bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 px-2 py-2">
                 <PhoneInput
                   ref={phoneInput}
                   defaultCode={phoneCountry}
@@ -317,12 +319,12 @@ export default function EditarPerfil() {
                     justifyContent: "center",
                   }}
                   codeTextStyle={{
-                    color: "white",
+                    color: colorScheme === 'dark' ? '#FFFFFF' : '#0F172A',
                     fontSize: 16,
                     fontWeight: "600",
                   }}
                   textInputStyle={{
-                    color: "white",
+                    color: colorScheme === 'dark' ? '#FFFFFF' : '#0F172A',
                     fontSize: 16,
                     paddingLeft: 8,
                   }}
@@ -365,11 +367,11 @@ export default function EditarPerfil() {
           className="flex-1 bg-black/60"
           onPress={() => setShowPicker(false)}
         />
-        <View className="bg-gray-900 rounded-t-3xl px-5 pt-4 pb-8">
+        <View className="bg-slate-50 dark:bg-gray-900 rounded-t-3xl px-5 pt-4 pb-8">
           {/* Handle */}
-          <View className="w-10 h-1 bg-gray-700 rounded-full self-center mb-5" />
+          <View className="w-10 h-1 bg-slate-200 dark:bg-gray-700 rounded-full self-center mb-5" />
 
-          <Text className="text-white text-base font-bold mb-4">
+          <Text className="text-gray-900 dark:text-white text-base font-bold mb-4">
             Foto de perfil
           </Text>
 
@@ -377,13 +379,13 @@ export default function EditarPerfil() {
           <Pressable
             accessibilityRole="button"
             onPress={pickFromCamera}
-            className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
+            className="flex-row items-center gap-4 bg-slate-100 dark:bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
             <View className="w-10 h-10 bg-emerald-500/20 rounded-xl items-center justify-center">
               <Ionicons name="camera-outline" size={22} color="#10b981" />
             </View>
             <View className="flex-1">
-              <Text className="text-white font-semibold">Tomar foto</Text>
+              <Text className="text-gray-900 dark:text-white font-semibold">Tomar foto</Text>
               <Text className="text-gray-500 text-xs mt-0.5">
                 Usar la cámara del dispositivo
               </Text>
@@ -395,13 +397,13 @@ export default function EditarPerfil() {
           <Pressable
             accessibilityRole="button"
             onPress={pickFromGallery}
-            className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
+            className="flex-row items-center gap-4 bg-slate-100 dark:bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
             <View className="w-10 h-10 bg-blue-500/20 rounded-xl items-center justify-center">
               <Ionicons name="images-outline" size={22} color="#3b82f6" />
             </View>
             <View className="flex-1">
-              <Text className="text-white font-semibold">Elegir de galería</Text>
+              <Text className="text-gray-900 dark:text-white font-semibold">Elegir de galería</Text>
               <Text className="text-gray-500 text-xs mt-0.5">
                 Seleccionar desde tus fotos
               </Text>
@@ -415,7 +417,7 @@ export default function EditarPerfil() {
             onPress={() => setShowPicker(false)}
             className="items-center py-3.5 mt-1"
           >
-            <Text className="text-gray-400 font-medium">Cancelar</Text>
+            <Text className="text-slate-500 dark:text-gray-400 font-medium">Cancelar</Text>
           </Pressable>
         </View>
       </Modal>

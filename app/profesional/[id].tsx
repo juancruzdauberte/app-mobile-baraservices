@@ -19,6 +19,7 @@ import {
   getServicesForProfessional,
 } from "../../lib/lib";
 import { PublicProfessional, PublicReview, ProfessionalService } from "../../types/types";
+import { useTheme } from '@/hooks/useTheme';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -43,7 +44,7 @@ function ReviewCard({ review }: { review: PublicReview }) {
     : "Cliente";
 
   return (
-    <View className="bg-gray-800/60 rounded-xl p-3 mb-2">
+    <View className="bg-slate-100/60 dark:bg-gray-800/60 rounded-xl p-3 mb-2">
       {/* Author row */}
       <View className="flex-row items-center mb-1.5" style={{ gap: 8 }}>
         {review.evaluador?.avatar ? (
@@ -57,14 +58,14 @@ function ReviewCard({ review }: { review: PublicReview }) {
           />
         ) : (
           <View
-            className="bg-gray-700 items-center justify-center"
+            className="bg-slate-200 dark:bg-gray-700 items-center justify-center"
             style={{ width: 28, height: 28, borderRadius: 14 }}
           >
             <Ionicons name="person" size={14} color="#6b7280" />
           </View>
         )}
         <View className="flex-1">
-          <Text className="text-white text-xs font-semibold">{authorName}</Text>
+          <Text className="text-gray-900 dark:text-white text-xs font-semibold">{authorName}</Text>
           <Text className="text-gray-500 text-xs">{formatReviewDate(review.fecha_creacion)}</Text>
         </View>
         <Text className="text-amber-400 text-sm tracking-wide">
@@ -74,7 +75,7 @@ function ReviewCard({ review }: { review: PublicReview }) {
 
       {/* Comment */}
       {review.comentario ? (
-        <Text className="text-gray-400 text-sm leading-5 italic">
+        <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5 italic">
           "{review.comentario}"
         </Text>
       ) : null}
@@ -85,6 +86,7 @@ function ReviewCard({ review }: { review: PublicReview }) {
 export default function ProfessionalProfile() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { colorScheme } = useTheme();
 
   const [professional, setProfessional] = useState<PublicProfessional | null>(null);
   const [loading, setLoading] = useState(true);
@@ -125,7 +127,7 @@ export default function ProfessionalProfile() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#10b981" />
         </View>
@@ -137,22 +139,22 @@ export default function ProfessionalProfile() {
 
   if (loadError || professional == null) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.back()}
           accessibilityLabel="Volver"
           className="flex-row items-center px-5 pt-4 pb-2"
         >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
         </Pressable>
 
         <View className="flex-1 items-center justify-center px-8">
           <Ionicons name="alert-circle-outline" size={48} color="#4b5563" />
-          <Text className="text-white text-lg font-bold mt-4 mb-2 text-center">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold mt-4 mb-2 text-center">
             No se pudo cargar el perfil
           </Text>
-          <Text className="text-gray-400 text-sm text-center mb-6">
+          <Text className="text-slate-500 dark:text-gray-400 text-sm text-center mb-6">
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
@@ -182,7 +184,7 @@ export default function ProfessionalProfile() {
   // ─── Main render ───────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
@@ -196,13 +198,13 @@ export default function ProfessionalProfile() {
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
           </Pressable>
-          <Text className="text-white text-lg font-bold">Perfil del profesional</Text>
+          <Text className="text-gray-900 dark:text-white text-lg font-bold">Perfil del profesional</Text>
         </View>
 
         {/* ── Hero card ─────────────────────────────────────────────────── */}
-        <View className="bg-gray-900 border border-gray-800 rounded-2xl p-5 mb-4 items-center">
+        <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-5 mb-4 items-center">
           {/* Avatar */}
           {professional.avatar ? (
             <Image
@@ -215,7 +217,7 @@ export default function ProfessionalProfile() {
             />
           ) : (
             <View
-              className="bg-gray-800 border border-gray-700 items-center justify-center"
+              className="bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 items-center justify-center"
               style={{ width: 80, height: 80, borderRadius: 40 }}
             >
               <Ionicons name="person" size={36} color="#6b7280" />
@@ -224,7 +226,7 @@ export default function ProfessionalProfile() {
 
           {/* Nombre + badge verificado inline */}
           <View className="flex-row items-center justify-center mt-3" style={{ gap: 6 }}>
-            <Text className="text-white text-xl font-bold text-center">
+            <Text className="text-gray-900 dark:text-white text-xl font-bold text-center">
               {professional.nombre} {professional.apellido}
             </Text>
             {professional.estado_perfil === "ACTIVO" ? (
@@ -251,7 +253,7 @@ export default function ProfessionalProfile() {
                 {rating.toFixed(1)}
               </Text>
               {professional.total_trabajos_realizados != null && (
-                <Text className="text-gray-400 text-sm ml-1">
+                <Text className="text-slate-500 dark:text-gray-400 text-sm ml-1">
                   ({professional.total_trabajos_realizados}{" "}
                   {professional.total_trabajos_realizados === 1 ? "trabajo" : "trabajos"})
                 </Text>
@@ -265,31 +267,31 @@ export default function ProfessionalProfile() {
         {/* ── Stats row ─────────────────────────────────────────────────── */}
         <View className="flex-row mb-4" style={{ gap: 12 }}>
           {/* Trabajos */}
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4 items-center">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4 items-center">
             <Ionicons name="briefcase-outline" size={22} color="#10b981" style={{ marginBottom: 4 }} />
-            <Text className="text-white text-xl font-bold">
+            <Text className="text-gray-900 dark:text-white text-xl font-bold">
               {professional.total_trabajos_realizados ?? 0}
             </Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Trabajos</Text>
+            <Text className="text-slate-500 dark:text-gray-400 text-xs mt-0.5">Trabajos</Text>
           </View>
 
           {/* Calificación */}
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl flex-1 p-4 items-center">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl flex-1 p-4 items-center">
             <Ionicons name="star-outline" size={22} color="#f59e0b" style={{ marginBottom: 4 }} />
-            <Text className="text-white text-xl font-bold">
+            <Text className="text-gray-900 dark:text-white text-xl font-bold">
               {professional.calificacion_promedio != null
                 ? professional.calificacion_promedio.toFixed(1)
                 : "—"}
             </Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Calificación</Text>
+            <Text className="text-slate-500 dark:text-gray-400 text-xs mt-0.5">Calificación</Text>
           </View>
         </View>
 
         {/* ── Biografía ─────────────────────────────────────────────────── */}
         {professional.biografia ? (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-            <Text className="text-white font-bold mb-2">Sobre mí</Text>
-            <Text className="text-gray-400 text-sm leading-5">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
+            <Text className="text-gray-900 dark:text-white font-bold mb-2">Sobre mí</Text>
+            <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5">
               {professional.biografia}
             </Text>
           </View>
@@ -297,19 +299,19 @@ export default function ProfessionalProfile() {
 
         {/* ── Servicios ─────────────────────────────────────────────────── */}
         {enrichLoading ? (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4 items-center">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4 items-center">
             <ActivityIndicator size="small" color="#10b981" />
           </View>
         ) : services.length > 0 ? (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-            <Text className="text-white font-bold mb-3">Servicios</Text>
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
+            <Text className="text-gray-900 dark:text-white font-bold mb-3">Servicios</Text>
             {services.map((service, idx) => (
               <View
                 key={service.categoria_id}
-                className={idx < services.length - 1 ? "mb-3 pb-3 border-b border-gray-800" : ""}
+                className={idx < services.length - 1 ? "mb-3 pb-3 border-b border-slate-200 dark:border-gray-800" : ""}
               >
                 <View className="flex-row items-center justify-between mb-0.5">
-                  <Text className="text-white text-sm font-semibold flex-1 mr-2">
+                  <Text className="text-gray-900 dark:text-white text-sm font-semibold flex-1 mr-2">
                     {service.nombre}
                   </Text>
                   {service.precio_base_por_hora != null ? (
@@ -319,7 +321,7 @@ export default function ProfessionalProfile() {
                   ) : null}
                 </View>
                 {service.descripcion ? (
-                  <Text className="text-gray-400 text-xs leading-4">
+                  <Text className="text-slate-500 dark:text-gray-400 text-xs leading-4">
                     {service.descripcion}
                   </Text>
                 ) : null}
@@ -330,10 +332,10 @@ export default function ProfessionalProfile() {
 
         {/* ── Reseñas ───────────────────────────────────────────────────── */}
         {!enrichLoading && reviews.length > 0 ? (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
             {/* Header */}
             <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-white font-bold">Reseñas</Text>
+              <Text className="text-gray-900 dark:text-white font-bold">Reseñas</Text>
               <View className="flex-row items-center" style={{ gap: 4 }}>
                 <Ionicons name="star" size={13} color="#f59e0b" />
                 <Text className="text-amber-400 text-xs font-semibold">
@@ -354,8 +356,8 @@ export default function ProfessionalProfile() {
 
         {/* ── Contacto ──────────────────────────────────────────────────── */}
         {(professional.telefono || professional.email) ? (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-            <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
+            <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
               Contacto
             </Text>
 
@@ -363,7 +365,7 @@ export default function ProfessionalProfile() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => Linking.openURL(`tel:${professional.telefono}`)}
-                className="flex-row items-center py-3 border-b border-gray-800"
+                className="flex-row items-center py-3 border-b border-slate-200 dark:border-gray-800"
                 style={{ gap: 12 }}
               >
                 <View className="w-9 h-9 rounded-full bg-emerald-500/15 items-center justify-center">
@@ -371,7 +373,7 @@ export default function ProfessionalProfile() {
                 </View>
                 <View className="flex-1">
                   <Text className="text-gray-500 text-xs mb-0.5">Teléfono</Text>
-                  <Text className="text-white text-sm font-medium">
+                  <Text className="text-gray-900 dark:text-white text-sm font-medium">
                     {professional.telefono}
                   </Text>
                 </View>
@@ -391,7 +393,7 @@ export default function ProfessionalProfile() {
                 </View>
                 <View className="flex-1">
                   <Text className="text-gray-500 text-xs mb-0.5">Email</Text>
-                  <Text className="text-white text-sm font-medium">
+                  <Text className="text-gray-900 dark:text-white text-sm font-medium">
                     {professional.email}
                   </Text>
                 </View>

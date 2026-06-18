@@ -26,6 +26,7 @@ import {
 } from "../../lib/lib";
 import { WorkOrder, WorkOrderEstado } from "../../types/types";
 import { useAuth } from "../../providers/AuthProvider";
+import { useTheme } from '@/hooks/useTheme';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -66,6 +67,7 @@ export default function OrdenDetalle() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { profile } = useAuth();
   const router = useRouter();
+  const { colorScheme } = useTheme();
 
   const [order, setOrder] = useState<WorkOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -239,7 +241,7 @@ export default function OrdenDetalle() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#10b981" />
         </View>
@@ -249,21 +251,21 @@ export default function OrdenDetalle() {
 
   if (loadError || order === null) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.back()}
           accessibilityLabel="Volver"
           className="flex-row items-center px-5 pt-4 pb-2"
         >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
         </Pressable>
         <View className="flex-1 items-center justify-center px-8">
           <Ionicons name="alert-circle-outline" size={48} color="#4b5563" />
-          <Text className="text-white text-lg font-bold mt-4 mb-2 text-center">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold mt-4 mb-2 text-center">
             No se pudo cargar la orden
           </Text>
-          <Text className="text-gray-400 text-sm text-center mb-6">
+          <Text className="text-slate-500 dark:text-gray-400 text-sm text-center mb-6">
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
@@ -292,7 +294,7 @@ export default function OrdenDetalle() {
   // ─── Main render ──────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
@@ -306,17 +308,17 @@ export default function OrdenDetalle() {
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
           </Pressable>
-          <Text className="text-white text-lg font-bold flex-1">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold flex-1">
             Detalle de Orden
           </Text>
         </View>
 
         {/* ── Info card ───────────────────────────────────────────────────── */}
-        <View className="bg-gray-900 border border-gray-800 rounded-2xl p-5 mb-4">
+        <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-5 mb-4">
           {/* Title */}
-          <Text className="text-white text-xl font-bold mb-3">
+          <Text className="text-gray-900 dark:text-white text-xl font-bold mb-3">
             {order.solicitudes_trabajo?.titulo ?? "Orden de trabajo"}
           </Text>
 
@@ -342,15 +344,15 @@ export default function OrdenDetalle() {
           </Text>
 
           {/* Separator */}
-          <View className="border-t border-gray-800 my-4" />
+          <View className="border-t border-slate-200 dark:border-gray-800 my-4" />
 
           {/* Description */}
           {order.solicitudes_trabajo?.descripcion ? (
             <View className="mb-4">
-              <Text className="text-gray-300 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-600 dark:text-gray-300 text-xs font-semibold uppercase tracking-wide mb-2">
                 Descripción del trabajo
               </Text>
-              <Text className="text-gray-400 text-sm leading-5">
+              <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5">
                 {order.solicitudes_trabajo.descripcion}
               </Text>
             </View>
@@ -359,15 +361,15 @@ export default function OrdenDetalle() {
           {/* Date */}
           <View className="flex-row items-center">
             <Ionicons name="calendar-outline" size={14} color="#6b7280" />
-            <Text className="text-gray-400 text-sm ml-1.5">{createdDate}</Text>
+            <Text className="text-slate-500 dark:text-gray-400 text-sm ml-1.5">{createdDate}</Text>
           </View>
         </View>
 
         {/* ── Participant card ─────────────────────────────────────────────── */}
-        <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
+        <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
           {isCliente ? (
             <>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
                 Profesional asignado
               </Text>
               <View className="flex-row items-center gap-3">
@@ -390,7 +392,7 @@ export default function OrdenDetalle() {
 
                 {/* Name + message — left */}
                 <View className="flex-1">
-                  <Text className="text-white font-semibold">
+                  <Text className="text-gray-900 dark:text-white font-semibold">
                     {order.propuestas?.profesionales?.nombre
                       ? `${order.propuestas.profesionales.nombre} ${order.propuestas.profesionales.apellido ?? ""}`.trim()
                       : "Profesional asignado"}
@@ -425,7 +427,7 @@ export default function OrdenDetalle() {
                   {order.propuestas?.profesionales?.calificacion_promedio ? (
                     <View className="flex-row items-center gap-1">
                       <Text className="text-yellow-400 text-xs">⭐</Text>
-                      <Text className="text-gray-300 text-xs font-semibold">
+                      <Text className="text-slate-600 dark:text-gray-300 text-xs font-semibold">
                         {order.propuestas.profesionales.calificacion_promedio.toFixed(
                           1,
                         )}
@@ -446,7 +448,7 @@ export default function OrdenDetalle() {
             </>
           ) : (
             <>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
                 Cliente
               </Text>
               <View className="flex-row items-center gap-3">
@@ -469,7 +471,7 @@ export default function OrdenDetalle() {
                   />
                 )}
                 <View className="flex-1">
-                  <Text className="text-white font-semibold">
+                  <Text className="text-gray-900 dark:text-white font-semibold">
                     {order.solicitudes_trabajo?.clientes?.nombre
                       ? `${order.solicitudes_trabajo.clientes.nombre} ${order.solicitudes_trabajo.clientes.apellido ?? ""}`.trim()
                       : "Cliente"}
@@ -538,7 +540,7 @@ export default function OrdenDetalle() {
               </Text>
             </Pressable>
           ) : (
-            <View className="flex-row items-center justify-center gap-2 py-3.5 mb-4 bg-gray-800 rounded-2xl">
+            <View className="flex-row items-center justify-center gap-2 py-3.5 mb-4 bg-slate-100 dark:bg-gray-800 rounded-2xl">
               <Ionicons name="checkmark-circle" size={18} color="#10b981" />
               <Text className="text-emerald-400 font-semibold">
                 Ya calificaste esta orden
@@ -552,7 +554,7 @@ export default function OrdenDetalle() {
             <Text className="text-orange-400 font-bold mb-1.5">
               En revisión
             </Text>
-            <Text className="text-gray-400 text-sm leading-5">
+            <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5">
               Nuestro equipo está analizando la situación. Te notificaremos
               cuando haya una resolución.
             </Text>
@@ -561,9 +563,9 @@ export default function OrdenDetalle() {
 
         {order.estado === "PROGRAMADA" && isCliente && (
           <View className="gap-3">
-            <View className="bg-gray-800 rounded-2xl p-4 border border-gray-700 mb-1">
-              <Text className="text-gray-400 text-sm mb-1">Precio confirmado por el profesional</Text>
-              <Text className="text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
+            <View className="bg-slate-100 dark:bg-gray-800 rounded-2xl p-4 border border-slate-300 dark:border-gray-700 mb-1">
+              <Text className="text-slate-500 dark:text-gray-400 text-sm mb-1">Precio confirmado por el profesional</Text>
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
               <Text className="text-gray-500 text-xs mt-1">Revisá el precio antes de confirmar el inicio</Text>
             </View>
             <Pressable
@@ -571,7 +573,7 @@ export default function OrdenDetalle() {
               onPress={handleConfirmStart}
               className="bg-green-600 rounded-2xl py-4 items-center"
             >
-              <Text className="text-white font-semibold text-base">Confirmar inicio</Text>
+              <Text className="text-gray-900 dark:text-white font-semibold text-base">Confirmar inicio</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
@@ -594,9 +596,9 @@ export default function OrdenDetalle() {
 
         {isProfesional && order.estado === "PROGRAMADA" && (
           <View className="gap-3 mb-4">
-            <View className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
-              <Text className="text-gray-400 text-sm mb-1">Precio actual</Text>
-              <Text className="text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
+            <View className="bg-slate-100 dark:bg-gray-800 rounded-2xl p-4 border border-slate-300 dark:border-gray-700">
+              <Text className="text-slate-500 dark:text-gray-400 text-sm mb-1">Precio actual</Text>
+              <Text className="text-gray-900 dark:text-white text-2xl font-bold">${order.precio_final?.toLocaleString("es-AR") ?? "—"}</Text>
             </View>
             <Pressable
               accessibilityRole="button"
@@ -637,7 +639,7 @@ export default function OrdenDetalle() {
             <Text className="text-orange-400 font-bold mb-1.5">
               En revisión
             </Text>
-            <Text className="text-gray-400 text-sm leading-5">
+            <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5">
               Nuestro equipo está analizando la situación. Te notificaremos
               cuando haya una resolución.
             </Text>
@@ -651,8 +653,8 @@ export default function OrdenDetalle() {
       {/* ── Price Modal ──────────────────────────────────────────────────── */}
       <Modal visible={showPriceModal} transparent animationType="slide">
         <View className="flex-1 justify-end bg-black/60">
-          <View className="bg-gray-900 rounded-t-3xl p-6 border-t border-gray-800">
-            <Text className="text-white text-lg font-bold mb-4">
+          <View className="bg-slate-50 dark:bg-gray-900 rounded-t-3xl p-6 border-t border-slate-200 dark:border-gray-800">
+            <Text className="text-gray-900 dark:text-white text-lg font-bold mb-4">
               Actualizar precio
             </Text>
 
@@ -662,7 +664,7 @@ export default function OrdenDetalle() {
               keyboardType="numeric"
               placeholder="Nuevo precio (ej: 6000)"
               placeholderTextColor="#6b7280"
-              className="bg-gray-800 text-white px-4 py-3 rounded-xl border border-gray-700 mb-4 text-base"
+              className="bg-slate-100 dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-3 rounded-xl border border-slate-300 dark:border-gray-700 mb-4 text-base"
             />
 
             <Pressable
@@ -683,7 +685,7 @@ export default function OrdenDetalle() {
               onPress={() => setShowPriceModal(false)}
               className="py-3 items-center"
             >
-              <Text className="text-gray-400">Cancelar</Text>
+              <Text className="text-slate-500 dark:text-gray-400">Cancelar</Text>
             </Pressable>
           </View>
         </View>

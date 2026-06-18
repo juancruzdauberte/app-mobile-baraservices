@@ -6,15 +6,37 @@ export type Role = "CLIENTE" | "PROFESIONAL" | "ADMIN";
 
 export type Urgencia = "BAJA" | "MEDIA" | "EMERGENCIA";
 
-export type JobRequestEstado = "ABIERTA" | "ASIGNADA" | "CANCELADA" | "EXPIRADA" | "COMPLETA";
+export type JobRequestEstado =
+  | "ABIERTA"
+  | "ASIGNADA"
+  | "CANCELADA"
+  | "EXPIRADA"
+  | "COMPLETA";
 
-export type ProposalEstado = "PENDIENTE" | "ACEPTADA" | "RECHAZADA" | "CANCELADA";
+export type ProposalEstado =
+  | "PENDIENTE"
+  | "ACEPTADA"
+  | "RECHAZADA"
+  | "CANCELADA";
 
-export type WorkOrderEstado = "PROGRAMADA" | "EN_PROGRESO" | "EN_DISPUTA" | "COMPLETADA" | "CANCELADA";
+export type WorkOrderEstado =
+  | "PROGRAMADA"
+  | "EN_PROGRESO"
+  | "EN_DISPUTA"
+  | "COMPLETADA"
+  | "CANCELADA";
 
-export type ProfileEstado = "ACTIVO" | "INACTIVO" | "PENDIENTE_APROBACION" | "RECHAZADO";
+export type ProfileEstado =
+  | "ACTIVO"
+  | "INACTIVO"
+  | "PENDIENTE_APROBACION"
+  | "RECHAZADO";
 
-export type ComplaintEstado = "PENDIENTE" | "EN_REVISION" | "RESUELTO" | "RECHAZADO";
+export type ComplaintEstado =
+  | "PENDIENTE"
+  | "EN_REVISION"
+  | "RESUELTO"
+  | "RECHAZADO";
 
 export type ProfesionalStateProfile =
   | "INCOMPLETO"
@@ -164,7 +186,13 @@ export type Proposal = {
   // Relación anidada (presente en GET /proposals/my-proposals)
   solicitudes_trabajo?: Pick<
     JobRequest,
-    "id" | "titulo" | "descripcion" | "estado" | "urgencia" | "categoria_id" | "fecha_creacion"
+    | "id"
+    | "titulo"
+    | "descripcion"
+    | "estado"
+    | "urgencia"
+    | "categoria_id"
+    | "fecha_creacion"
   >;
   // Orden generada al aceptar la propuesta (array por esquema, en práctica máx. 1)
   ordenes_trabajo?: { id: string }[];

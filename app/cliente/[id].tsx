@@ -15,10 +15,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { getClientById } from "../../lib/lib";
 import { PublicClient } from "../../types/types";
+import { useTheme } from '@/hooks/useTheme';
 
 export default function ClientProfile() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { colorScheme } = useTheme();
 
   const [client, setClient] = useState<PublicClient | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ export default function ClientProfile() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#10b981" />
         </View>
@@ -53,22 +55,22 @@ export default function ClientProfile() {
 
   if (loadError || client == null) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.back()}
           accessibilityLabel="Volver"
           className="flex-row items-center px-5 pt-4 pb-2"
         >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
         </Pressable>
 
         <View className="flex-1 items-center justify-center px-8">
           <Ionicons name="alert-circle-outline" size={48} color="#4b5563" />
-          <Text className="text-white text-lg font-bold mt-4 mb-2 text-center">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold mt-4 mb-2 text-center">
             No se pudo cargar el perfil
           </Text>
-          <Text className="text-gray-400 text-sm text-center mb-6">
+          <Text className="text-slate-500 dark:text-gray-400 text-sm text-center mb-6">
             Verificá tu conexión e intentá de nuevo.
           </Text>
           <Pressable
@@ -86,7 +88,7 @@ export default function ClientProfile() {
   // ─── Main render ───────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
@@ -100,13 +102,13 @@ export default function ClientProfile() {
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
           </Pressable>
-          <Text className="text-white text-lg font-bold">Perfil del cliente</Text>
+          <Text className="text-gray-900 dark:text-white text-lg font-bold">Perfil del cliente</Text>
         </View>
 
         {/* ── Hero card ─────────────────────────────────────────────────── */}
-        <View className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-4 items-center">
+        <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-6 mb-4 items-center">
           {client.avatar ? (
             <Image
               source={{ uri: client.avatar }}
@@ -118,14 +120,14 @@ export default function ClientProfile() {
             />
           ) : (
             <View
-              className="bg-gray-800 border border-gray-700 items-center justify-center"
+              className="bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 items-center justify-center"
               style={{ width: 80, height: 80, borderRadius: 40 }}
             >
               <Ionicons name="person" size={36} color="#6b7280" />
             </View>
           )}
 
-          <Text className="text-white text-xl font-bold mt-3 text-center">
+          <Text className="text-gray-900 dark:text-white text-xl font-bold mt-3 text-center">
             {client.nombre} {client.apellido}
           </Text>
 
@@ -137,8 +139,8 @@ export default function ClientProfile() {
 
         {/* ── Contacto ──────────────────────────────────────────────────── */}
         {(client.telefono || client.email) ? (
-          <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-            <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
+          <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-4">
+            <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-3">
               Contacto
             </Text>
 
@@ -146,7 +148,7 @@ export default function ClientProfile() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => Linking.openURL(`tel:${client.telefono}`)}
-                className="flex-row items-center py-3 border-b border-gray-800"
+                className="flex-row items-center py-3 border-b border-slate-200 dark:border-gray-800"
                 style={{ gap: 12 }}
               >
                 <View className="w-9 h-9 rounded-full bg-emerald-500/15 items-center justify-center">
@@ -154,7 +156,7 @@ export default function ClientProfile() {
                 </View>
                 <View className="flex-1">
                   <Text className="text-gray-500 text-xs mb-0.5">Teléfono</Text>
-                  <Text className="text-white text-sm font-medium">
+                  <Text className="text-gray-900 dark:text-white text-sm font-medium">
                     {client.telefono}
                   </Text>
                 </View>
@@ -174,7 +176,7 @@ export default function ClientProfile() {
                 </View>
                 <View className="flex-1">
                   <Text className="text-gray-500 text-xs mb-0.5">Email</Text>
-                  <Text className="text-white text-sm font-medium">
+                  <Text className="text-gray-900 dark:text-white text-sm font-medium">
                     {client.email}
                   </Text>
                 </View>

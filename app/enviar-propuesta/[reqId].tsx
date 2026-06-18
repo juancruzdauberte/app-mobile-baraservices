@@ -15,10 +15,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { createProposal } from "../../lib/lib";
+import { useTheme } from '@/hooks/useTheme';
 
 export default function EnviarPropuestaScreen() {
   const { reqId } = useLocalSearchParams<{ reqId: string }>();
   const router = useRouter();
+  const { colorScheme } = useTheme();
 
   const [precio, setPrecio] = useState("");
   const [mensaje, setMensaje] = useState("");
@@ -57,7 +59,7 @@ export default function EnviarPropuestaScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -75,17 +77,17 @@ export default function EnviarPropuestaScreen() {
               className="mr-3 p-1"
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Ionicons name="arrow-back" size={24} color="#ffffff" />
+              <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? '#FFFFFF' : '#0F172A'} />
             </Pressable>
-            <Text className="text-white text-lg font-bold flex-1">
+            <Text className="text-gray-900 dark:text-white text-lg font-bold flex-1">
               Nueva propuesta
             </Text>
           </View>
 
           {/* ── Form card ───────────────────────────────────────────────── */}
-          <View className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-5">
+          <View className="bg-slate-50 dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-5 mb-5">
             {/* Precio */}
-            <Text className="text-white text-sm font-semibold mb-2">
+            <Text className="text-gray-900 dark:text-white text-sm font-semibold mb-2">
               Precio estimado (opcional)
             </Text>
             <TextInput
@@ -94,17 +96,17 @@ export default function EnviarPropuestaScreen() {
               keyboardType="numeric"
               placeholder="Ej: 5000"
               placeholderTextColor="#6b7280"
-              className="bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-base"
+              className="bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-base"
             />
             <Text className="text-gray-500 text-xs mt-2 leading-4">
               Si no ingresás precio, quedará como &quot;a coordinar&quot;
             </Text>
 
             {/* Separador */}
-            <View className="mt-5 border-t border-gray-800" />
+            <View className="mt-5 border-t border-slate-200 dark:border-gray-800" />
 
             {/* Mensaje */}
-            <Text className="text-white text-sm font-semibold mt-5 mb-2">
+            <Text className="text-gray-900 dark:text-white text-sm font-semibold mt-5 mb-2">
               Tu mensaje (opcional)
             </Text>
             <TextInput
@@ -116,7 +118,7 @@ export default function EnviarPropuestaScreen() {
               placeholder="Describí brevemente cómo podés ayudar, tu experiencia, o cualquier info relevante..."
               placeholderTextColor="#6b7280"
               textAlignVertical="top"
-              className="bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm leading-5 min-h-[100px]"
+              className="bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm leading-5 min-h-[100px]"
             />
             <Text className="text-gray-500 text-xs text-right mt-1">
               {mensaje.length}/500

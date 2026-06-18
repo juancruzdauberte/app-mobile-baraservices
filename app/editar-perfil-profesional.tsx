@@ -12,7 +12,11 @@ import {
   View,
 } from "react-native";
 import { Image } from "expo-image";
-import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
+import {
+  AVATAR_PLACEHOLDER,
+  IMAGE_CACHE_POLICY,
+  IMAGE_TRANSITION,
+} from "../constants/image-config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import PhoneInput, { CountryCode } from "react-native-phone-number-input";
@@ -29,18 +33,35 @@ import {
 } from "../lib/lib";
 import { useAuth } from "../providers/AuthProvider";
 import { Category, MyProfessionalJob } from "../types/types";
+import { useTheme } from "@/hooks/useTheme";
 
 // ─── Phone parsing ────────────────────────────────────────────────────────────
 
 const PHONE_PREFIXES: [string, CountryCode][] = [
-  ["598", "UY"], ["595", "PY"], ["593", "EC"], ["592", "GY"],
-  ["591", "BO"], ["506", "CR"], ["505", "NI"], ["503", "SV"],
-  ["502", "GT"], ["501", "BZ"],
-  ["56", "CL"], ["57", "CO"], ["58", "VE"], ["55", "BR"],
-  ["54", "AR"], ["53", "CU"], ["52", "MX"], ["51", "PE"],
+  ["598", "UY"],
+  ["595", "PY"],
+  ["593", "EC"],
+  ["592", "GY"],
+  ["591", "BO"],
+  ["506", "CR"],
+  ["505", "NI"],
+  ["503", "SV"],
+  ["502", "GT"],
+  ["501", "BZ"],
+  ["56", "CL"],
+  ["57", "CO"],
+  ["58", "VE"],
+  ["55", "BR"],
+  ["54", "AR"],
+  ["53", "CU"],
+  ["52", "MX"],
+  ["51", "PE"],
 ];
 
-function parseStoredPhone(stored: string): { country: CountryCode; local: string } {
+function parseStoredPhone(stored: string): {
+  country: CountryCode;
+  local: string;
+} {
   const digits = (stored ?? "").replace(/\D/g, "");
   if (!digits) return { country: "AR", local: "" };
   for (const [prefix, country] of PHONE_PREFIXES) {
@@ -72,7 +93,7 @@ export default function EditarPerfilProfesional() {
   const router = useRouter();
   const { profile, refreshProfile } = useAuth();
   const phoneInput = useRef<PhoneInput>(null);
-
+  const { colorScheme } = useTheme();
   const [form, setForm] = useState<FormState>({
     nombre: "",
     apellido: "",
@@ -124,7 +145,11 @@ export default function EditarPerfilProfesional() {
 
         setCategories(cats);
       } catch (e: any) {
-        console.error("[EditarPerfilPro] load error:", e?.response?.status, JSON.stringify(e?.response?.data ?? e?.message));
+        console.error(
+          "[EditarPerfilPro] load error:",
+          e?.response?.status,
+          JSON.stringify(e?.response?.data ?? e?.message),
+        );
         Toast.show({ type: "error", text1: "Error al cargar el perfil" });
       } finally {
         setLoadingData(false);
@@ -144,7 +169,9 @@ export default function EditarPerfilProfesional() {
   function toggleJob(categoriaId: string) {
     const isSelected = selectedJobs.some((j) => j.categoria_id === categoriaId);
     if (isSelected) {
-      setSelectedJobs((prev) => prev.filter((j) => j.categoria_id !== categoriaId));
+      setSelectedJobs((prev) =>
+        prev.filter((j) => j.categoria_id !== categoriaId),
+      );
     } else {
       setSelectedJobs((prev) => [...prev, { categoria_id: categoriaId }]);
     }
@@ -167,7 +194,8 @@ export default function EditarPerfilProfesional() {
 
   function getJobPrice(categoriaId: string) {
     return (
-      selectedJobs.find((j) => j.categoria_id === categoriaId)
+      selectedJobs
+        .find((j) => j.categoria_id === categoriaId)
         ?.precio_base_por_hora?.toString() ?? ""
     );
   }
@@ -178,7 +206,10 @@ export default function EditarPerfilProfesional() {
     setShowPicker(false);
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     if (!permission.granted) {
-      Alert.alert("Permiso denegado", "Necesitás autorizar el acceso a la cámara.");
+      Alert.alert(
+        "Permiso denegado",
+        "Necesitás autorizar el acceso a la cámara.",
+      );
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
@@ -197,7 +228,10 @@ export default function EditarPerfilProfesional() {
     setShowPicker(false);
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      Alert.alert("Permiso denegado", "Necesitás autorizar el acceso a la galería.");
+      Alert.alert(
+        "Permiso denegado",
+        "Necesitás autorizar el acceso a la galería.",
+      );
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -268,7 +302,10 @@ export default function EditarPerfilProfesional() {
 
   if (loadingData) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView
+        className="flex-1 bg-white dark:bg-gray-950"
+        edges={["top"]}
+      >
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#10b981" />
         </View>
@@ -279,22 +316,26 @@ export default function EditarPerfilProfesional() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         {/* Header */}
-        <View className="flex-row items-center px-5 pt-4 pb-4 border-b border-gray-800">
+        <View className="flex-row items-center px-5 pt-4 pb-4 border-b border-slate-200 dark:border-gray-800">
           <Pressable
             accessibilityRole="button"
             onPress={() => router.back()}
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={colorScheme === "dark" ? "#ffffff" : "#000000"}
+            />
           </Pressable>
-          <Text className="text-white text-lg font-bold flex-1">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold flex-1">
             Editar perfil
           </Text>
         </View>
@@ -307,9 +348,7 @@ export default function EditarPerfilProfesional() {
         >
           {/* ── Avatar ──────────────────────────────────────────────────── */}
           <View className="items-center py-6">
-            <Pressable onPress={() => setShowPicker(true)}>
-              accessibilityRole="button"
-              accessibilityRole="button"
+            <Pressable onPress={() => setShowPicker(true)} accessibilityRole="button">
               <View className="relative">
                 {displayAvatar ? (
                   <Image
@@ -322,7 +361,7 @@ export default function EditarPerfilProfesional() {
                   />
                 ) : (
                   <View
-                    className="bg-gray-800 border border-gray-700 items-center justify-center"
+                    className="bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 items-center justify-center"
                     style={{ width: 96, height: 96, borderRadius: 48 }}
                   >
                     <Ionicons name="person" size={40} color="#6b7280" />
@@ -340,7 +379,7 @@ export default function EditarPerfilProfesional() {
                 </View>
               </View>
             </Pressable>
-            <Text className="text-gray-400 text-xs mt-3">
+            <Text className="text-slate-500 dark:text-gray-400 text-xs mt-3">
               Tocá para cambiar la foto
             </Text>
           </View>
@@ -349,7 +388,7 @@ export default function EditarPerfilProfesional() {
           <View className="gap-4">
             {/* Nombre */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 Nombre
               </Text>
               <TextInput
@@ -357,13 +396,13 @@ export default function EditarPerfilProfesional() {
                 onChangeText={(v) => updateField("nombre", v)}
                 placeholder="Tu nombre"
                 placeholderTextColor="#6b7280"
-                className="bg-gray-900 border border-gray-800 rounded-2xl px-4 py-4 text-white text-base"
+                className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base"
               />
             </View>
 
             {/* Apellido */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 Apellido
               </Text>
               <TextInput
@@ -371,16 +410,16 @@ export default function EditarPerfilProfesional() {
                 onChangeText={(v) => updateField("apellido", v)}
                 placeholder="Tu apellido"
                 placeholderTextColor="#6b7280"
-                className="bg-gray-900 border border-gray-800 rounded-2xl px-4 py-4 text-white text-base"
+                className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base"
               />
             </View>
 
             {/* Teléfono */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 Teléfono
               </Text>
-              <View className="w-full rounded-2xl bg-gray-900 border border-gray-800 px-2 py-2">
+              <View className="w-full rounded-2xl bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 px-2 py-2">
                 <PhoneInput
                   ref={phoneInput}
                   defaultCode={phoneCountry}
@@ -411,8 +450,16 @@ export default function EditarPerfilProfesional() {
                     paddingHorizontal: 0,
                     justifyContent: "center",
                   }}
-                  codeTextStyle={{ color: "white", fontSize: 16, fontWeight: "600" }}
-                  textInputStyle={{ color: "white", fontSize: 16, paddingLeft: 8 }}
+                  codeTextStyle={{
+                    color: colorScheme === 'dark' ? '#FFFFFF' : '#0F172A',
+                    fontSize: 16,
+                    fontWeight: "600",
+                  }}
+                  textInputStyle={{
+                    color: colorScheme === 'dark' ? '#FFFFFF' : '#0F172A',
+                    fontSize: 16,
+                    paddingLeft: 8,
+                  }}
                   renderDropdownImage={
                     <Ionicons name="chevron-down" size={16} color="#9ca3af" />
                   }
@@ -425,7 +472,7 @@ export default function EditarPerfilProfesional() {
 
             {/* DNI */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 DNI
               </Text>
               <TextInput
@@ -437,13 +484,13 @@ export default function EditarPerfilProfesional() {
                 placeholderTextColor="#6b7280"
                 keyboardType="numeric"
                 maxLength={8}
-                className="bg-gray-900 border border-gray-800 rounded-2xl px-4 py-4 text-white text-base"
+                className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base"
               />
             </View>
 
             {/* Biografía */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-2">
                 Biografía
               </Text>
               <TextInput
@@ -454,13 +501,13 @@ export default function EditarPerfilProfesional() {
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
-                className="bg-gray-900 border border-gray-800 rounded-2xl px-4 py-4 text-white text-base h-28"
+                className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base h-28"
               />
             </View>
 
             {/* Categorías */}
             <View>
-              <Text className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">
+              <Text className="text-slate-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">
                 Categorías de trabajo
               </Text>
               <Text className="text-gray-500 text-xs mb-3">
@@ -473,7 +520,7 @@ export default function EditarPerfilProfesional() {
                     className={`rounded-2xl border p-4 ${
                       isJobSelected(cat.id)
                         ? "border-emerald-500/50 bg-emerald-500/10"
-                        : "border-gray-800 bg-gray-900"
+                        : "border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-gray-900"
                     }`}
                   >
                     <Pressable
@@ -484,21 +531,32 @@ export default function EditarPerfilProfesional() {
                       <View className="flex-row items-center gap-3 flex-1">
                         <View
                           className={`h-10 w-10 items-center justify-center rounded-xl ${
-                            isJobSelected(cat.id) ? "bg-emerald-500/20" : "bg-gray-800"
+                            isJobSelected(cat.id)
+                              ? "bg-emerald-500/20"
+                              : "bg-slate-100 dark:bg-gray-800"
                           }`}
                         >
                           <Ionicons
-                            name={isJobSelected(cat.id) ? "checkmark-circle" : "ellipse-outline"}
+                            name={
+                              isJobSelected(cat.id)
+                                ? "checkmark-circle"
+                                : "ellipse-outline"
+                            }
                             size={24}
-                            color={isJobSelected(cat.id) ? "#10b981" : "#6b7280"}
+                            color={
+                              isJobSelected(cat.id) ? "#10b981" : "#6b7280"
+                            }
                           />
                         </View>
                         <View className="flex-1">
-                          <Text className="text-base font-medium text-white">
+                          <Text className="text-base font-medium text-gray-900 dark:text-white">
                             {cat.nombre}
                           </Text>
                           {cat.descripcion ? (
-                            <Text className="mt-0.5 text-xs text-gray-400" numberOfLines={1}>
+                            <Text
+                              className="mt-0.5 text-xs text-slate-500 dark:text-gray-400"
+                              numberOfLines={1}
+                            >
                               {cat.descripcion}
                             </Text>
                           ) : null}
@@ -507,9 +565,11 @@ export default function EditarPerfilProfesional() {
                     </Pressable>
 
                     {isJobSelected(cat.id) && (
-                      <View className="mt-4 flex-row items-center gap-3 border-t border-gray-800 pt-4">
-                        <Text className="text-sm text-gray-400">Precio por hora:</Text>
-                        <View className="flex-1 flex-row items-center rounded-xl border border-gray-700 bg-gray-800 px-3">
+                      <View className="mt-4 flex-row items-center gap-3 border-t border-slate-200 dark:border-gray-800 pt-4">
+                        <Text className="text-sm text-slate-500 dark:text-gray-400">
+                          Precio por hora:
+                        </Text>
+                        <View className="flex-1 flex-row items-center rounded-xl border border-slate-300 dark:border-gray-700 bg-slate-100 dark:bg-gray-800 px-3">
                           <Text className="text-emerald-500">$</Text>
                           <TextInput
                             value={getJobPrice(cat.id)}
@@ -517,9 +577,11 @@ export default function EditarPerfilProfesional() {
                             keyboardType="numeric"
                             placeholder="0"
                             placeholderTextColor="#6b7280"
-                            className="ml-2 flex-1 py-3 text-white"
+                            className="ml-2 flex-1 py-3 text-gray-900 dark:text-white"
                           />
-                          <Text className="text-sm text-gray-400">/hora</Text>
+                          <Text className="text-sm text-slate-500 dark:text-gray-400">
+                            /hora
+                          </Text>
                         </View>
                       </View>
                     )}
@@ -559,21 +621,27 @@ export default function EditarPerfilProfesional() {
           className="flex-1 bg-black/60"
           onPress={() => setShowPicker(false)}
         />
-        <View className="bg-gray-900 rounded-t-3xl px-5 pt-4 pb-8">
-          <View className="w-10 h-1 bg-gray-700 rounded-full self-center mb-5" />
-          <Text className="text-white text-base font-bold mb-4">Foto de perfil</Text>
+        <View className="bg-slate-50 dark:bg-gray-900 rounded-t-3xl px-5 pt-4 pb-8">
+          <View className="w-10 h-1 bg-slate-200 dark:bg-gray-700 rounded-full self-center mb-5" />
+          <Text className="text-gray-900 dark:text-white text-base font-bold mb-4">
+            Foto de perfil
+          </Text>
 
           <Pressable
             accessibilityRole="button"
             onPress={pickFromCamera}
-            className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
+            className="flex-row items-center gap-4 bg-slate-100 dark:bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
             <View className="w-10 h-10 bg-emerald-500/20 rounded-xl items-center justify-center">
               <Ionicons name="camera-outline" size={22} color="#10b981" />
             </View>
             <View className="flex-1">
-              <Text className="text-white font-semibold">Tomar foto</Text>
-              <Text className="text-gray-500 text-xs mt-0.5">Usar la cámara del dispositivo</Text>
+              <Text className="text-gray-900 dark:text-white font-semibold">
+                Tomar foto
+              </Text>
+              <Text className="text-gray-500 text-xs mt-0.5">
+                Usar la cámara del dispositivo
+              </Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#6b7280" />
           </Pressable>
@@ -581,14 +649,18 @@ export default function EditarPerfilProfesional() {
           <Pressable
             accessibilityRole="button"
             onPress={pickFromGallery}
-            className="flex-row items-center gap-4 bg-gray-800 rounded-2xl px-4 py-4 mb-3"
+            className="flex-row items-center gap-4 bg-slate-100 dark:bg-gray-800 rounded-2xl px-4 py-4 mb-3"
           >
             <View className="w-10 h-10 bg-blue-500/20 rounded-xl items-center justify-center">
               <Ionicons name="images-outline" size={22} color="#3b82f6" />
             </View>
             <View className="flex-1">
-              <Text className="text-white font-semibold">Elegir de galería</Text>
-              <Text className="text-gray-500 text-xs mt-0.5">Seleccionar desde tus fotos</Text>
+              <Text className="text-gray-900 dark:text-white font-semibold">
+                Elegir de galería
+              </Text>
+              <Text className="text-gray-500 text-xs mt-0.5">
+                Seleccionar desde tus fotos
+              </Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#6b7280" />
           </Pressable>
@@ -598,7 +670,9 @@ export default function EditarPerfilProfesional() {
             onPress={() => setShowPicker(false)}
             className="items-center py-3.5 mt-1"
           >
-            <Text className="text-gray-400 font-medium">Cancelar</Text>
+            <Text className="text-slate-500 dark:text-gray-400 font-medium">
+              Cancelar
+            </Text>
           </Pressable>
         </View>
       </Modal>
