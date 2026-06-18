@@ -291,6 +291,14 @@ export default function OrdenDetalle() {
     { day: "2-digit", month: "long", year: "numeric" },
   );
 
+  const scheduledDate = order.fecha_programada
+    ? new Date(order.fecha_programada).toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
+
   // ─── Main render ──────────────────────────────────────────────────────────
 
   return (
@@ -358,10 +366,20 @@ export default function OrdenDetalle() {
             </View>
           ) : null}
 
-          {/* Date */}
+          {/* Scheduled date + creation date */}
+          {scheduledDate && (
+            <View className="flex-row items-center mb-2">
+              <Ionicons name="calendar-outline" size={14} color="#6b7280" />
+              <Text className="text-slate-500 dark:text-gray-400 text-sm ml-1.5">
+                Programada: {scheduledDate}
+              </Text>
+            </View>
+          )}
           <View className="flex-row items-center">
-            <Ionicons name="calendar-outline" size={14} color="#6b7280" />
-            <Text className="text-slate-500 dark:text-gray-400 text-sm ml-1.5">{createdDate}</Text>
+            <Ionicons name="time-outline" size={14} color="#6b7280" />
+            <Text className="text-slate-500 dark:text-gray-400 text-sm ml-1.5">
+              Creada: {createdDate}
+            </Text>
           </View>
         </View>
 

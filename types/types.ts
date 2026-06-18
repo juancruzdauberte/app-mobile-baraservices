@@ -216,6 +216,7 @@ export type WorkOrder = {
   estado: WorkOrderEstado;
   precio_final: number;
   fecha_creacion: string;
+  fecha_programada: string | null;
   _count?: {
     resenas: number;
   };

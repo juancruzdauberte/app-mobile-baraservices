@@ -186,7 +186,7 @@ export default function Perfil() {
                   ? "Cambiar a modo claro"
                   : "Cambiar a modo oscuro"
               }
-              className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 flex-row items-center border border-slate-200 dark:border-gray-800 active:bg-gray-800"
+              className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 flex-row items-center border border-slate-200 dark:border-gray-800 dark:active:bg-gray-800 active:bg-gray-200"
             >
               <View className="bg-slate-100 dark:bg-gray-800 p-2 rounded-lg mr-4">
                 <Ionicons

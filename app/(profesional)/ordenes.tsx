@@ -79,6 +79,14 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
     { day: "2-digit", month: "short", year: "numeric" },
   );
 
+  const scheduledDate = order.fecha_programada
+    ? new Date(order.fecha_programada).toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : null;
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -114,16 +122,21 @@ function WorkOrderCard({ order, onPress }: WorkOrderCardProps) {
         <Text className="text-slate-500 dark:text-gray-400 text-xs ml-1.5">{proNombre}</Text>
       </View>
 
-      {/* Date */}
-      <View className="flex-row items-center mb-3">
-        <Ionicons name="calendar-outline" size={13} color="#6b7280" />
-        <Text className="text-slate-500 dark:text-gray-400 text-xs ml-1.5">{createdDate}</Text>
-      </View>
+      {/* Scheduled date */}
+      {scheduledDate && (
+        <View className="flex-row items-center mb-3">
+          <Ionicons name="calendar-outline" size={13} color="#6b7280" />
+          <Text className="text-slate-500 dark:text-gray-400 text-xs ml-1.5">{scheduledDate}</Text>
+        </View>
+      )}
 
-      {/* Footer: hint + chevron */}
+      {/* Footer: hint + creation date + chevron */}
       <View className="flex-row items-center justify-between border-t border-slate-200 dark:border-gray-800 pt-2.5">
         <Text className={`text-xs ${statusCfg.text}`}>{hint}</Text>
-        <Ionicons name="chevron-forward" size={14} color="#6b7280" />
+        <View className="flex-row items-center" style={{ gap: 4 }}>
+          <Text className="text-slate-400 dark:text-gray-600 text-xs">{createdDate}</Text>
+          <Ionicons name="chevron-forward" size={14} color="#6b7280" />
+        </View>
       </View>
     </Pressable>
   );
