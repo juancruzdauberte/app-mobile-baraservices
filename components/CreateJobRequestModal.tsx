@@ -189,10 +189,10 @@ export default function CreateJobRequestModal({
       presentationStyle="fullScreen"
       onRequestClose={handleClose}
     >
-      <SafeAreaView className="flex-1 bg-gray-950" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={["top"]}>
         {/* Header */}
-        <View className="flex-row items-center justify-between px-5 py-4 border-b border-gray-800">
-          <Text className="text-white text-xl font-bold">
+        <View className="flex-row items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-gray-800">
+          <Text className="text-gray-900 dark:text-white text-xl font-bold">
             Nueva Solicitud de Trabajo
           </Text>
           <Pressable onPress={handleClose} hitSlop={8}>
@@ -212,7 +212,7 @@ export default function CreateJobRequestModal({
           >
             {/* ── Address ──────────────────────────────────────────────── */}
             <View className="mt-5">
-              <Text className="text-gray-400 text-sm font-medium mb-3">
+              <Text className="text-slate-600 dark:text-gray-400 text-sm font-medium mb-3">
                 Dirección
               </Text>
               <GooglePlacesInput
@@ -233,7 +233,7 @@ export default function CreateJobRequestModal({
             </View>
             {/* ── Urgency ─────────────────────────────────────────────── */}
             <View className="mt-6 mb-5">
-              <Text className="text-gray-400 text-sm font-medium mb-3">
+              <Text className="text-slate-600 dark:text-gray-400 text-sm font-medium mb-3">
                 Urgencia
               </Text>
               <View className="flex-row gap-x-3">
@@ -247,12 +247,12 @@ export default function CreateJobRequestModal({
                       className={`flex-1 items-center py-3 rounded-2xl border ${
                         isActive
                           ? item.activeClasses
-                          : "bg-gray-900 border-gray-800"
+                          : "bg-slate-50 dark:bg-gray-900 border-slate-200 dark:border-gray-800"
                       }`}
                     >
                       <Text
                         className={`text-sm font-semibold ${
-                          isActive ? item.activeTextClasses : "text-gray-400"
+                          isActive ? item.activeTextClasses : "text-slate-500 dark:text-gray-400"
                         }`}
                       >
                         {item.label}
@@ -265,7 +265,7 @@ export default function CreateJobRequestModal({
 
             {/* ── Category ─────────────────────────────────────────────── */}
             <View className="mb-5">
-              <Text className="text-gray-400 text-sm font-medium mb-3">
+              <Text className="text-slate-600 dark:text-gray-400 text-sm font-medium mb-3">
                 Categoría
               </Text>
               <ScrollView
@@ -284,12 +284,12 @@ export default function CreateJobRequestModal({
                         className={`px-4 py-2 rounded-2xl border ${
                           isActive
                             ? "bg-emerald-500/20 border-emerald-500"
-                            : "bg-gray-900 border-gray-800"
+                            : "bg-slate-50 dark:bg-gray-900 border-slate-200 dark:border-gray-800"
                         }`}
                       >
                         <Text
                           className={`text-sm font-medium ${
-                            isActive ? "text-emerald-400" : "text-gray-400"
+                            isActive ? "text-emerald-400" : "text-slate-500 dark:text-gray-400"
                           }`}
                         >
                           {cat.nombre.charAt(0).toUpperCase() +
@@ -309,7 +309,7 @@ export default function CreateJobRequestModal({
 
             {/* ── Title ────────────────────────────────────────────────── */}
             <View className="mb-5">
-              <Text className="text-gray-400 text-sm font-medium mb-3">
+              <Text className="text-slate-600 dark:text-gray-400 text-sm font-medium mb-3">
                 Título
               </Text>
               <TextInput
@@ -317,8 +317,8 @@ export default function CreateJobRequestModal({
                 onChangeText={(v) => updateField("titulo", v)}
                 placeholder="Ej: Reparación de cañería urgente"
                 placeholderTextColor="#9ca3af"
-                className={`bg-gray-900 border rounded-2xl px-4 py-4 text-white text-base ${
-                  errors.titulo ? "border-red-500" : "border-gray-800"
+                className={`bg-slate-50 dark:bg-gray-900 border rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base ${
+                  errors.titulo ? "border-red-500" : "border-slate-200 dark:border-gray-800"
                 }`}
               />
               {errors.titulo ? (
@@ -330,7 +330,7 @@ export default function CreateJobRequestModal({
 
             {/* ── Description ──────────────────────────────────────────── */}
             <View className="mb-5">
-              <Text className="text-gray-400 text-sm font-medium mb-3">
+              <Text className="text-slate-600 dark:text-gray-400 text-sm font-medium mb-3">
                 Descripción
               </Text>
               <TextInput
@@ -341,8 +341,8 @@ export default function CreateJobRequestModal({
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
-                className={`bg-gray-900 border rounded-2xl px-4 py-4 text-white text-base h-28 ${
-                  errors.descripcion ? "border-red-500" : "border-gray-800"
+                className={`bg-slate-50 dark:bg-gray-900 border rounded-2xl px-4 py-4 text-gray-900 dark:text-white text-base h-28 ${
+                  errors.descripcion ? "border-red-500" : "border-slate-200 dark:border-gray-800"
                 }`}
               />
               {errors.descripcion ? (

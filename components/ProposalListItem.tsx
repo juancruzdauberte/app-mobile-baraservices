@@ -21,7 +21,7 @@ const STATUS_CONFIG: Record<
     text: "text-emerald-400",
   },
   RECHAZADA: { label: "Rechazada", bg: "bg-red-500/20", text: "text-red-400" },
-  CANCELADA: { label: "Cancelada", bg: "bg-gray-800", text: "text-gray-500" },
+  CANCELADA: { label: "Cancelada", bg: "bg-slate-100 dark:bg-gray-800", text: "text-slate-500 dark:text-gray-500" },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -49,11 +49,11 @@ function ProposalListItemComponent({
   );
 
   return (
-    <View className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-3">
+    <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl p-4 mb-3">
       {/* Top row: title + status badge */}
       <View className="flex-row items-start justify-between mb-2">
         <Text
-          className="text-white font-semibold text-sm flex-1 mr-2"
+          className="text-gray-900 dark:text-white font-semibold text-sm flex-1 mr-2"
           numberOfLines={2}
         >
           {titulo}
@@ -71,13 +71,13 @@ function ProposalListItemComponent({
           ${proposal.precio_estimado.toLocaleString("es-AR")}
         </Text>
       ) : (
-        <Text className="text-gray-500 text-sm mb-2">Precio a coordinar</Text>
+        <Text className="text-slate-500 dark:text-gray-500 text-sm mb-2">Precio a coordinar</Text>
       )}
 
       {/* Message */}
       {proposal.mensaje ? (
         <Text
-          className="text-gray-400 text-sm italic leading-5 mb-2"
+          className="text-slate-600 dark:text-gray-400 text-sm italic leading-5 mb-2"
           numberOfLines={2}
         >
           "{proposal.mensaje}"
@@ -87,7 +87,7 @@ function ProposalListItemComponent({
       {/* Date */}
       <View className="flex-row items-center mb-3">
         <Ionicons name="calendar-outline" size={13} color="#6b7280" />
-        <Text className="text-gray-400 text-xs ml-1.5">{createdDate}</Text>
+        <Text className="text-slate-500 dark:text-gray-400 text-xs ml-1.5">{createdDate}</Text>
       </View>
 
       {/* Actions */}

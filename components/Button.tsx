@@ -1,5 +1,6 @@
 import { Pressable, Text, ActivityIndicator, StyleSheet } from "react-native";
-import { theme } from "@/constants/theme";
+import { theme, lightTheme, darkTheme } from "@/constants/theme";
+import { useTheme } from "@/hooks/useTheme";
 
 interface ButtonProps {
   onPress: () => void;
@@ -21,6 +22,24 @@ export function Button({
   fullWidth = false,
 }: ButtonProps) {
   const isDisabled = disabled || loading;
+  const { colorScheme } = useTheme();
+  const colors = colorScheme === "dark" ? darkTheme.colors : lightTheme.colors;
+
+  const variantStyle = {
+    primary:   { backgroundColor: colors.primary },
+    secondary: { backgroundColor: colors.secondary },
+    outline:   { backgroundColor: "transparent" as const, borderWidth: 1, borderColor: colors.border.default },
+    ghost:     { backgroundColor: "transparent" as const },
+    danger:    { backgroundColor: colors.error },
+  }[variant];
+
+  const variantTextStyle = {
+    primary:   { color: colors.text.inverse },
+    secondary: { color: colors.text.inverse },
+    outline:   { color: colors.text.primary },
+    ghost:     { color: colors.text.secondary },
+    danger:    { color: colors.text.inverse },
+  }[variant];
 
   return (
     <Pressable
@@ -29,22 +48,21 @@ export function Button({
       disabled={isDisabled}
       style={({ pressed }) => [
         styles.base,
-        styles[variant],
+        variantStyle,
         styles[size],
         fullWidth && styles.fullWidth,
         pressed && !isDisabled && styles.pressed,
         isDisabled && styles.disabled,
       ]}
-      accessibilityRole="button"
       accessibilityState={{ disabled: isDisabled }}
     >
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === "primary" ? "#030712" : "#10b981"}
+          color={variant === "primary" ? colors.text.primary : colors.success}
         />
       ) : (
-        <Text style={[styles.text, styles[`${variant}Text`]]}>{children}</Text>
+        <Text style={[styles.text, variantTextStyle]}>{children}</Text>
       )}
     </Pressable>
   );
@@ -57,26 +75,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
   },
-  
-  // Variants
-  primary: {
-    backgroundColor: theme.colors.primary,
-  },
-  secondary: {
-    backgroundColor: theme.colors.secondary,
-  },
-  outline: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: theme.colors.border.default,
-  },
-  ghost: {
-    backgroundColor: "transparent",
-  },
-  danger: {
-    backgroundColor: "#EF4444",
-  },
-  
+
   // Sizes
   sm: {
     paddingHorizontal: theme.spacing.sm,
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.md,
   },
-  
+
   // States
   pressed: {
     opacity: 0.8,
@@ -102,25 +101,10 @@ const styles = StyleSheet.create({
   fullWidth: {
     width: "100%",
   },
-  
-  // Text styles
+
+  // Text base (color is set dynamically)
   text: {
     fontSize: theme.typography.fontSize.base,
     fontWeight: theme.typography.fontWeight.semibold,
-  },
-  primaryText: {
-    color: "#FFFFFF",
-  },
-  secondaryText: {
-    color: "#FFFFFF",
-  },
-  outlineText: {
-    color: theme.colors.text.primary,
-  },
-  ghostText: {
-    color: theme.colors.text.secondary,
-  },
-  dangerText: {
-    color: "#FFFFFF",
   },
 });

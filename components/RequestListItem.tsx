@@ -35,8 +35,8 @@ const STATUS_CONFIG: Record<
   },
   EXPIRADA: {
     label: "Expirada",
-    bg: "bg-gray-700/40",
-    text: "text-gray-400",
+    bg: "bg-slate-200/40 dark:bg-gray-700/40",
+    text: "text-slate-500 dark:text-gray-400",
   },
   COMPLETA: {
     label: "Completada",
@@ -49,8 +49,8 @@ function getStatusConfig(estado: string) {
   return (
     STATUS_CONFIG[estado] ?? {
       label: estado,
-      bg: "bg-gray-700/40",
-      text: "text-gray-400",
+      bg: "bg-slate-200/40 dark:bg-gray-700/40",
+      text: "text-slate-500 dark:text-gray-400",
     }
   );
 }
@@ -94,7 +94,7 @@ function RequestListItemComponent({ request, onPress }: RequestListItemProps) {
     <Pressable
       accessibilityRole="button"
       onPress={() => onPress(request.id)}
-      className="bg-gray-900 rounded-2xl p-4 border border-gray-800 mb-3"
+      className="bg-slate-50 dark:bg-gray-900 rounded-2xl p-4 border border-slate-200 dark:border-gray-800 mb-3"
       accessibilityRole="button"
       accessibilityLabel={`Solicitud: ${request.titulo}`}
       accessibilityHint="Toca para ver detalles de la solicitud"
@@ -102,7 +102,7 @@ function RequestListItemComponent({ request, onPress }: RequestListItemProps) {
       {/* Title row */}
       <View className="flex-row items-start justify-between mb-2">
         <Text
-          className="text-white font-bold text-base flex-1 mr-3"
+          className="text-gray-900 dark:text-white font-bold text-base flex-1 mr-3"
           numberOfLines={2}
         >
           {request.titulo}
@@ -111,24 +111,24 @@ function RequestListItemComponent({ request, onPress }: RequestListItemProps) {
       </View>
 
       {/* Description */}
-      <Text className="text-gray-400 text-sm leading-5 mb-3" numberOfLines={2}>
+      <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5 mb-3" numberOfLines={2}>
         {request.descripcion}
       </Text>
 
       {/* Address */}
       <View className="flex-row items-center mb-3">
         <Ionicons name="location-outline" size={14} color="#6b7280" />
-        <Text className="text-gray-500 text-xs ml-1 flex-1" numberOfLines={1}>
+        <Text className="text-slate-500 dark:text-gray-500 text-xs ml-1 flex-1" numberOfLines={1}>
           {request.direccion_formateada}
         </Text>
       </View>
 
       {/* Footer */}
-      <View className="flex-row items-center justify-between border-t border-gray-800 pt-3">
+      <View className="flex-row items-center justify-between border-t border-slate-200 dark:border-gray-800 pt-3">
         <Badge bg={status.bg} text={status.text} label={status.label} />
         <View className="flex-row items-center gap-1.5">
           <Ionicons name="calendar-outline" size={13} color="#6b7280" />
-          <Text className="text-gray-500 text-xs">{date}</Text>
+          <Text className="text-slate-500 dark:text-gray-500 text-xs">{date}</Text>
           <Ionicons name="chevron-forward" size={14} color="#4b5563" />
         </View>
       </View>

@@ -1,5 +1,7 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
+import { useTheme } from "@/hooks/useTheme";
+import { lightTheme, darkTheme } from "@/constants/theme";
 import { Pressable, View, type ViewStyle } from "react-native";
 import { Image } from "expo-image";
 import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
@@ -23,8 +25,7 @@ import {
 import { useTabBarVisibility } from "./TabBarVisibilityContext";
 import { useAuth } from "../providers/AuthProvider";
 
-const PRIMARY_COLOR = "#130057";
-const SECONDARY_COLOR = "#FFFFFF";
+
 
 export function AnimatedTabBar({
   state,
@@ -32,6 +33,20 @@ export function AnimatedTabBar({
   navigation,
 }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { colorScheme } = useTheme();
+  // Semantic tab bar color tokens
+  const BAR_BG = colorScheme === 'dark'
+    ? darkTheme.colors.background.secondary  // #27272A — dark gray bar
+    : lightTheme.colors.primary;             // #0284C7 — sky blue bar
+  const PILL_BG = colorScheme === 'dark'
+    ? darkTheme.colors.primary               // #38BDF8 — sky pill on dark bar
+    : lightTheme.colors.background.primary;  // #FFFFFF — white pill on blue bar
+  const ICON_FOCUSED = colorScheme === 'dark'
+    ? darkTheme.colors.background.primary    // #18181B — dark icon on bright pill
+    : lightTheme.colors.primary;             // #0284C7 — blue icon on white pill
+  const ICON_MUTED = colorScheme === 'dark'
+    ? darkTheme.colors.text.secondary        // #CBD5E1 — light gray icon on dark bar
+    : lightTheme.colors.background.primary;  // #FFFFFF — white icon on blue bar
   const { isVisible, setVisible } = useTabBarVisibility();
   const { profile } = useAuth();
   const visibilityProgress = useSharedValue(1);
@@ -108,11 +123,14 @@ export function AnimatedTabBar({
 
   return (
     <Animated.View
-      className="absolute w-[80%] flex-row items-center justify-center self-center rounded-full bg-[#130057] px-3 py-3.5"
+      className="absolute w-[80%] flex-row items-center justify-center self-center rounded-full px-3 py-3.5"
+      // backgroundColor is set dynamically below
+
       style={[
         animatedContainerStyle,
         {
           bottom: insets.bottom + 16,
+          backgroundColor: BAR_BG,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 5 },
           shadowOpacity: 0.3,
@@ -170,19 +188,20 @@ export function AnimatedTabBar({
               onLongPress={onLongPress}
               className="h-9 flex-row items-center justify-center rounded-full px-[13px]"
               style={{
-                backgroundColor: isFocused ? SECONDARY_COLOR : "transparent",
+                backgroundColor: isFocused ? PILL_BG : "transparent",
               }}
             >
               {getIconByRouteName(
                 route.name,
-                isFocused ? PRIMARY_COLOR : SECONDARY_COLOR,
+                isFocused ? ICON_FOCUSED : ICON_MUTED,
               )}
 
               {isFocused ? (
                 <Animated.Text
                   entering={FadeIn.duration(200)}
                   exiting={FadeOut.duration(200)}
-                  className="ml-2 font-bold text-[#130057]"
+                  className="ml-2 font-bold"
+                  style={{ color: ICON_FOCUSED }}
                 >
                   {label as string}
                 </Animated.Text>

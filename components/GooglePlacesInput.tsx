@@ -188,8 +188,8 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
     <View>
       {/* Input row */}
       <View
-        className={`flex-row items-center bg-gray-900 border rounded-2xl px-4 py-2 ${
-          error ? "border-red-500" : "border-gray-800"
+        className={`flex-row items-center bg-slate-50 dark:bg-gray-900 border rounded-2xl px-4 py-2 ${
+          error ? "border-red-500" : "border-slate-200 dark:border-gray-800"
         } ${predictions.length > 0 && "rounded-b-none"}`}
       >
         <Ionicons name="location-outline" size={18} color="#9ca3af" />
@@ -198,7 +198,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
           onChangeText={handleTextChange}
           placeholder="Dirección del servicio"
           placeholderTextColor="#9ca3af"
-          className="flex-1 ml-3 text-white text-base"
+          className="flex-1 ml-3 text-gray-900 dark:text-white text-base"
         />
         {loading ? (
           <ActivityIndicator size="small" color="#10b981" />
@@ -217,14 +217,14 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
 
       {/* Dropdown */}
       {showDropdown && predictions.length > 0 && (
-        <View className="bg-gray-900 border border-gray-800 rounded-b-2xl mt-14 overflow-hidden absolute z-10 w-full">
+        <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-b-2xl mt-14 overflow-hidden absolute z-10 w-full">
           {predictions.map((prediction, index) => (
             <Pressable
               accessibilityRole="button"
               key={prediction.place_id}
               onPress={() => handleSelectPrediction(prediction)}
               className={`px-4 py-3 flex-row items-start ${
-                index < predictions.length - 1 ? "border-b border-gray-800" : ""
+                index < predictions.length - 1 ? "border-b border-slate-200 dark:border-gray-800" : ""
               }`}
             >
               <Ionicons
@@ -235,7 +235,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
               />
               <View className="flex-1">
                 <Text
-                  className="text-white text-sm font-medium"
+                  className="text-gray-900 dark:text-white text-sm font-medium"
                   numberOfLines={1}
                 >
                   {prediction.structured_formatting?.main_text ??
@@ -243,7 +243,7 @@ export default function GooglePlacesInput({ onSelect, error }: Props) {
                 </Text>
                 {prediction.structured_formatting?.secondary_text ? (
                   <Text
-                    className="text-gray-400 text-xs mt-0.5"
+                    className="text-slate-500 dark:text-gray-400 text-xs mt-0.5"
                     numberOfLines={1}
                   >
                     {prediction.structured_formatting.secondary_text}
