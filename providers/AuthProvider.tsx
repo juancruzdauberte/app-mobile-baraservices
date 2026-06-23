@@ -9,6 +9,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../config/supabase.config";
 import { setGlobalAuthToken } from "../config/axios.config";
 import { Platform } from "react-native";
+import Toast from "react-native-toast-message";
 import {
   loginUser,
   registerUser,
@@ -81,7 +82,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const profileData = await getProfile();
           console.log("[AUTH] profileData fetched:", profileData);
           setProfile(profileData || null);
+        } catch (error) {
+          console.log("[AUTH] Error fetching profile:", error);
+          setProfile(null);
+          return;
+        }
 
+        try {
           const pushToken = await registerForPushNotificationsAsync();
 
           if (pushToken) {
@@ -92,10 +99,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             console.log("[AUTH] push token registered");
           }
-
         } catch (error) {
-          console.log("[AUTH] Error fetching profile:", error);
-          setProfile(null);
+          console.log("[AUTH] push token registration failed (non-fatal):", error);
+          Toast.show({
+            type: "error",
+            text1: "Notificaciones push no disponibles",
+            text2: "Activá los permisos en Configuración para recibirlas.",
+            visibilityTime: 4000,
+          });
         }
       } else {
         setProfile(null);

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useAuth } from "../providers/AuthProvider";
 import {
     AppNotification,
     getMyNotifications,
@@ -49,6 +50,7 @@ function formatDate(value: string) {
 }
 
 export default function NotificationsScreen() {
+    const { profile } = useAuth();
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -127,7 +129,9 @@ export default function NotificationsScreen() {
             <View className="mb-4 flex-row items-center justify-between">
                 <View className="flex-row items-center" style={{ gap: 8 }}>
                     <Pressable
-                        onPress={() => router.push("/")}
+                        onPress={() => router.replace(
+                            (profile?.rol === "PROFESIONAL" ? "/(profesional)" : "/(cliente)") as any
+                        )}
                         accessibilityRole="button"
                         accessibilityLabel="Ir al inicio"
                         className="h-9 w-9 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800"

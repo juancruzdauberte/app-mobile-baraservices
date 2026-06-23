@@ -66,18 +66,17 @@ export default function Index() {
         //   return;
         // }
 
-        if (
-          profile?.rol === "CLIENTE" ||
-          (profile?.rol === undefined && !profile?.estado_perfil)
-        ) {
+        // Esperar a que el perfil llegue — no rutear si todavía es null
+        if (profile === null) {
+          return;
+        }
+
+        if (profile.rol === "CLIENTE") {
           setTargetRoute("/(cliente)");
           return;
         }
 
-        if (
-          profile?.rol === "PROFESIONAL" ||
-          profile?.estado_perfil !== undefined
-        ) {
+        if (profile.rol === "PROFESIONAL") {
           setTargetRoute(getRouteByProfesionalEstado(profile.estado_perfil));
           return;
         }

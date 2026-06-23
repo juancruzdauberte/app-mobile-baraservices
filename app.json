@@ -1,59 +1,65 @@
 {
-  "expo": {
-    "name": "baraservices",
-    "slug": "baraservices",
-    "scheme": "baraservices",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/icon.png",
-        "backgroundImage": "./assets/icon.png",
-        "monochromeImage": "./assets/icon.png"
-      },
-      "package": "com.cmbs.baraservices",
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "autoVerify": true,
-          "data": [
-            {
-              "scheme": "https",
-              "host": "baraservices.app",
-              "pathPrefix": "/auth/confirm"
+    "expo": {
+        "name": "baraservices",
+        "slug": "baraservices",
+        "scheme": "baraservices",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "light",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "adaptiveIcon": {
+                "backgroundColor": "#E6F4FE",
+                "foregroundImage": "./assets/icon.png",
+                "backgroundImage": "./assets/icon.png",
+                "monochromeImage": "./assets/icon.png"
+            },
+            "package": "com.cmbs.baraservices",
+            "intentFilters": [
+                {
+                    "action": "VIEW",
+                    "autoVerify": true,
+                    "data": [
+                        {
+                            "scheme": "https",
+                            "host": "baraservices.app",
+                            "pathPrefix": "/auth/confirm"
+                        }
+                    ],
+                    "category": [
+                        "BROWSABLE",
+                        "DEFAULT"
+                    ]
+                }
+            ]
+        },
+        "web": {
+            "bundler": "metro",
+            "favicon": "./assets/favicon.png"
+        },
+        "plugins": [
+            [
+                "expo-notifications",
+                {
+                    "icon": "./assets/icon-foreground.png",
+                    "color": "#10b981"
+                }
+            ],
+            "expo-font",
+            "expo-router"
+        ],
+        "extra": {
+            "eas": {
+                "projectId": "a0e98a83-68ac-44b1-9564-5d65af66e04d"
             }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
         }
-      ]
-    },
-    "web": {
-      "bundler": "metro",
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-notifications",
-      "expo-font",
-      "expo-router"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "a0e98a83-68ac-44b1-9564-5d65af66e04d"
-      }
     }
-  }
 }

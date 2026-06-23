@@ -18,7 +18,7 @@ import { Review } from "../../types/types";
 
 
 export default function Perfil() {
-  const { signOut, profile } = useAuth();
+  const { signOut, profile, refreshProfile } = useAuth();
   const { colorScheme, isSystemDefault, setTheme } = useTheme();
   const themeIconName =
     colorScheme === "dark" ? "moon-outline" : "sunny-outline";
@@ -75,7 +75,6 @@ export default function Perfil() {
     nombre && apellido ? `${nombre} ${apellido}` : profile?.email || "Usuario";
 
   // Estados para datos dinámicos
-  const { refreshProfile } = useAuth();
   const [loadingFresh, setLoadingFresh] = useState(true);
 
   // Reseñas del propio profesional
