@@ -78,6 +78,60 @@ export async function updatePassword(password: string): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
+// Notifications
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Notifications
+// ---------------------------------------------------------------------------
+
+export type AppNotification = {
+  id: string;
+  usuario_id: string;
+  tipo:
+  | "PROPUESTA_RECIBIDA"
+  | "PROPUESTA_ACEPTADA"
+  | "PROPUESTA_RECHAZADA"
+  | "ORDEN_INICIADA"
+  | "ORDEN_CANCELADA"
+  | "ORDEN_COMPLETADA"
+  | "ORDEN_DISPUTADA"
+  | "PRECIO_ACTUALIZADO";
+  titulo: string;
+  mensaje: string;
+  payload?: unknown;
+  leida: boolean;
+  fecha_creacion: string;
+};
+
+type RegisterDeviceTokenPayload = {
+  token: string;
+  plataforma?: string;
+  device_id?: string;
+};
+
+export async function registerDeviceToken(
+  payload: RegisterDeviceTokenPayload,
+): Promise<void> {
+  await api.post("/notifications/device-token", payload);
+}
+
+export async function getMyNotifications(): Promise<AppNotification[]> {
+  const { data } =
+    await api.get<ApiResponse<AppNotification[]>>("/notifications");
+  return data.data;
+}
+
+export async function markNotificationAsRead(id: string): Promise<void> {
+  await api.patch(`/notifications/${id}/read`);
+}
+
+export async function markAllNotificationsAsRead(): Promise<void> {
+  await api.patch("/notifications/read-all");
+}
+
+
+// ---------------------------------------------------------------------------
 // Categories
 // ---------------------------------------------------------------------------
 
@@ -100,12 +154,16 @@ export async function getProfessionalProfile(): Promise<Professional> {
 /** Perfil público de un profesional por su ID (profesionales.id) */
 export async function getProfessionalById(
   id: string,
+  page = 1,
+  limit = 5,
 ): Promise<PublicProfessional> {
   const { data } = await api.get<ApiResponse<PublicProfessional>>(
     `/professionals/public/${id}`,
+    { params: { page, limit } },
   );
   return data.data;
 }
+
 
 /** Perfil público de un cliente por su ID */
 export async function getClientById(id: string): Promise<PublicClient> {
