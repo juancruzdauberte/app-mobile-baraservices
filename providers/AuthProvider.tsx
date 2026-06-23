@@ -8,16 +8,18 @@ import React, {
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../config/supabase.config";
 import { setGlobalAuthToken } from "../config/axios.config";
+import { Platform } from "react-native";
 import {
   loginUser,
   registerUser,
   forgotPassword as apiForgotPassword,
   updatePassword as apiUpdatePassword,
   getProfile,
+  registerDeviceToken,
 } from "../lib/lib";
 import { router } from "expo-router";
-
-import { Role, UserProfile } from "../types/types";
+import { registerForPushNotificationsAsync } from "../services/notifications.service";
+import { RegisterResponse, Role, UserProfile } from "../types/types";
 
 type AuthContextType = {
   loading: boolean;
@@ -50,7 +52,7 @@ type AuthContextType = {
     rol: Role;
     telefono: string;
     dni: string;
-  }) => Promise<void>;
+  }) => Promise<RegisterResponse>;
   signOut: () => Promise<void>;
 };
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -79,6 +81,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const profileData = await getProfile();
           console.log("[AUTH] profileData fetched:", profileData);
           setProfile(profileData || null);
+
+          const pushToken = await registerForPushNotificationsAsync();
+
+          if (pushToken) {
+            await registerDeviceToken({
+              token: pushToken,
+              plataforma: Platform.OS,
+            });
+
+            console.log("[AUTH] push token registered");
+          }
+
         } catch (error) {
           console.log("[AUTH] Error fetching profile:", error);
           setProfile(null);
