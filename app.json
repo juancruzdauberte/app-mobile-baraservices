@@ -3,9 +3,6 @@
     "name": "baraservices",
     "slug": "baraservices",
     "scheme": "baraservices",
-    "plugins": [
-      "expo-notifications"
-    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -49,12 +46,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
-        }
-      ],
+      "expo-notifications",
       "expo-font",
       "expo-router"
     ],
