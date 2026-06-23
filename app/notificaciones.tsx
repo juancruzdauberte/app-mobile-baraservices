@@ -125,9 +125,19 @@ export default function NotificationsScreen() {
     return (
         <View className="flex-1 bg-white px-4 pt-14 dark:bg-neutral-950">
             <View className="mb-4 flex-row items-center justify-between">
-                <Text className="text-2xl font-bold text-neutral-900 dark:text-white">
-                    Notificaciones
-                </Text>
+                <View className="flex-row items-center" style={{ gap: 8 }}>
+                    <Pressable
+                        onPress={() => router.push("/")}
+                        accessibilityRole="button"
+                        accessibilityLabel="Ir al inicio"
+                        className="h-9 w-9 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800"
+                    >
+                        <Ionicons name="chevron-back" size={22} color="#6b7280" />
+                    </Pressable>
+                    <Text className="text-2xl font-bold text-neutral-900 dark:text-white">
+                        Notificaciones
+                    </Text>
+                </View>
 
                 {notifications.some((item) => !item.leida) ? (
                     <Pressable
