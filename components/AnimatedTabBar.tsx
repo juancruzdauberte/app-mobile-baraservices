@@ -7,6 +7,7 @@ import { Image } from "expo-image";
 import { AVATAR_PLACEHOLDER, IMAGE_CACHE_POLICY, IMAGE_TRANSITION } from "../constants/image-config";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -123,7 +124,7 @@ export function AnimatedTabBar({
 
   return (
     <Animated.View
-      className="absolute w-[80%] flex-row items-center justify-center self-center rounded-full px-3 py-3.5"
+      className="absolute w-[88%] flex-row items-center justify-center self-center rounded-full px-3 py-3.5"
       // backgroundColor is set dynamically below
 
       style={[
@@ -210,6 +211,7 @@ export function AnimatedTabBar({
           </Animated.View>
         );
       })}
+
     </Animated.View>
   );
 }
