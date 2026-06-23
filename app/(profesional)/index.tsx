@@ -21,6 +21,7 @@ import {
   WorkOrderEstado,
 } from "../../types/types";
 import { useTheme } from '@/hooks/useTheme';
+import { NotificationBell } from "../../components/NotificationBell";
 
 // ─── Local types ─────────────────────────────────────────────────────────────
 
@@ -272,17 +273,20 @@ export default function DashboardPro() {
               {profile?.nombre}
             </Text>
           </View>
-          {rating != null && rating > 0 && (
-            <View
-              className="bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex-row items-center"
-              style={{ gap: 4 }}
-            >
-              <Ionicons name="star" size={14} color="#f59e0b" />
-              <Text className="text-amber-400 font-bold text-sm">
-                {rating.toFixed(1)}
-              </Text>
-            </View>
-          )}
+          <View className="flex-row items-center" style={{ gap: 10 }}>
+            {rating != null && rating > 0 && (
+              <View
+                className="bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex-row items-center"
+                style={{ gap: 4 }}
+              >
+                <Ionicons name="star" size={14} color="#f59e0b" />
+                <Text className="text-amber-400 font-bold text-sm">
+                  {rating.toFixed(1)}
+                </Text>
+              </View>
+            )}
+            <NotificationBell />
+          </View>
         </View>
 
         {/* Stats Row */}
