@@ -11,6 +11,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../hooks/useTheme";
+import { useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
+import { getMyReviews } from "../../lib/lib";
+import { Review } from "../../types/types";
+
 
 export default function Perfil() {
   const { signOut, profile } = useAuth();
@@ -68,6 +73,78 @@ export default function Perfil() {
   // Nombre completo del usuario
   const fullName =
     nombre && apellido ? `${nombre} ${apellido}` : profile?.email || "Usuario";
+
+  // Estados para datos dinámicos
+  const { refreshProfile } = useAuth();
+  const [loadingFresh, setLoadingFresh] = useState(true);
+
+  // Reseñas del propio profesional
+  const [myReviews, setMyReviews] = useState<Review[]>([]);
+  const [myReviewsTotal, setMyReviewsTotal] = useState(0);
+  const [reviewsPage, setReviewsPage] = useState(1);
+  const [reviewsHasMore, setReviewsHasMore] = useState(false);
+  const [loadingMoreReviews, setLoadingMoreReviews] = useState(false);
+
+  // Al montar la pantalla, refresca el perfil de useAuth() y trae las reseñas iniciales
+  useEffect(() => {
+    async function loadData() {
+      try {
+        await refreshProfile(); // Esto actualiza la información global (calificación y cantidad de trabajos)
+
+        // Traer las primeras 5 reseñas
+        const reviewsRes = await getMyReviews({ page: 1, limit: 5 });
+        setMyReviews(reviewsRes.data);
+        setMyReviewsTotal(reviewsRes.meta.total);
+        setReviewsHasMore(reviewsRes.meta.page < reviewsRes.meta.totalPages);
+        setReviewsPage(1);
+      } catch (err) {
+        console.error("Error al cargar datos en perfil propio:", err);
+      } finally {
+        setLoadingFresh(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  async function loadMoreMyReviews() {
+    if (loadingMoreReviews || !reviewsHasMore) return;
+    setLoadingMoreReviews(true);
+    const nextPage = reviewsPage + 1;
+    try {
+      const res = await getMyReviews({ page: nextPage, limit: 5 });
+      setMyReviews((prev) => [...prev, ...res.data]);
+      setReviewsHasMore(res.meta.page < res.meta.totalPages);
+      setReviewsPage(nextPage);
+    } catch (err) {
+      console.error("Error al cargar más reseñas en perfil propio:", err);
+    } finally {
+      setLoadingMoreReviews(false);
+    }
+  }
+
+  function handleSeeLessMyReviews() {
+    setMyReviews((prev) => prev.slice(0, 5));
+    setReviewsPage(1);
+    // Solo mostrar "Ver más" si el total real supera las 5 que quedan visibles
+    setReviewsHasMore(myReviewsTotal > 5);
+  }
+
+
+  // Helper para renderizar estrellas de reseñas propias
+  function renderStars(puntaje: number): string {
+    const full = Math.min(5, Math.max(0, Math.round(puntaje)));
+    return "★".repeat(full) + "☆".repeat(5 - full);
+  }
+
+  // Helper para dar formato a la fecha
+  function formatReviewDate(fechaCreacion: string): string {
+    return new Date(fechaCreacion).toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
 
   const menuItems = [
     {
@@ -178,6 +255,74 @@ export default function Perfil() {
               </Text>
             </View>
           </View>
+        </View>
+
+        {/* Sección de Reseñas Recibidas */}
+        <View className="bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-3xl p-5 mb-6">
+          <Text className="text-gray-900 dark:text-white text-lg font-bold mb-4">
+            Mis Reseñas Recibidas
+          </Text>
+
+          {loadingFresh ? (
+            <ActivityIndicator size="small" color="#10b981" />
+          ) : myReviews.length > 0 ? (
+            <View>
+              {myReviews.map((review) => (
+                <View
+                  key={review.id}
+                  className="bg-slate-100/60 dark:bg-gray-800/60 rounded-xl p-3 mb-2"
+                >
+                  <View className="flex-row items-center justify-between mb-1.5">
+                    <Text className="text-slate-500 text-xs">
+                      {formatReviewDate(review.fecha_creacion)}
+                    </Text>
+                    <Text className="text-amber-400 text-sm tracking-wide">
+                      {renderStars(review.puntaje)}
+                    </Text>
+                  </View>
+                  {review.comentario ? (
+                    <Text className="text-slate-500 dark:text-gray-400 text-sm leading-5 italic">
+                      "{review.comentario}"
+                    </Text>
+                  ) : null}
+                </View>
+              ))}
+
+              {/* Botones Ver más / Ver menos */}
+              <View className="flex-row items-center mt-3" style={{ gap: 12 }}>
+                {reviewsHasMore && (
+                  <Pressable
+                    onPress={loadMoreMyReviews}
+                    disabled={loadingMoreReviews}
+                    className="flex-1 py-2 bg-slate-200/50 dark:bg-gray-800/80 rounded-xl items-center active:opacity-70"
+                  >
+                    {loadingMoreReviews ? (
+                      <ActivityIndicator size="small" color="#10b981" />
+                    ) : (
+                      <Text className="text-emerald-500 dark:text-emerald-400 font-semibold text-xs">
+                        Ver más reseñas
+                      </Text>
+                    )}
+                  </Pressable>
+                )}
+
+                {reviewsPage > 1 && (
+                  <Pressable
+                    onPress={handleSeeLessMyReviews}
+                    className="flex-1 py-2 bg-slate-200/50 dark:bg-gray-800/80 rounded-xl items-center active:opacity-70"
+                  >
+                    <Text className="text-slate-500 dark:text-slate-400 font-semibold text-xs">
+                      Ver menos
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
+            </View>
+          ) : (
+            <Text className="text-gray-500 text-sm italic">
+              Aún no has recibido calificaciones.
+            </Text>
+          )}
         </View>
 
         {/* Menu Items */}
