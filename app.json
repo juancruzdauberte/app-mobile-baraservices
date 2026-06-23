@@ -49,7 +49,7 @@
             [
                 "expo-notifications",
                 {
-                    "icon": "./assets/icon-foreground.png",
+                    "icon": "./assets/icon-foreground-notif.png",
                     "color": "#10b981"
                 }
             ],
