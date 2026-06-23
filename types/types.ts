@@ -259,8 +259,10 @@ export type PublicReview = {
   puntaje: number;
   comentario: string | null;
   fecha_creacion: string;
+  trabajo_titulo?: string | null; // Añadido
   evaluador: { nombre: string; apellido: string; avatar: string | null } | null;
 };
+
 
 /** Servicio ofrecido por un profesional — mapeado desde trabajos_profesionales + categorias */
 export type ProfessionalService = {
@@ -324,14 +326,21 @@ export type PublicProfessional = {
   biografia: string | null;
   calificacion_promedio: number | null;
   total_trabajos_realizados: number | null;
+  total_resenas?: number | null; // Añadido
   telefono: string | null;
   avatar: string | null;
   email: string | null;
   estado_perfil: ProfesionalStateProfile;
-  // Enriquecidos via Supabase directo en el perfil público
   reviews?: PublicReview[];
+  reviews_meta?: {               // Añadido
+    total: number;
+    page: number;
+    limit: number;
+    hasMore: boolean;
+  };
   services?: ProfessionalService[];
 };
+
 
 export type Professional = {
   id: string;

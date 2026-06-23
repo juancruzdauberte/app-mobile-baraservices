@@ -15,7 +15,6 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 
 import {
   getProfessionalById,
-  getReviewsForProfessional,
   getServicesForProfessional,
 } from "../../lib/lib";
 import { PublicProfessional, PublicReview, ProfessionalService } from "../../types/types";
@@ -95,23 +94,29 @@ export default function ProfessionalProfile() {
   const [services, setServices] = useState<ProfessionalService[]>([]);
   const [enrichLoading, setEnrichLoading] = useState(false);
 
+  // Estados para paginar reseñas
+  const [reviewsPage, setReviewsPage] = useState(1);
+  const [reviewsHasMore, setReviewsHasMore] = useState(false);
+  const [loadingMoreReviews, setLoadingMoreReviews] = useState(false);
+
   useEffect(() => {
     async function load() {
       try {
-        const data = await getProfessionalById(id);
+        // Carga inicial del profesional y las primeras 5 reseñas
+        const data = await getProfessionalById(id, 1, 5);
         setProfessional(data);
-        // Fetch reviews + services in parallel after profile loads — fail silently
+        setReviews(data.reviews ?? []);
+        setReviewsHasMore(data.reviews_meta?.hasMore ?? false);
+        setReviewsPage(1);
+
+        // Cargar servicios en paralelo de forma silenciosa
         setEnrichLoading(true);
-        Promise.all([
-          getReviewsForProfessional(id, 5),
-          getServicesForProfessional(id),
-        ])
-          .then(([fetchedReviews, fetchedServices]) => {
-            setReviews(fetchedReviews);
+        getServicesForProfessional(id)
+          .then((fetchedServices) => {
             setServices(fetchedServices);
           })
           .catch(() => {
-            // Silently degrade — profile is still usable
+            // Silently degrade
           })
           .finally(() => setEnrichLoading(false));
       } catch {
@@ -122,6 +127,30 @@ export default function ProfessionalProfile() {
     }
     load();
   }, [id]);
+
+  async function loadMoreReviews() {
+    if (loadingMoreReviews || !reviewsHasMore) return;
+    setLoadingMoreReviews(true);
+    const nextPage = reviewsPage + 1;
+    try {
+      const more = await getProfessionalById(id, nextPage, 5);
+      setReviews((prev) => [...prev, ...(more.reviews ?? [])]);
+      setReviewsHasMore(more.reviews_meta?.hasMore ?? false);
+      setReviewsPage(nextPage);
+    } catch (err) {
+      console.error("Error al cargar más reseñas:", err);
+    } finally {
+      setLoadingMoreReviews(false);
+    }
+  }
+
+  function handleSeeLessReviews() {
+    setReviews((prev) => prev.slice(0, 5));
+    setReviewsPage(1);
+    // Si el total de reseñas es mayor a 5, hay más para cargar
+    setReviewsHasMore((professional?.total_resenas ?? 0) > 5);
+  }
+
 
   // ─── Loading ───────────────────────────────────────────────────────────────
 
@@ -194,7 +223,7 @@ export default function ProfessionalProfile() {
           <Pressable
             accessibilityRole="button"
             onPress={() => router.back()}
-          accessibilityLabel="Volver"
+            accessibilityLabel="Volver"
             className="mr-3 p-1"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
@@ -339,11 +368,15 @@ export default function ProfessionalProfile() {
               <View className="flex-row items-center" style={{ gap: 4 }}>
                 <Ionicons name="star" size={13} color="#f59e0b" />
                 <Text className="text-amber-400 text-xs font-semibold">
-                  {(reviews.reduce((sum, r) => sum + r.puntaje, 0) / reviews.length).toFixed(1)}
+                  {professional?.calificacion_promedio != null
+                    ? professional.calificacion_promedio.toFixed(1)
+                    : "0.0"}
                 </Text>
-                <Text className="text-gray-500 text-xs">
-                  ({reviews.length} {reviews.length === 1 ? "reseña" : "reseñas"})
-                </Text>
+                {professional?.total_resenas != null && (
+                  <Text className="text-gray-500 text-xs font-normal">
+                    ({professional.total_resenas} {professional.total_resenas === 1 ? "reseña" : "reseñas"})
+                  </Text>
+                )}
               </View>
             </View>
 
@@ -351,8 +384,39 @@ export default function ProfessionalProfile() {
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review} />
             ))}
+
+            {/* Botones Ver más / Ver menos */}
+            <View className="flex-row items-center mt-3" style={{ gap: 12 }}>
+              {reviewsHasMore && (
+                <Pressable
+                  onPress={loadMoreReviews}
+                  disabled={loadingMoreReviews}
+                  className="flex-1 py-2 bg-slate-200/50 dark:bg-gray-800/80 rounded-xl items-center active:opacity-70"
+                >
+                  {loadingMoreReviews ? (
+                    <ActivityIndicator size="small" color="#10b981" />
+                  ) : (
+                    <Text className="text-emerald-500 dark:text-emerald-400 font-semibold text-xs">
+                      Ver más reseñas
+                    </Text>
+                  )}
+                </Pressable>
+              )}
+
+              {reviewsPage > 1 && (
+                <Pressable
+                  onPress={handleSeeLessReviews}
+                  className="flex-1 py-2 bg-slate-200/50 dark:bg-gray-800/80 rounded-xl items-center active:opacity-70"
+                >
+                  <Text className="text-slate-500 dark:text-slate-400 font-semibold text-xs">
+                    Ver menos
+                  </Text>
+                </Pressable>
+              )}
+            </View>
           </View>
         ) : null}
+
 
         {/* ── Contacto ──────────────────────────────────────────────────── */}
         {(professional.telefono || professional.email) ? (

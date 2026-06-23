@@ -3,6 +3,9 @@
     "name": "baraservices",
     "slug": "baraservices",
     "scheme": "baraservices",
+    "plugins": [
+      "expo-notifications"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -34,7 +37,10 @@
               "pathPrefix": "/auth/confirm"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -48,7 +54,9 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-router"
     ],
     "extra": {
       "eas": {

@@ -11,6 +11,7 @@ import { getMyJobRequests, getMyWorkOrders, getProposalsByJobRequest } from "../
 import { JobRequest, WorkOrder, WorkOrderEstado } from "../../types/types";
 import CreateJobRequestModal from "../../components/CreateJobRequestModal";
 import { useTheme } from '@/hooks/useTheme';
+import { NotificationBell } from "../../components/NotificationBell";
 
 // ─── Local types ──────────────────────────────────────────────────────────────
 
@@ -219,9 +220,7 @@ export default function Home() {
               {profile?.nombre} {profile?.apellido}
             </Text>
           </View>
-          <Pressable className="bg-slate-50 dark:bg-gray-900 p-3 rounded-full border border-slate-200 dark:border-gray-800">
-            <Ionicons name="notifications-outline" size={20} color="#f3f4f6" />
-          </Pressable>
+          <NotificationBell />
         </View>
 
         {/* Stats Row */}
